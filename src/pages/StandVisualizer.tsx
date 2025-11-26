@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Upload, Wand2, Lightbulb } from "lucide-react";
+import { Upload, Wand2, Lightbulb, Heart, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
@@ -13,6 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -21,6 +31,13 @@ interface Product {
   categories: {
     name: string;
   } | null;
+}
+
+interface FavoritePrompt {
+  id: string;
+  title: string;
+  prompt: string;
+  created_at: string;
 }
 
 const examplePrompts = [
@@ -49,11 +66,122 @@ const StandVisualizer = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [favoritePrompts, setFavoritePrompts] = useState<FavoritePrompt[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [favoriteTitle, setFavoriteTitle] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
+    checkAuth();
     fetchProducts();
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsAuthenticated(!!session);
+    if (session) {
+      fetchFavoritePrompts();
+    }
+  };
+
+  const fetchFavoritePrompts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("favorite_prompts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setFavoritePrompts(data || []);
+    } catch (error) {
+      console.error("Error fetching favorite prompts:", error);
+    }
+  };
+
+  const saveFavoritePrompt = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Autenticação necessária",
+        description: "Faça login para salvar prompts favoritos",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!favoriteTitle.trim() || !prompt.trim()) {
+      toast({
+        title: "Campos obrigatórios",
+        description: "Por favor, preencha o título e o prompt",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      const { error } = await supabase
+        .from("favorite_prompts")
+        .insert({
+          user_id: user.id,
+          title: favoriteTitle,
+          prompt: prompt,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Prompt salvo!",
+        description: "Seu prompt foi adicionado aos favoritos",
+      });
+
+      setFavoriteTitle("");
+      setSaveDialogOpen(false);
+      fetchFavoritePrompts();
+    } catch (error: any) {
+      console.error("Error saving favorite prompt:", error);
+      toast({
+        title: "Erro ao salvar",
+        description: error.message || "Não foi possível salvar o prompt",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteFavoritePrompt = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("favorite_prompts")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Prompt removido",
+        description: "O prompt foi removido dos favoritos",
+      });
+
+      fetchFavoritePrompts();
+    } catch (error: any) {
+      console.error("Error deleting favorite prompt:", error);
+      toast({
+        title: "Erro ao remover",
+        description: error.message || "Não foi possível remover o prompt",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const loadFavoritePrompt = (favoritePrompt: FavoritePrompt) => {
+    setPrompt(favoritePrompt.prompt);
+    toast({
+      title: "Prompt carregado",
+      description: `"${favoritePrompt.title}" foi carregado`,
+    });
+  };
 
   const fetchProducts = async () => {
     try {
@@ -214,6 +342,41 @@ const StandVisualizer = () => {
               </label>
             </Card>
 
+            {isAuthenticated && favoritePrompts.length > 0 && (
+              <Card className="p-6 bg-card border-border">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-primary" />
+                  Meus Prompts Favoritos
+                </h2>
+                <div className="grid grid-cols-1 gap-2 mb-4">
+                  {favoritePrompts.map((favorite) => (
+                    <div
+                      key={favorite.id}
+                      className="flex items-start gap-2 px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-muted/50 transition-all"
+                    >
+                      <button
+                        onClick={() => loadFavoritePrompt(favorite)}
+                        className="flex-1 text-left"
+                      >
+                        <p className="font-semibold text-sm mb-1">{favorite.title}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {favorite.prompt}
+                        </p>
+                      </button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteFavoritePrompt(favorite.id)}
+                        className="flex-shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
             <Card className="p-6 bg-card border-border">
               <h2 className="text-xl font-bold mb-4">Prompts de Exemplo</h2>
               <div className="grid grid-cols-1 gap-2 mb-4">
@@ -233,7 +396,41 @@ const StandVisualizer = () => {
             </Card>
 
             <Card className="p-6 bg-card border-border">
-              <h2 className="text-xl font-bold mb-4">Descreva a edição desejada</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Descreva a edição desejada</h2>
+                {isAuthenticated && prompt.trim() && (
+                  <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <Heart className="mr-2 h-4 w-4" />
+                        Salvar Prompt
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-card">
+                      <DialogHeader>
+                        <DialogTitle>Salvar Prompt Favorito</DialogTitle>
+                        <DialogDescription>
+                          Dê um nome ao seu prompt para encontrá-lo facilmente depois
+                        </DialogDescription>
+                      </DialogHeader>
+                      <Input
+                        placeholder="Ex: Stand Moderno Azul"
+                        value={favoriteTitle}
+                        onChange={(e) => setFavoriteTitle(e.target.value)}
+                        className="bg-background"
+                      />
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+                          Cancelar
+                        </Button>
+                        <Button onClick={saveFavoritePrompt}>
+                          Salvar
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
               <Textarea
                 placeholder="Ex: Adicione um stand Smart Curved vermelho com logo da marca centralizado, iluminação led azul nas laterais..."
                 value={prompt}

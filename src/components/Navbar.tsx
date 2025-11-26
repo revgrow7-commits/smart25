@@ -67,9 +67,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            
-          </div>
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logo} alt="Smart Signage" className="h-12" />
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
@@ -110,8 +110,8 @@ const Navbar = () => {
                 </Link>
               )
             )}
-            <Button className="btn-primary">
-              Solicitar Demo
+            <Button asChild className="btn-primary">
+              <a href="#contato">Solicitar Demo</a>
             </Button>
           </div>
 
@@ -145,8 +145,8 @@ const Navbar = () => {
                 </Link>
               )
             )}
-            <Button className="w-full btn-primary">
-              Solicitar Demo
+            <Button asChild className="w-full btn-primary">
+              <a href="#contato">Solicitar Demo</a>
             </Button>
           </div>}
       </div>

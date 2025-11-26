@@ -1,42 +1,45 @@
 import { FileText, Pencil, Box, Truck, Wrench, Repeat } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const HowItWorks = () => {
+  const { t } = useTranslation();
+
   const steps = [
     {
       number: "01",
       icon: FileText,
-      title: "Briefing",
-      description: "Entendemos suas necessidades e objetivos"
+      title: t('howItWorks.step1Title'),
+      description: t('howItWorks.step1Desc')
     },
     {
       number: "02",
       icon: Pencil,
-      title: "Design 3D",
-      description: "Criamos visualização realista do projeto"
+      title: t('howItWorks.step2Title'),
+      description: t('howItWorks.step2Desc')
     },
     {
       number: "03",
       icon: Box,
-      title: "Produção",
-      description: "Fabricação com alta precisão e qualidade"
+      title: t('howItWorks.step3Title'),
+      description: t('howItWorks.step3Desc')
     },
     {
       number: "04",
       icon: Truck,
-      title: "Entrega",
-      description: "Logística em formato compacto"
+      title: t('howItWorks.step4Title'),
+      description: t('howItWorks.step4Desc')
     },
     {
       number: "05",
       icon: Wrench,
-      title: "Montagem",
-      description: "Setup rápido e sem ferramentas"
+      title: t('howItWorks.step5Title'),
+      description: t('howItWorks.step5Desc')
     },
     {
       number: "06",
       icon: Repeat,
-      title: "Reuso",
-      description: "Reconfigure para o próximo evento"
+      title: t('howItWorks.step6Title'),
+      description: t('howItWorks.step6Desc')
     }
   ];
 
@@ -45,10 +48,10 @@ const HowItWorks = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Como <span className="gradient-text">Funciona</span>
+            {t('howItWorks.title')} <span className="gradient-text">{t('howItWorks.titleHighlight')}</span>
           </h2>
           <p className="text-xl text-muted-foreground">
-            Do conceito à execução em 6 passos simples
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 

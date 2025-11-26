@@ -93,7 +93,7 @@ const HeroSection = () => {
                 </div>
                 
                 <div className="flex items-center justify-center">
-                  <img src={heroImage} alt="Smart Signage Visual" className="w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" />
+                  <img alt="Smart Signage Visual" className="w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" src="/lovable-uploads/b7c0f382-37bb-45ca-b717-cdd4387709ed.jpg" />
                 </div>
                 
                 {/* Animated lines effect overlay */}

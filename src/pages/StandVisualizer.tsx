@@ -23,6 +23,25 @@ interface Product {
   } | null;
 }
 
+const examplePrompts = [
+  {
+    title: "Stand Outdoor Feira",
+    prompt: "A photo taken with a DSLR at f1.8, capturing a branded outdoor promotional booth. The setup includes two curved side banners and a large central backdrop with a sunrise highway scene and a large coffee jar printed. There are two white chairs and a round table at the front, placed on a black carpet. The booth is surrounded by people enjoying a sunny outdoor fair with trees in the background. The branding is clean, bold, and prominently features the logo and product. Natural sunlight enhances the warm tones of the scene."
+  },
+  {
+    title: "Stand Corporativo Moderno",
+    prompt: "A photo of a modern corporate exhibition booth with clean lines and minimalist design. Features LED backlighting, glass display cases, white furniture, and professional corporate branding. Shot in a convention center with professional lighting, f2.8, high-end conference environment."
+  },
+  {
+    title: "Stand Tecnológico Futurista",
+    prompt: "A futuristic tech booth with curved LED screens displaying dynamic content, holographic elements, sleek metallic surfaces, and neon blue accent lighting. Modern furniture, high-tech atmosphere, shot with wide-angle lens in a technology expo."
+  },
+  {
+    title: "Stand Elegante Premium",
+    prompt: "An elegant luxury brand booth with sophisticated design, premium materials including marble accents, gold details, plush seating, dramatic spotlighting, and refined product displays. High-end trade show environment, professional photography."
+  }
+];
+
 const StandVisualizer = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [products, setProducts] = useState<Product[]>([]);
@@ -193,6 +212,24 @@ const StandVisualizer = () => {
                   )}
                 </div>
               </label>
+            </Card>
+
+            <Card className="p-6 bg-card border-border">
+              <h2 className="text-xl font-bold mb-4">Prompts de Exemplo</h2>
+              <div className="grid grid-cols-1 gap-2 mb-4">
+                {examplePrompts.map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setPrompt(example.prompt)}
+                    className="text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-muted/50 transition-all"
+                  >
+                    <p className="font-semibold text-sm mb-1">{example.title}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {example.prompt}
+                    </p>
+                  </button>
+                ))}
+              </div>
             </Card>
 
             <Card className="p-6 bg-card border-border">

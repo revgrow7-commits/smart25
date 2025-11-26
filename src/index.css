@@ -8,43 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 240 60% 20%;
+    --background: 260 60% 8%;
     --foreground: 0 0% 100%;
 
-    --card: 240 55% 25%;
+    --card: 260 55% 12%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 240 55% 25%;
+    --popover: 260 55% 12%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 354 100% 50%;
+    --primary: 345 100% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 60% 20%;
+    --secondary: 260 60% 15%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 45% 30%;
+    --muted: 260 45% 18%;
     --muted-foreground: 240 10% 70%;
 
-    --accent: 354 100% 50%;
+    --accent: 345 100% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 40% 35%;
-    --input: 240 45% 30%;
-    --ring: 354 100% 50%;
+    --border: 260 40% 20%;
+    --input: 260 45% 15%;
+    --ring: 345 100% 55%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(0 100% 50%), hsl(354 100% 60%));
-    --gradient-card: linear-gradient(145deg, hsl(240 55% 25%), hsl(0 40% 20%));
-    --gradient-neon: linear-gradient(90deg, hsl(0 100% 50%), hsl(354 100% 60%), hsl(0 85% 55%));
+    --gradient-primary: linear-gradient(135deg, hsl(345 100% 55%), hsl(330 100% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(260 55% 12%), hsl(270 45% 10%));
+    --gradient-neon: linear-gradient(90deg, hsl(345 100% 55%), hsl(330 100% 60%), hsl(315 100% 55%));
+    --gradient-border: linear-gradient(135deg, hsl(345 100% 55%), hsl(330 100% 60%), hsl(315 100% 55%));
     
-    --shadow-neon: 0 0 30px hsl(354 100% 50% / 0.5);
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.6);
-    --shadow-red: 0 0 30px hsl(354 100% 50% / 0.4);
+    --shadow-neon: 0 0 30px hsl(345 100% 55% / 0.5);
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.7);
+    --shadow-red: 0 0 30px hsl(345 100% 55% / 0.4);
   }
 }
 
@@ -79,7 +80,7 @@ All colors MUST be HSL.
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsl(0 100% 60%), hsl(354 100% 50%));
+    background: linear-gradient(135deg, hsl(345 100% 55%), hsl(330 100% 60%), hsl(315 100% 55%));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -90,7 +91,7 @@ All colors MUST be HSL.
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,0,0,0.5)] hover:scale-105;
+    @apply bg-gradient-to-r from-primary via-[hsl(330,100%,60%)] to-primary text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_hsl(345,100%,55%,0.5)] hover:scale-105;
   }
 }
 

@@ -38,9 +38,9 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(354 100% 50%), hsl(354 100% 60%));
-    --gradient-card: linear-gradient(145deg, hsl(240 55% 25%), hsl(240 60% 20%));
-    --gradient-neon: linear-gradient(90deg, hsl(354 100% 50%), hsl(330 100% 60%), hsl(270 100% 60%));
+    --gradient-primary: linear-gradient(135deg, hsl(0 100% 50%), hsl(354 100% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(240 55% 25%), hsl(0 40% 20%));
+    --gradient-neon: linear-gradient(90deg, hsl(0 100% 50%), hsl(354 100% 60%), hsl(0 85% 55%));
     
     --shadow-neon: 0 0 30px hsl(354 100% 50% / 0.5);
     --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.6);
@@ -65,7 +65,7 @@ All colors MUST be HSL.
 
 @layer components {
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent;
   }
 
   .gradient-border {
@@ -79,18 +79,18 @@ All colors MUST be HSL.
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsl(330 81% 60%), hsl(271 91% 65%));
+    background: linear-gradient(135deg, hsl(0 100% 60%), hsl(354 100% 50%));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
 
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)];
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(255,0,0,0.4)];
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-primary to-secondary text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.4)] hover:scale-105;
+    @apply bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,0,0,0.5)] hover:scale-105;
   }
 }
 

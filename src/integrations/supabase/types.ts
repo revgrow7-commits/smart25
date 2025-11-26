@@ -90,6 +90,7 @@ export type Database = {
           id: string
           is_featured: boolean | null
           item_code: string
+          model_3d_url: string | null
           name: string
           packing_size: string | null
           pcs_per_ctn: number | null
@@ -97,6 +98,7 @@ export type Database = {
           specifications: Json | null
           status: string | null
           updated_at: string
+          video_url: string | null
         }
         Insert: {
           category_id?: string | null
@@ -108,6 +110,7 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           item_code: string
+          model_3d_url?: string | null
           name: string
           packing_size?: string | null
           pcs_per_ctn?: number | null
@@ -115,6 +118,7 @@ export type Database = {
           specifications?: Json | null
           status?: string | null
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
           category_id?: string | null
@@ -126,6 +130,7 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           item_code?: string
+          model_3d_url?: string | null
           name?: string
           packing_size?: string | null
           pcs_per_ctn?: number | null
@@ -133,6 +138,7 @@ export type Database = {
           specifications?: Json | null
           status?: string | null
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
           {

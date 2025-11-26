@@ -37,6 +37,8 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
     packing_size: '',
     price: '',
     status: 'active',
+    video_url: '',
+    model_3d_url: '',
   });
 
   useEffect(() => {
@@ -78,6 +80,8 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       packing_size: data.packing_size || '',
       price: data.price?.toString() || '',
       status: data.status || 'active',
+      video_url: data.video_url || '',
+      model_3d_url: data.model_3d_url || '',
     });
   };
 
@@ -351,6 +355,34 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
               <SelectItem value="draft">Rascunho</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="video_url">URL do Vídeo (YouTube, Vimeo, etc.)</Label>
+          <Input
+            id="video_url"
+            type="url"
+            placeholder="https://www.youtube.com/embed/..."
+            value={formData.video_url}
+            onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+          />
+          <p className="text-xs text-muted-foreground">
+            Cole a URL do vídeo embed (ex: YouTube embed URL)
+          </p>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="model_3d_url">URL do Modelo 3D</Label>
+          <Input
+            id="model_3d_url"
+            type="url"
+            placeholder="https://sketchfab.com/models/..."
+            value={formData.model_3d_url}
+            onChange={(e) => setFormData({ ...formData, model_3d_url: e.target.value })}
+          />
+          <p className="text-xs text-muted-foreground">
+            Cole a URL do modelo 3D (ex: Sketchfab embed)
+          </p>
         </div>
       </div>
 

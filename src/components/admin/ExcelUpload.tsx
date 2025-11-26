@@ -50,42 +50,99 @@ const ExcelUpload = () => {
       const totalRows = jsonData.length;
       let imported = 0;
       let errors = 0;
+      let skipped = 0;
 
-      // Buscar categorias existentes
-      const { data: categories } = await supabase
+      // Buscar ou criar categorias
+      const { data: existingCategories } = await supabase
         .from('categories')
         .select('id, name');
 
       const categoryMap = new Map(
-        categories?.map(cat => [cat.name, cat.id]) || []
+        existingCategories?.map(cat => [cat.name, cat.id]) || []
       );
+
+      // Variáveis para manter contexto das linhas anteriores
+      let currentCategory = '';
+      let currentItemCode = '';
+      let currentFrameSize = '';
+      let currentGraphicSize = '';
+      let currentPcsCtn = '';
+      let currentGrossWeight = '';
+      let currentPackingSize = '';
 
       for (let i = 0; i < jsonData.length; i++) {
         const row: any = jsonData[i];
         setProgress(Math.round(((i + 1) / totalRows) * 100));
 
         try {
-          // Mapear os dados da planilha para o formato do banco
-          const categoryName = row['Grupos'] || row['Category'] || row['Categoria'];
-          const categoryId = categoryMap.get(categoryName);
+          // Atualizar valores de contexto quando não estão vazios
+          if (row['Grupos']) currentCategory = row['Grupos'];
+          if (row['Item Code']) currentItemCode = row['Item Code'];
+          if (row['Frame Size (mm)']) currentFrameSize = row['Frame Size (mm)'];
+          if (row['Graphic size (mm)']) currentGraphicSize = row['Graphic size (mm)'];
+          if (row['pcs /ctn']) currentPcsCtn = row['pcs /ctn'];
+          if (row['G.W. (kgs)/Ibs']) currentGrossWeight = row['G.W. (kgs)/Ibs'];
+          if (row['Packing Size(cm) /ctn (cm)']) currentPackingSize = row['Packing Size(cm) /ctn (cm)'];
+
+          const description = row['Description'];
+          
+          // Pular linhas sem descrição
+          if (!description || description.trim() === '') {
+            skipped++;
+            continue;
+          }
+
+          // Buscar ou criar categoria
+          let categoryId = categoryMap.get(currentCategory);
+          
+          if (!categoryId && currentCategory) {
+            // Criar categoria se não existir
+            const slug = currentCategory
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-|-$/g, '');
+
+            const { data: newCategory, error: catError } = await supabase
+              .from('categories')
+              .insert({ 
+                name: currentCategory, 
+                slug: slug,
+                description: `Categoria ${currentCategory}` 
+              })
+              .select()
+              .single();
+
+            if (!catError && newCategory) {
+              categoryId = newCategory.id;
+              categoryMap.set(currentCategory, categoryId);
+            }
+          }
 
           if (!categoryId) {
-            console.warn(`Categoria não encontrada: ${categoryName}`);
+            console.warn(`Não foi possível criar/encontrar categoria: ${currentCategory}`);
             errors++;
             continue;
           }
 
+          // Criar nome completo do produto combinando Item Code e Description
+          const productName = currentItemCode 
+            ? `${currentItemCode} - ${description}` 
+            : description;
+
           const productData = {
             category_id: categoryId,
-            item_code: row['Item Code'] || row['Código'] || `PROD-${Date.now()}-${i}`,
-            name: row['Description'] || row['Descrição'] || 'Produto Importado',
-            frame_size: row['Frame Size (mm)'] || row['Tamanho Frame'] || '',
-            graphic_size: row['Graphic size (mm)'] || row['Tamanho Gráfico'] || '',
-            pcs_per_ctn: parseInt(row['pcs /ctn'] || row['Peças/Caixa'] || '0'),
-            gross_weight: row['G.W. (kgs)/Ibs'] || row['Peso'] || '',
-            packing_size: row['Packing Size(cm) /ctn (cm)'] || row['Tamanho Embalagem'] || '',
-            price: parseFloat(row['price'] || row['Preço'] || '0'),
-            distributor_price: parseFloat(row['distributor price'] || row['Preço Distribuidor'] || '0'),
+            item_code: currentItemCode || `PROD-${Date.now()}-${i}`,
+            name: productName,
+            description: description,
+            frame_size: currentFrameSize || null,
+            graphic_size: currentGraphicSize || null,
+            pcs_per_ctn: currentPcsCtn ? parseInt(currentPcsCtn.toString()) : null,
+            gross_weight: currentGrossWeight || null,
+            packing_size: currentPackingSize || null,
+            price: row['price'] ? parseFloat(row['price'].toString()) : null,
+            distributor_price: row['distributor price'] ? parseFloat(row['distributor price'].toString()) : null,
             status: 'active',
           };
 
@@ -94,7 +151,7 @@ const ExcelUpload = () => {
             .insert(productData);
 
           if (error) {
-            console.error('Erro ao inserir produto:', error);
+            console.error('Erro ao inserir produto:', error, productData);
             errors++;
           } else {
             imported++;
@@ -110,7 +167,7 @@ const ExcelUpload = () => {
       if (errors === 0) {
         toast.success(`${imported} produtos importados com sucesso!`);
       } else {
-        toast.warning(`${imported} produtos importados, ${errors} com erro`);
+        toast.warning(`${imported} produtos importados, ${errors} com erro, ${skipped} linhas ignoradas`);
       }
     } catch (error) {
       console.error('Erro ao processar Excel:', error);
@@ -230,9 +287,10 @@ const ExcelUpload = () => {
         <div className="text-sm text-muted-foreground space-y-2">
           <p className="font-semibold">💡 Dicas:</p>
           <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>A planilha deve ter colunas: Grupos, Item Code, Description, etc.</li>
-            <li>As categorias devem existir antes da importação</li>
-            <li>Produtos duplicados serão ignorados</li>
+            <li>A planilha deve ter as colunas: Grupos, Item Code, Frame Size, Graphic size, Description, etc.</li>
+            <li>Categorias serão criadas automaticamente se não existirem</li>
+            <li>Linhas sem descrição serão ignoradas</li>
+            <li>Os valores de categoria e Item Code podem estar apenas na primeira linha de cada grupo</li>
           </ul>
         </div>
       </div>

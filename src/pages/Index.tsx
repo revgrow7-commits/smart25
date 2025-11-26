@@ -8,6 +8,7 @@ import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
 import ContactForm from "@/components/ContactForm";
+import ProductChatbot from "@/components/ProductChatbot";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
       <HowItWorks />
       <FAQ />
       <ContactForm />
+      <ProductChatbot />
       
       {/* Footer */}
       <footer className="bg-card border-t border-border py-8">

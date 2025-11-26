@@ -1,11 +1,34 @@
 import { Zap, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-smart-signage.jpg";
-import logo from "@/assets/logo-smartsignage.png";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const HeroSection = () => {
   const { t } = useTranslation();
+  
+  const { data: heroImages, isLoading } = useQuery({
+    queryKey: ['hero-images'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('hero_images')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+  
   return <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -80,7 +103,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Column - Visual Card */}
+          {/* Right Column - Visual Card with Carousel */}
           <div className="relative hidden lg:block">
             <div className="relative rounded-3xl overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-card/80 to-background/80 backdrop-blur-xl p-8 shadow-2xl">
               {/* Decorative elements */}
@@ -88,15 +111,55 @@ const HeroSection = () => {
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"></div>
               
               {/* Content */}
-              <div className="relative z-10 space-y-6">
-                {/* Logo */}
-                <div className="flex items-center justify-center mb-6">
-                  
-                </div>
-                
-                <div className="flex items-center justify-center -mt-8">
-                  <img alt="Smart Signage Visual" className="w-full max-w-4xl rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" src="/lovable-uploads/b7c0f382-37bb-45ca-b717-cdd4387709ed.jpg" />
-                </div>
+              <div className="relative z-10">
+                {isLoading ? (
+                  <div className="flex items-center justify-center h-[400px]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                  </div>
+                ) : heroImages && heroImages.length > 0 ? (
+                  <Carousel
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    plugins={[
+                      Autoplay({
+                        delay: 5000,
+                      }),
+                    ]}
+                    className="w-full"
+                  >
+                    <CarouselContent>
+                      {heroImages.map((image) => (
+                        <CarouselItem key={image.id}>
+                          <div className="space-y-4">
+                            {(image.title || image.subtitle) && (
+                              <div className="text-center space-y-2">
+                                {image.title && (
+                                  <h3 className="text-2xl font-bold text-foreground">{image.title}</h3>
+                                )}
+                                {image.subtitle && (
+                                  <p className="text-muted-foreground">{image.subtitle}</p>
+                                )}
+                              </div>
+                            )}
+                            <img
+                              src={image.image_url}
+                              alt={image.title || "Hero Image"}
+                              className="w-full max-w-4xl rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]"
+                            />
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2" />
+                    <CarouselNext className="right-2" />
+                  </Carousel>
+                ) : (
+                  <div className="flex items-center justify-center -mt-8">
+                    <img alt="Smart Signage Visual" className="w-full max-w-4xl rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" src="/lovable-uploads/b7c0f382-37bb-45ca-b717-cdd4387709ed.jpg" />
+                  </div>
+                )}
                 
                 {/* Animated lines effect overlay */}
                 <div className="absolute inset-0 opacity-40 pointer-events-none">

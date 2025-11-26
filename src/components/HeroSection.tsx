@@ -2,7 +2,10 @@ import { Zap, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-smart-signage.jpg";
 import logo from "@/assets/logo-smartsignage.png";
+import { useTranslation } from "react-i18next";
+
 const HeroSection = () => {
+  const { t } = useTranslation();
   return <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -19,24 +22,23 @@ const HeroSection = () => {
             {/* Badge */}
             <div className="inline-block">
               <div className="px-6 py-2.5 rounded-full border-2 border-primary/40 bg-primary/10 text-primary font-medium text-sm">
-                by Indústria Visual
+                {t('hero.badge')}
               </div>
             </div>
 
             {/* Title */}
             <div className="space-y-2">
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] tracking-tight">
-                Arquitetura Efêmera
+                {t('hero.title1')}
               </h1>
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] tracking-tight text-primary">
-                Modular Inteligente
+                {t('hero.title2')}
               </h1>
             </div>
             
             {/* Description */}
             <p className="text-lg md:text-xl text-muted-foreground/90 leading-relaxed max-w-xl">
-              Revolucione seus eventos com estruturas modulares que se montam em minutos, 
-              se adaptam infinitamente e economizam até 45% em múltiplos eventos.
+              {t('hero.description')}
             </p>
 
             {/* Stats Row */}
@@ -46,7 +48,7 @@ const HeroSection = () => {
                   <Zap className="h-5 w-5 text-yellow-400" />
                   <span className="text-5xl md:text-6xl font-bold text-foreground">90%</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">Mais rápida montagem</p>
+                <p className="text-sm text-muted-foreground/80">{t('hero.stat1')}</p>
               </div>
               
               <div className="space-y-1">
@@ -54,7 +56,7 @@ const HeroSection = () => {
                   <TrendingUp className="h-5 w-5 text-green-400" />
                   <span className="text-5xl md:text-6xl font-bold text-foreground">5x+</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">Reuso garantido</p>
+                <p className="text-sm text-muted-foreground/80">{t('hero.stat2')}</p>
               </div>
               
               <div className="space-y-1">
@@ -62,18 +64,18 @@ const HeroSection = () => {
                   <DollarSign className="h-5 w-5 text-primary" />
                   <span className="text-5xl md:text-6xl font-bold text-foreground">45%</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">Economia total</p>
+                <p className="text-sm text-muted-foreground/80">{t('hero.stat3')}</p>
               </div>
             </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button className="group px-8 py-4 bg-gradient-to-r from-primary via-[hsl(340,100%,60%)] to-primary text-white font-semibold text-base rounded-xl hover:shadow-[0_0_40px_hsl(345,100%,55%,0.5)] transition-all duration-300 flex items-center justify-center gap-2">
-                Solicitar Demonstração
+                {t('hero.requestDemo')}
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="px-8 py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300">
-                Ver Catálogo
+                {t('hero.viewCatalog')}
               </button>
             </div>
           </div>

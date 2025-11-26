@@ -3,17 +3,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Send, Mail, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = () => {
+  const { t } = useTranslation();
   return (
     <section id="contato" className="py-12 md:py-20 bg-gradient-to-b from-card to-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
-            Pronto para <span className="gradient-text">Revolucionar</span> Seus Eventos?
+            {t('contact.title')} <span className="gradient-text">{t('contact.titleHighlight')}</span> {t('contact.titleEnd')}
           </h2>
           <p className="text-base md:text-xl text-muted-foreground px-4">
-            Solicite um diagnóstico gratuito e descubra como podemos ajudar
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -22,20 +24,20 @@ const ContactForm = () => {
             <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Nome Completo *
+                  {t('contact.fullName')} {t('contact.required')}
                 </label>
                 <Input 
-                  placeholder="Seu nome" 
+                  placeholder={t('contact.fullName')}
                   className="bg-background border-border"
                   required
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Empresa *
+                  {t('contact.company')} {t('contact.required')}
                 </label>
                 <Input 
-                  placeholder="Nome da empresa" 
+                  placeholder={t('contact.company')}
                   className="bg-background border-border"
                   required
                 />
@@ -45,22 +47,22 @@ const ContactForm = () => {
             <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Email *
+                  {t('contact.email')} {t('contact.required')}
                 </label>
                 <Input 
                   type="email"
-                  placeholder="seu@email.com" 
+                  placeholder={t('contact.email')}
                   className="bg-background border-border"
                   required
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Telefone *
+                  {t('contact.phone')} {t('contact.required')}
                 </label>
                 <Input 
                   type="tel"
-                  placeholder="(11) 99999-9999" 
+                  placeholder={t('contact.phone')}
                   className="bg-background border-border"
                   required
                 />
@@ -69,21 +71,21 @@ const ContactForm = () => {
 
             <div>
               <label className="block text-sm font-semibold mb-2">
-                Descrição do Projeto *
+                {t('contact.projectDescription')} {t('contact.required')}
               </label>
               <Textarea 
-                placeholder="Conte-nos sobre seu projeto, objetivos e necessidades..."
+                placeholder={t('contact.projectPlaceholder')}
                 className="min-h-32 bg-background border-border resize-none"
                 required
               />
               <p className="text-xs text-muted-foreground mt-2">
-                0/1000 caracteres
+                0/1000 {t('contact.characters')}
               </p>
             </div>
 
             <Button type="submit" className="w-full btn-primary text-base md:text-lg py-5 md:py-6">
               <Send className="mr-2 h-4 md:h-5 w-4 md:w-5" />
-              Solicitar Diagnóstico Gratuito
+              {t('contact.submit')}
             </Button>
           </form>
         </Card>

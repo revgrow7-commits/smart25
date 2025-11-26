@@ -8,22 +8,22 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 260 60% 8%;
+    --background: 265 70% 12%;
     --foreground: 0 0% 100%;
 
-    --card: 260 55% 12%;
+    --card: 265 60% 16%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 260 55% 12%;
+    --popover: 265 60% 16%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 345 100% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 60% 15%;
+    --secondary: 265 70% 18%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 260 45% 18%;
+    --muted: 265 50% 20%;
     --muted-foreground: 240 10% 70%;
 
     --accent: 345 100% 55%;
@@ -32,14 +32,14 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 260 40% 20%;
-    --input: 260 45% 15%;
+    --border: 265 40% 22%;
+    --input: 265 50% 18%;
     --ring: 345 100% 55%;
 
     --radius: 0.75rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(345 100% 55%), hsl(330 100% 60%));
-    --gradient-card: linear-gradient(145deg, hsl(260 55% 12%), hsl(270 45% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(265 60% 16%), hsl(270 50% 14%));
     --gradient-neon: linear-gradient(90deg, hsl(345 100% 55%), hsl(330 100% 60%), hsl(315 100% 55%));
     --gradient-border: linear-gradient(135deg, hsl(345 100% 55%), hsl(330 100% 60%), hsl(315 100% 55%));
     

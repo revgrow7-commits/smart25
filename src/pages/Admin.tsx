@@ -1,26 +1,50 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { Package, Upload, Grid3x3, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Package, Upload, Grid3x3, Settings, Loader2, LogOut } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
 import CategoryManager from "@/components/admin/CategoryManager";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
+  const { user, isAdmin, loading, signOut } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">
-            Painel <span className="gradient-text">Administrativo</span>
-          </h1>
-          <p className="text-muted-foreground">
-            Gerencie produtos, categorias e uploads do catálogo
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">
+              Painel <span className="gradient-text">Administrativo</span>
+            </h1>
+            <p className="text-muted-foreground">
+              Gerencie produtos, categorias e uploads do catálogo
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">{user?.email}</span>
+            <Button variant="outline" onClick={signOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

@@ -2,14 +2,14 @@ import { Zap, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-smart-signage.jpg";
 import logo from "@/assets/logo-smartsignage.png";
-
 const HeroSection = () => {
-  return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
+  return <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '700ms' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] animate-pulse" style={{
+        animationDelay: '700ms'
+      }}></div>
       </div>
 
       <div className="container relative z-10 mx-auto px-4 py-12 md:py-16">
@@ -89,39 +89,37 @@ const HeroSection = () => {
               <div className="relative z-10 space-y-6">
                 {/* Logo */}
                 <div className="flex items-center justify-center mb-6">
-                  <img 
-                    src={logo} 
-                    alt="Smart Signage" 
-                    className="w-full max-w-lg"
-                  />
+                  
                 </div>
                 
                 <div className="flex items-center justify-center">
-                  <img 
-                    src={heroImage} 
-                    alt="Smart Signage Visual" 
-                    className="w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" 
-                  />
+                  <img src={heroImage} alt="Smart Signage Visual" className="w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" />
                 </div>
                 
                 {/* Animated lines effect overlay */}
                 <div className="absolute inset-0 opacity-40 pointer-events-none">
                   <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse"></div>
-                  <div className="absolute top-1/3 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse" style={{ animationDelay: '500ms' }}></div>
-                  <div className="absolute top-2/3 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-pulse" style={{ animationDelay: '1000ms' }}></div>
+                  <div className="absolute top-1/3 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse" style={{
+                  animationDelay: '500ms'
+                }}></div>
+                  <div className="absolute top-2/3 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-pulse" style={{
+                  animationDelay: '1000ms'
+                }}></div>
                   
                   {/* Decorative dots */}
                   <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                  <div className="absolute bottom-1/3 left-1/4 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></div>
-                  <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '600ms' }}></div>
+                  <div className="absolute bottom-1/3 left-1/4 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{
+                  animationDelay: '300ms'
+                }}></div>
+                  <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{
+                  animationDelay: '600ms'
+                }}></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;

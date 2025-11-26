@@ -32,12 +32,12 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="text-2xl font-bold">
-              <span className="text-foreground">smart</span>
-              <span className="gradient-text">signage</span>
+          <div className="flex items-center gap-3">
+            <div className="text-2xl font-bold tracking-tight">
+              <span className="text-foreground font-extrabold">smart</span>
+              <span className="text-primary font-extrabold">signage</span>
             </div>
-            <span className="text-xs text-muted-foreground hidden sm:block">by Indústria Visual</span>
+            <span className="text-xs text-muted-foreground hidden sm:block font-medium">by Indústria Visual</span>
           </div>
 
           {/* Desktop Navigation */}

@@ -8,41 +8,43 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 240 45% 15%;
+    --foreground: 0 0% 100%;
 
-    --card: 240 5% 6%;
-    --card-foreground: 0 0% 98%;
+    --card: 240 40% 18%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 240 5% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 240 40% 18%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 330 81% 60%;
+    --primary: 0 100% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 271 91% 65%;
+    --secondary: 189 100% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 5% 10%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 240 35% 25%;
+    --muted-foreground: 240 10% 70%;
 
-    --accent: 330 81% 60%;
+    --accent: 0 100% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5% 15%;
-    --input: 240 5% 15%;
-    --ring: 330 81% 60%;
+    --border: 240 30% 25%;
+    --input: 240 30% 25%;
+    --ring: 0 100% 60%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(330 81% 60%), hsl(271 91% 65%));
-    --gradient-card: linear-gradient(145deg, hsl(240 5% 8%), hsl(240 5% 6%));
+    --gradient-primary: linear-gradient(135deg, hsl(0 100% 60%), hsl(330 100% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(240 40% 20%), hsl(240 45% 15%));
+    --gradient-neon: linear-gradient(90deg, hsl(0 100% 60%), hsl(330 100% 60%), hsl(270 100% 60%), hsl(189 100% 50%));
     
-    --shadow-neon: 0 0 20px hsl(330 81% 60% / 0.3);
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.5);
+    --shadow-neon: 0 0 30px hsl(0 100% 60% / 0.5);
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.6);
+    --shadow-cyan: 0 0 30px hsl(189 100% 50% / 0.4);
   }
 }
 
@@ -53,7 +55,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-family: 'Outfit', 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {

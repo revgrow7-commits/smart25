@@ -1,12 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface ProductImage {
   id: string;
@@ -30,6 +31,7 @@ interface Product {
 }
 
 const ProductCatalog = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -177,8 +179,11 @@ const ProductCatalog = () => {
                     )}
                   </div>
                   
-                  <Button className="w-full btn-primary">
-                    <Plus className="mr-2 h-4 w-4" />
+                  <Button 
+                    className="w-full btn-primary"
+                    onClick={() => navigate(`/produto/${product.id}`)}
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
                     Ver Detalhes
                   </Button>
                 </div>

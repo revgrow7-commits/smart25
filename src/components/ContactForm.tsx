@@ -6,20 +6,20 @@ import { Send, Mail, Phone } from "lucide-react";
 
 const ContactForm = () => {
   return (
-    <section id="contato" className="py-20 bg-gradient-to-b from-card to-background">
+    <section id="contato" className="py-12 md:py-20 bg-gradient-to-b from-card to-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Pronto para <span className="gradient-text">Revolucionar</span> Seus Eventos?
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base md:text-xl text-muted-foreground px-4">
             Solicite um diagnóstico gratuito e descubra como podemos ajudar
           </p>
         </div>
 
-        <Card className="max-w-2xl mx-auto p-8 bg-card border-border">
-          <form className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+        <Card className="max-w-2xl mx-auto p-6 md:p-8 bg-card border-border">
+          <form className="space-y-4 md:space-y-6">
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-semibold mb-2">
                   Nome Completo *
@@ -42,7 +42,7 @@ const ContactForm = () => {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm font-semibold mb-2">
                   Email *
@@ -81,8 +81,8 @@ const ContactForm = () => {
               </p>
             </div>
 
-            <Button type="submit" className="w-full btn-primary text-lg py-6">
-              <Send className="mr-2 h-5 w-5" />
+            <Button type="submit" className="w-full btn-primary text-base md:text-lg py-5 md:py-6">
+              <Send className="mr-2 h-4 md:h-5 w-4 md:w-5" />
               Solicitar Diagnóstico Gratuito
             </Button>
           </form>

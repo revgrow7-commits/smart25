@@ -37,13 +37,13 @@ const ProductCatalog = () => {
   ];
 
   return (
-    <section id="catalogo" className="py-20 bg-background">
+    <section id="catalogo" className="py-12 md:py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Catálogo de <span className="gradient-text">Soluções Modulares</span>
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-base md:text-xl text-muted-foreground mb-6 md:mb-8">
             Sistemas inteligentes para eventos corporativos
           </p>
           

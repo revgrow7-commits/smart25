@@ -19,6 +19,7 @@ const Navbar = () => {
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    localStorage.setItem('language', lng);
   };
   useEffect(() => {
     const handleScroll = () => {

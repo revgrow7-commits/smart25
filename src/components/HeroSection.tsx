@@ -12,10 +12,10 @@ const HeroSection = () => {
       }}></div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 py-12 md:py-16">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="container relative z-10 mx-auto px-4 py-6 md:py-10">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
           {/* Left Column - Content */}
-          <div className="space-y-6 md:space-y-8 max-w-2xl">
+          <div className="space-y-4 md:space-y-5 max-w-2xl">
             {/* Badge */}
             <div className="inline-block">
               <div className="px-6 py-2.5 rounded-full border-2 border-primary/40 bg-primary/10 text-primary font-medium text-sm">

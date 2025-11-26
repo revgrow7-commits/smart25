@@ -36,7 +36,6 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
     gross_weight: '',
     packing_size: '',
     price: '',
-    distributor_price: '',
     status: 'active',
   });
 
@@ -78,7 +77,6 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       gross_weight: data.gross_weight || '',
       packing_size: data.packing_size || '',
       price: data.price?.toString() || '',
-      distributor_price: data.distributor_price?.toString() || '',
       status: data.status || 'active',
     });
   };
@@ -168,7 +166,6 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
         ...formData,
         pcs_per_ctn: formData.pcs_per_ctn ? parseInt(formData.pcs_per_ctn) : null,
         price: formData.price ? parseFloat(formData.price) : null,
-        distributor_price: formData.distributor_price ? parseFloat(formData.distributor_price) : null,
       };
 
       let savedProductId = productId;
@@ -301,6 +298,34 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="pcs_per_ctn">Peças por Caixa</Label>
+          <Input
+            id="pcs_per_ctn"
+            type="number"
+            value={formData.pcs_per_ctn}
+            onChange={(e) => setFormData({ ...formData, pcs_per_ctn: e.target.value })}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="gross_weight">Peso Bruto</Label>
+          <Input
+            id="gross_weight"
+            value={formData.gross_weight}
+            onChange={(e) => setFormData({ ...formData, gross_weight: e.target.value })}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="packing_size">Tamanho Embalagem</Label>
+          <Input
+            id="packing_size"
+            value={formData.packing_size}
+            onChange={(e) => setFormData({ ...formData, packing_size: e.target.value })}
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="price">Preço</Label>
           <Input
             id="price"
@@ -308,17 +333,6 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
             step="0.01"
             value={formData.price}
             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="distributor_price">Preço Distribuidor</Label>
-          <Input
-            id="distributor_price"
-            type="number"
-            step="0.01"
-            value={formData.distributor_price}
-            onChange={(e) => setFormData({ ...formData, distributor_price: e.target.value })}
           />
         </div>
 

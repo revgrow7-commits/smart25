@@ -142,7 +142,6 @@ const ExcelUpload = () => {
             gross_weight: currentGrossWeight || null,
             packing_size: currentPackingSize || null,
             price: row['price'] ? parseFloat(row['price'].toString()) : null,
-            distributor_price: row['distributor price'] ? parseFloat(row['distributor price'].toString()) : null,
             status: 'active',
           };
 

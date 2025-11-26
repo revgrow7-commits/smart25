@@ -84,7 +84,6 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string | null
-          distributor_price: number | null
           frame_size: string | null
           graphic_size: string | null
           gross_weight: string | null
@@ -103,7 +102,6 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
-          distributor_price?: number | null
           frame_size?: string | null
           graphic_size?: string | null
           gross_weight?: string | null
@@ -122,7 +120,6 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string | null
-          distributor_price?: number | null
           frame_size?: string | null
           graphic_size?: string | null
           gross_weight?: string | null

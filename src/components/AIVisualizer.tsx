@@ -37,7 +37,7 @@ const AIVisualizer = () => {
                 </label>
                 <Textarea 
                   placeholder="Ex: Adicione um stand Smart Curved vermelho com logo da marca centralizado, iluminação led azul nas laterais..."
-                  className="min-h-32 bg-background border-border resize-none"
+                  className="min-h-32 bg-background border-border resize-none text-lg"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
                   💡 <strong>Dica Pro:</strong> Quanto mais detalhes, melhor o resultado

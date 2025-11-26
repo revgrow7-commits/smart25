@@ -25,20 +25,20 @@ const ROICalculator = () => {
   const paybackMonths = monthlyEvents > 0 ? Math.ceil(modularInitialCost / (savingsPerEvent * monthlyEvents)) : 0;
 
   return (
-    <section id="calculadora" className="py-20 bg-gradient-to-b from-card to-background">
+    <section id="calculadora" className="py-12 md:py-20 bg-gradient-to-b from-card to-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="text-center mb-10 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Calculadora de <span className="gradient-text">ROI</span>
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base md:text-xl text-muted-foreground px-4">
             Descubra quanto você pode economizar com soluções modulares
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
           {/* Inputs Section */}
-          <Card className="p-8 space-y-8 bg-card border-border">
+          <Card className="p-6 md:p-8 space-y-6 md:space-y-8 bg-card border-border">
             <div className="space-y-4">
               <label className="text-lg font-semibold">
                 Custo atual por evento (stand tradicional)
@@ -94,38 +94,38 @@ const ROICalculator = () => {
 
           {/* Results Section */}
           <div className="space-y-6">
-            <Card className="p-8 bg-gradient-to-br from-primary/20 to-secondary/20 border-primary/30 hover-lift">
+            <Card className="p-6 md:p-8 bg-gradient-to-br from-primary/20 to-secondary/20 border-primary/30 hover-lift">
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Sua Economia em 3 Anos</h3>
-                <div className="text-5xl md:text-6xl font-bold gradient-text mb-2">
+                <h3 className="text-lg md:text-xl font-semibold mb-2">Sua Economia em 3 Anos</h3>
+                <div className="text-4xl sm:text-5xl md:text-6xl font-bold gradient-text mb-2">
                   R$ {savings.toLocaleString('pt-BR')}
                 </div>
-                <p className="text-sm text-muted-foreground">comparado ao modelo tradicional</p>
+                <p className="text-xs md:text-sm text-muted-foreground">comparado ao modelo tradicional</p>
               </div>
             </Card>
 
-            <div className="grid grid-cols-2 gap-6">
-              <Card className="p-6 bg-card border-border hover-lift">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Clock className="h-5 w-5 text-primary" />
+            <div className="grid grid-cols-2 gap-4 md:gap-6">
+              <Card className="p-4 md:p-6 bg-card border-border hover-lift">
+                <div className="flex items-center gap-2 md:gap-3 mb-2">
+                  <div className="p-1.5 md:p-2 rounded-lg bg-primary/10">
+                    <Clock className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                   </div>
-                  <span className="text-sm font-semibold">Payback</span>
+                  <span className="text-xs md:text-sm font-semibold">Payback</span>
                 </div>
-                <div className="text-3xl font-bold gradient-text">{paybackMonths} meses</div>
+                <div className="text-2xl md:text-3xl font-bold gradient-text">{paybackMonths} meses</div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Após o 1º evento, tudo é economia líquida
                 </p>
               </Card>
 
-              <Card className="p-6 bg-card border-border hover-lift">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <DollarSign className="h-5 w-5 text-secondary" />
+              <Card className="p-4 md:p-6 bg-card border-border hover-lift">
+                <div className="flex items-center gap-2 md:gap-3 mb-2">
+                  <div className="p-1.5 md:p-2 rounded-lg bg-secondary/10">
+                    <DollarSign className="h-4 w-4 md:h-5 md:w-5 text-secondary" />
                   </div>
-                  <span className="text-sm font-semibold">Custo por evento</span>
+                  <span className="text-xs md:text-sm font-semibold">Custo por evento</span>
                 </div>
-                <div className="text-3xl font-bold gradient-text">
+                <div className="text-2xl md:text-3xl font-bold gradient-text">
                   R$ {costPerEvent.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">

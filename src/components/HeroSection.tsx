@@ -1,6 +1,7 @@
 import { Zap, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-smart-signage.jpg";
+import logo from "@/assets/logo-smartsignage.png";
 
 const HeroSection = () => {
   return (
@@ -86,10 +87,19 @@ const HeroSection = () => {
               
               {/* Content */}
               <div className="relative z-10 space-y-6">
-                <div className="flex items-center justify-center mb-8">
+                {/* Logo */}
+                <div className="flex items-center justify-center mb-6">
+                  <img 
+                    src={logo} 
+                    alt="Smart Signage" 
+                    className="w-full max-w-lg"
+                  />
+                </div>
+                
+                <div className="flex items-center justify-center">
                   <img 
                     src={heroImage} 
-                    alt="Smart Signage" 
+                    alt="Smart Signage Visual" 
                     className="w-full max-w-md rounded-2xl shadow-[0_0_50px_rgba(255,0,80,0.3)]" 
                   />
                 </div>

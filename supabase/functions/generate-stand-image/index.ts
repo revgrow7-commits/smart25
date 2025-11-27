@@ -16,10 +16,13 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
+      console.error('LOVABLE_API_KEY não encontrada');
       throw new Error('LOVABLE_API_KEY não configurada');
     }
 
-    console.log('Gerando imagem com prompt:', prompt);
+    console.log('=== INÍCIO DA GERAÇÃO ===');
+    console.log('Prompt recebido:', prompt?.substring(0, 100) + '...');
+    console.log('Referência de imagem:', referenceImage ? 'SIM' : 'NÃO');
 
     // Preparar mensagens para o modelo
     const messages: any[] = [
@@ -45,6 +48,8 @@ serve(async (req) => {
       });
     }
 
+    console.log('Chamando Lovable AI Gateway...');
+    
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -57,6 +62,8 @@ serve(async (req) => {
         modalities: ["image", "text"]
       }),
     });
+
+    console.log('Status da resposta:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -86,15 +93,21 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('Resposta recebida da API');
+    console.log('Resposta recebida. Estrutura:', JSON.stringify(Object.keys(data)));
+    console.log('Choices:', data.choices ? data.choices.length : 0);
     
     // Extrair a imagem gerada
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     
+    console.log('ImageUrl encontrada:', imageUrl ? 'SIM (tamanho: ' + imageUrl.length + ')' : 'NÃO');
+    
     if (!imageUrl) {
+      console.error('Estrutura completa da resposta:', JSON.stringify(data, null, 2));
       throw new Error('Nenhuma imagem foi gerada');
     }
 
+    console.log('=== SUCESSO ===');
+    
     return new Response(
       JSON.stringify({ 
         imageUrl: imageUrl,
@@ -105,7 +118,11 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Erro na função:', error);
+    console.error('=== ERRO NA FUNÇÃO ===');
+    console.error('Tipo:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('Mensagem:', error instanceof Error ? error.message : String(error));
+    console.error('Stack:', error instanceof Error ? error.stack : 'N/A');
+    
     return new Response(
       JSON.stringify({ 
         error: error instanceof Error ? error.message : 'Erro desconhecido ao gerar imagem' 

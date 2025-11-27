@@ -59,9 +59,10 @@ interface ProductCatalogProps {
   categorySlug?: string;
   limit?: number;
   productGroup?: string;
+  showFilters?: boolean;
 }
 
-const ProductCatalog = ({ categorySlug, limit, productGroup }: ProductCatalogProps = {}) => {
+const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true }: ProductCatalogProps = {}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -230,7 +231,7 @@ const ProductCatalog = ({ categorySlug, limit, productGroup }: ProductCatalogPro
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar de filtros hierárquicos - only show if no categorySlug prop */}
-          {!categorySlug && (
+          {showFilters && !categorySlug && (
           <aside className="lg:w-64 flex-shrink-0 space-y-4">
             {/* Filtro de Famílias (Categorias) */}
             <div className="bg-card border border-border rounded-lg p-4 sticky top-4">

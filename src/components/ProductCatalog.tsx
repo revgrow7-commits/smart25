@@ -54,7 +54,11 @@ const getCategoryIcon = (slug: string) => {
   }
 };
 
-const ProductCatalog = () => {
+interface ProductCatalogProps {
+  categorySlug?: string;
+}
+
+const ProductCatalog = ({ categorySlug }: ProductCatalogProps = {}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -66,8 +70,10 @@ const ProductCatalog = () => {
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
-  }, []);
+    if (!categorySlug) {
+      fetchCategories();
+    }
+  }, [categorySlug]);
 
   useEffect(() => {
     let filtered = products;
@@ -108,15 +114,29 @@ const ProductCatalog = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("products")
         .select(`
           *,
           categories (name, slug),
           product_images (*)
         `)
-        .eq("status", "active")
-        .order("created_at", { ascending: false });
+        .eq("status", "active");
+
+      // Filter by category if categorySlug prop is provided
+      if (categorySlug) {
+        const { data: categoryData } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('slug', categorySlug)
+          .maybeSingle();
+        
+        if (categoryData) {
+          query = query.eq('category_id', categoryData.id);
+        }
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
 
       if (error) throw error;
 
@@ -166,7 +186,8 @@ const ProductCatalog = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar de categorias */}
+          {/* Sidebar de categorias - only show if no categorySlug prop */}
+          {!categorySlug && (
           <aside className="lg:w-64 flex-shrink-0">
             <div className="bg-card border border-border rounded-lg p-4 sticky top-4">
               <h3 className="font-bold text-lg mb-4">Categorias</h3>
@@ -201,6 +222,7 @@ const ProductCatalog = () => {
               </nav>
             </div>
           </aside>
+          )}
 
           {/* Grid de produtos */}
           <div className="flex-1">

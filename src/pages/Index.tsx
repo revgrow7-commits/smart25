@@ -17,7 +17,7 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <HeroSection />
-      <ProductCatalog />
+      <ProductCatalog categorySlug="stands-modulados" />
       <AIVisualizer />
       <ROICalculator />
       <ComparisonTable />

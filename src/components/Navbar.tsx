@@ -21,6 +21,17 @@ const Navbar = () => {
     i18n.changeLanguage(lng);
     localStorage.setItem('language', lng);
   };
+
+  const getLanguageInfo = (lng: string) => {
+    const languages: Record<string, { flag: string; name: string }> = {
+      pt: { flag: '🇧🇷', name: 'Português' },
+      en: { flag: '🇺🇸', name: 'English' },
+      es: { flag: '🇪🇸', name: 'Español' }
+    };
+    return languages[lng] || languages.pt;
+  };
+
+  const currentLanguage = getLanguageInfo(i18n.language || 'pt');
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -97,18 +108,35 @@ const Navbar = () => {
                 </Link>)}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-                <Languages className="w-4 h-4" />
+              <DropdownMenuTrigger className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent">
+                <span className="text-lg">{currentLanguage.flag}</span>
+                <span className="hidden lg:inline">{currentLanguage.name}</span>
+                <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-card border-border z-50">
-                <DropdownMenuItem onClick={() => changeLanguage('pt')} className="cursor-pointer">
-                  🇧🇷 Português
+              <DropdownMenuContent className="bg-card border-border z-50 min-w-[160px]">
+                <DropdownMenuItem 
+                  onClick={() => changeLanguage('pt')} 
+                  className={`cursor-pointer flex items-center gap-2 ${i18n.language === 'pt' ? 'bg-accent' : ''}`}
+                >
+                  <span className="text-lg">🇧🇷</span>
+                  <span>Português</span>
+                  {i18n.language === 'pt' && <span className="ml-auto text-primary">✓</span>}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage('en')} className="cursor-pointer">
-                  🇺🇸 English
+                <DropdownMenuItem 
+                  onClick={() => changeLanguage('en')} 
+                  className={`cursor-pointer flex items-center gap-2 ${i18n.language === 'en' ? 'bg-accent' : ''}`}
+                >
+                  <span className="text-lg">🇺🇸</span>
+                  <span>English</span>
+                  {i18n.language === 'en' && <span className="ml-auto text-primary">✓</span>}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage('es')} className="cursor-pointer">
-                  🇪🇸 Español
+                <DropdownMenuItem 
+                  onClick={() => changeLanguage('es')} 
+                  className={`cursor-pointer flex items-center gap-2 ${i18n.language === 'es' ? 'bg-accent' : ''}`}
+                >
+                  <span className="text-lg">🇪🇸</span>
+                  <span>Español</span>
+                  {i18n.language === 'es' && <span className="ml-auto text-primary">✓</span>}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -143,14 +171,29 @@ const Navbar = () => {
             
             <div className="border-t border-border pt-4">
               <p className="text-xs text-muted-foreground mb-2 px-2">Idioma / Language</p>
-              <button onClick={() => changeLanguage('pt')} className="block w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors py-2 px-2">
-                🇧🇷 Português
+              <button 
+                onClick={() => changeLanguage('pt')} 
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'pt' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+              >
+                <span className="text-lg">🇧🇷</span>
+                <span>Português</span>
+                {i18n.language === 'pt' && <span className="ml-auto">✓</span>}
               </button>
-              <button onClick={() => changeLanguage('en')} className="block w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors py-2 px-2">
-                🇺🇸 English
+              <button 
+                onClick={() => changeLanguage('en')} 
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'en' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+              >
+                <span className="text-lg">🇺🇸</span>
+                <span>English</span>
+                {i18n.language === 'en' && <span className="ml-auto">✓</span>}
               </button>
-              <button onClick={() => changeLanguage('es')} className="block w-full text-left text-sm text-muted-foreground hover:text-primary transition-colors py-2 px-2">
-                🇪🇸 Español
+              <button 
+                onClick={() => changeLanguage('es')} 
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'es' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+              >
+                <span className="text-lg">🇪🇸</span>
+                <span>Español</span>
+                {i18n.language === 'es' && <span className="ml-auto">✓</span>}
               </button>
             </div>
 

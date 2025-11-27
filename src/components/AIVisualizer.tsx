@@ -14,6 +14,25 @@ const AIVisualizer = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
+  const examplePrompts = [
+    {
+      title: "Stand Natura Feira Tecnologia",
+      prompt: "Crie um estande profissional semelhante ao anexo montado em uma feira de tecnologia indoor. O estande apresenta uma imagem espontânea de uma mulher loira falando, e uma tela secundária menor mostrando o retrato de perfil de um homem em um ambiente escuro. A estrutura do estande é moderna e elegante, com iluminação suave e acabamento linear. O logotipo da Natura está em destaque nos painéis e no balcão de recepção. O fundo mostra uma multidão levemente desfocada caminhando pelo pavilhão da feira, com iluminação ambiente quente criando uma atmosfera profissional. Fotografia tirada com uma DSLR em f/1.8 para obter pouca profundidade de campo, imitando a fotografia urbana de produtos com tons cinematográficos."
+    },
+    {
+      title: "Stand Outdoor Feira",
+      prompt: "Crie um stand promocional ao ar livre com dois banners laterais curvos e um backdrop central grande com cena de estrada ao nascer do sol e um grande pote de café impresso. Duas cadeiras brancas e uma mesa redonda na frente, colocadas sobre um tapete preto. O stand está cercado por pessoas aproveitando uma feira ao ar livre ensolarada com árvores ao fundo. A marca é limpa, ousada e destaca o logotipo e o produto. A luz solar natural realça os tons quentes da cena."
+    },
+    {
+      title: "Stand Corporativo Moderno",
+      prompt: "Um stand de feira corporativo moderno com linhas limpas e design minimalista. Apresenta retroiluminação LED, vitrines de vidro, móveis brancos e marca corporativa profissional. Fotografado em um centro de convenções com iluminação profissional, f2.8, ambiente de conferência de alto nível."
+    },
+    {
+      title: "Stand Tecnológico Futurista",
+      prompt: "Um stand tecnológico futurista com telas LED curvas exibindo conteúdo dinâmico, elementos holográficos, superfícies metálicas elegantes e iluminação de destaque azul neon. Móveis modernos, atmosfera high-tech, fotografado com lente grande angular em uma expo de tecnologia."
+    }
+  ];
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('=== UPLOAD INICIADO ===');
     const file = e.target.files?.[0];
@@ -167,6 +186,29 @@ const AIVisualizer = () => {
                 <label className="block text-sm font-semibold mb-2">
                   Descreva a edição desejada
                 </label>
+                
+                {/* Botões de sugestões de prompts */}
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {examplePrompts.map((example, index) => (
+                    <Button
+                      key={index}
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setPrompt(example.prompt);
+                        toast({
+                          title: "Prompt carregado",
+                          description: example.title,
+                        });
+                      }}
+                      className="text-xs"
+                    >
+                      {example.title}
+                    </Button>
+                  ))}
+                </div>
+
                 <Textarea 
                   placeholder="Ex: Adicione um stand Smart Curved vermelho com logo da marca centralizado, iluminação led azul nas laterais..."
                   className="min-h-32 bg-background border-border resize-none text-lg"

@@ -56,9 +56,10 @@ const getCategoryIcon = (slug: string) => {
 
 interface ProductCatalogProps {
   categorySlug?: string;
+  limit?: number;
 }
 
-const ProductCatalog = ({ categorySlug }: ProductCatalogProps = {}) => {
+const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -136,9 +137,14 @@ const ProductCatalog = ({ categorySlug }: ProductCatalogProps = {}) => {
         }
       }
 
-      const { data, error } = await query.order("created_at", { ascending: false });
+      let { data, error } = await query.order("created_at", { ascending: false });
 
       if (error) throw error;
+
+      // Apply limit if provided
+      if (limit && data) {
+        data = data.slice(0, limit);
+      }
 
       setProducts(data || []);
       setFilteredProducts(data || []);

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, Languages } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo-smartsignage.png";
+import LogoProcessor from "@/components/LogoProcessor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
@@ -75,7 +75,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="https://smart-canvas-labs.lovable.app/" className="flex items-center gap-3">
-            <img alt="Smart Signage" className="h-12" src="/lovable-uploads/18a5c753-87c2-440b-ad3c-5f2b4c51cdad.jpg" />
+            <LogoProcessor />
           </a>
 
           {/* Desktop Navigation */}

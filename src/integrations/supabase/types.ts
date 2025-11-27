@@ -155,6 +155,7 @@ export type Database = {
           packing_size: string | null
           pcs_per_ctn: number | null
           price: number | null
+          product_group: string | null
           specifications: Json | null
           status: string | null
           updated_at: string
@@ -175,6 +176,7 @@ export type Database = {
           packing_size?: string | null
           pcs_per_ctn?: number | null
           price?: number | null
+          product_group?: string | null
           specifications?: Json | null
           status?: string | null
           updated_at?: string
@@ -195,6 +197,7 @@ export type Database = {
           packing_size?: string | null
           pcs_per_ctn?: number | null
           price?: number | null
+          product_group?: string | null
           specifications?: Json | null
           status?: string | null
           updated_at?: string

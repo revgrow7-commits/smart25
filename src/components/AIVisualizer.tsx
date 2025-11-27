@@ -3,8 +3,104 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Upload, Wand2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const AIVisualizer = () => {
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [prompt, setPrompt] = useState("");
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast({
+          title: "Arquivo muito grande",
+          description: "O arquivo deve ter no máximo 10MB",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setUploadedImage(event.target?.result as string);
+        toast({
+          title: "Imagem carregada",
+          description: "Agora descreva as alterações desejadas",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) {
+      toast({
+        title: "Descrição necessária",
+        description: "Por favor, descreva as alterações desejadas",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    console.log('=== INICIANDO GERAÇÃO (Home) ===');
+
+    try {
+      const fullPrompt = `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}. Use fotografia profissional com iluminação adequada, ambiente de feira realista.`;
+
+      console.log('Chamando edge function...');
+
+      const { data, error } = await supabase.functions.invoke("generate-stand-image", {
+        body: {
+          prompt: fullPrompt,
+          referenceImage: uploadedImage,
+        },
+      });
+
+      console.log('Resposta recebida:', { hasData: !!data, hasError: !!error });
+
+      if (error) {
+        console.error('Erro da função:', error);
+        if (error.message?.includes("429")) {
+          throw new Error("Limite de requisições atingido. Tente novamente em alguns instantes.");
+        }
+        if (error.message?.includes("402")) {
+          throw new Error("Créditos insuficientes. Adicione créditos em Settings → Workspace → Usage.");
+        }
+        throw error;
+      }
+
+      if (data?.imageUrl) {
+        console.log('Imagem gerada com sucesso');
+        setGeneratedImage(data.imageUrl);
+        toast({
+          title: "Visualização gerada!",
+          description: data.message || "Sua visualização foi criada com sucesso",
+        });
+      } else {
+        console.error('Dados recebidos:', data);
+        throw new Error("Nenhuma imagem foi gerada");
+      }
+    } catch (error: any) {
+      console.error("=== ERRO NA GERAÇÃO ===");
+      console.error("Erro:", error);
+      toast({
+        title: "Erro ao gerar visualização",
+        description: error.message || "Não foi possível gerar a visualização. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+      console.log('=== FIM DA GERAÇÃO ===');
+    }
+  };
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-card">
       <div className="container mx-auto px-4">
@@ -25,11 +121,27 @@ const AIVisualizer = () => {
           {/* Upload Section */}
           <Card className="p-8 bg-card border-border">
             <div className="space-y-6">
-              <div className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/60 transition-colors cursor-pointer">
-                <Upload className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <p className="font-semibold mb-2">Arraste uma imagem ou clique para fazer upload</p>
-                <p className="text-sm text-muted-foreground">PNG, JPG até 10MB</p>
-              </div>
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/jpg"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="home-image-upload"
+              />
+              <label
+                htmlFor="home-image-upload"
+                className="block border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/60 transition-colors cursor-pointer"
+              >
+                {uploadedImage ? (
+                  <img src={uploadedImage} alt="Preview" className="max-h-48 mx-auto rounded mb-4" />
+                ) : (
+                  <>
+                    <Upload className="h-12 w-12 mx-auto mb-4 text-primary" />
+                    <p className="font-semibold mb-2">Arraste uma imagem ou clique para fazer upload</p>
+                    <p className="text-sm text-muted-foreground">PNG, JPG até 10MB</p>
+                  </>
+                )}
+              </label>
 
               <div>
                 <label className="block text-sm font-semibold mb-2">
@@ -38,27 +150,43 @@ const AIVisualizer = () => {
                 <Textarea 
                   placeholder="Ex: Adicione um stand Smart Curved vermelho com logo da marca centralizado, iluminação led azul nas laterais..."
                   className="min-h-32 bg-background border-border resize-none text-lg"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground mt-2">
                   💡 <strong>Dica Pro:</strong> Quanto mais detalhes, melhor o resultado
                 </p>
               </div>
 
-              <Button className="w-full btn-primary text-lg py-6">
+              <Button 
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                className="w-full btn-primary text-lg py-6"
+              >
                 <Wand2 className="mr-2 h-5 w-5" />
-                Gerar Visualização com IA
+                {isGenerating ? "Gerando..." : "Gerar Visualização com IA"}
               </Button>
             </div>
           </Card>
 
           {/* Preview Section */}
           <Card className="p-8 bg-card border-border flex items-center justify-center min-h-[400px]">
-            <div className="text-center space-y-4">
-              <div className="inline-flex p-4 rounded-full bg-muted/50">
-                <Wand2 className="h-12 w-12 text-muted-foreground" />
+            {generatedImage ? (
+              <img 
+                src={generatedImage} 
+                alt="Generated visualization" 
+                className="w-full h-full object-contain rounded-lg" 
+              />
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="inline-flex p-4 rounded-full bg-muted/50">
+                  <Wand2 className="h-12 w-12 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground">
+                  {isGenerating ? "Gerando visualização..." : "Sua visualização aparecerá aqui"}
+                </p>
               </div>
-              <p className="text-muted-foreground">Sua visualização aparecerá aqui</p>
-            </div>
+            )}
           </Card>
         </div>
       </div>

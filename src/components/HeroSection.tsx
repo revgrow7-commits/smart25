@@ -97,9 +97,9 @@ const HeroSection = () => {
                 {t('hero.requestDemo')}
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="px-8 py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300">
+              <a href="#catalogo" className="px-8 py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 inline-flex items-center justify-center">
                 {t('hero.viewCatalog')}
-              </button>
+              </a>
             </div>
           </div>
 

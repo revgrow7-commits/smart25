@@ -15,9 +15,15 @@ const AIVisualizer = () => {
   const { toast } = useToast();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('=== UPLOAD INICIADO ===');
     const file = e.target.files?.[0];
+    console.log('Arquivo selecionado:', file ? file.name : 'nenhum');
+    
     if (file) {
+      console.log('Tamanho do arquivo:', file.size);
+      
       if (file.size > 10 * 1024 * 1024) {
+        console.error('Arquivo muito grande:', file.size);
         toast({
           title: "Arquivo muito grande",
           description: "O arquivo deve ter no máximo 10MB",
@@ -28,13 +34,26 @@ const AIVisualizer = () => {
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        setUploadedImage(event.target?.result as string);
+        console.log('Arquivo lido com sucesso');
+        const result = event.target?.result as string;
+        console.log('Tamanho do base64:', result?.length);
+        setUploadedImage(result);
         toast({
           title: "Imagem carregada",
           description: "Agora descreva as alterações desejadas",
         });
       };
+      reader.onerror = (error) => {
+        console.error('Erro ao ler arquivo:', error);
+        toast({
+          title: "Erro ao carregar imagem",
+          description: "Não foi possível ler o arquivo",
+          variant: "destructive",
+        });
+      };
       reader.readAsDataURL(file);
+    } else {
+      console.log('Nenhum arquivo foi selecionado');
     }
   };
 
@@ -131,6 +150,7 @@ const AIVisualizer = () => {
               <label
                 htmlFor="home-image-upload"
                 className="block border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/60 transition-colors cursor-pointer"
+                onClick={() => console.log('Label clicado')}
               >
                 {uploadedImage ? (
                   <img src={uploadedImage} alt="Preview" className="max-h-48 mx-auto rounded mb-4" />

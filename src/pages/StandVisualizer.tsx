@@ -234,12 +234,16 @@ const StandVisualizer = () => {
     }
 
     setIsGenerating(true);
+    console.log('=== INICIANDO GERAÇÃO ===');
 
     try {
       const selectedProductData = products.find(p => p.id === selectedProduct);
       const fullPrompt = selectedProductData 
         ? `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}\n\nO stand deve ser baseado no modelo: ${selectedProductData.name} (${selectedProductData.item_code}). Use fotografia profissional com iluminação adequada, ambiente de feira realista.`
         : `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}. Use fotografia profissional com iluminação adequada, ambiente de feira realista.`;
+
+      console.log('Prompt completo:', fullPrompt.substring(0, 100) + '...');
+      console.log('Imagem de referência:', uploadedImage ? 'Presente' : 'Ausente');
 
       const { data, error } = await supabase.functions.invoke("generate-stand-image", {
         body: {
@@ -248,7 +252,10 @@ const StandVisualizer = () => {
         },
       });
 
+      console.log('Resposta recebida:', { hasData: !!data, hasError: !!error });
+
       if (error) {
+        console.error('Erro da função:', error);
         if (error.message?.includes("429")) {
           throw new Error("Limite de requisições atingido. Por favor, tente novamente em alguns instantes.");
         }
@@ -258,16 +265,21 @@ const StandVisualizer = () => {
         throw error;
       }
 
+      console.log('Dados recebidos:', data);
+
       if (data?.imageUrl) {
+        console.log('ImageUrl encontrada, tamanho:', data.imageUrl.length);
         setGeneratedImage(data.imageUrl);
         toast({
           title: "Visualização gerada!",
           description: data.message || "Sua visualização foi criada com sucesso",
         });
       } else {
+        console.error('Dados completos:', JSON.stringify(data));
         throw new Error("Nenhuma imagem foi gerada");
       }
     } catch (error: any) {
+      console.error("=== ERRO NA GERAÇÃO ===");
       console.error("Error generating visualization:", error);
       toast({
         title: "Erro ao gerar visualização",
@@ -276,6 +288,7 @@ const StandVisualizer = () => {
       });
     } finally {
       setIsGenerating(false);
+      console.log('=== FIM DA GERAÇÃO ===');
     }
   };
 

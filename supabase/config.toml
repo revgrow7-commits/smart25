@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-stand-visualization]
 verify_jwt = false
+
+[functions.generate-stand-image]
+verify_jwt = false

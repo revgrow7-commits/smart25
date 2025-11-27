@@ -238,13 +238,13 @@ const StandVisualizer = () => {
     try {
       const selectedProductData = products.find(p => p.id === selectedProduct);
       const fullPrompt = selectedProductData 
-        ? `${prompt}\n\nModelo base: ${selectedProductData.name} (${selectedProductData.item_code})`
-        : prompt;
+        ? `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}\n\nO stand deve ser baseado no modelo: ${selectedProductData.name} (${selectedProductData.item_code}). Use fotografia profissional com iluminação adequada, ambiente de feira realista.`
+        : `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}. Use fotografia profissional com iluminação adequada, ambiente de feira realista.`;
 
-      const { data, error } = await supabase.functions.invoke("generate-stand-visualization", {
+      const { data, error } = await supabase.functions.invoke("generate-stand-image", {
         body: {
           prompt: fullPrompt,
-          baseImage: uploadedImage,
+          referenceImage: uploadedImage,
         },
       });
 
@@ -258,12 +258,14 @@ const StandVisualizer = () => {
         throw error;
       }
 
-      if (data?.image) {
-        setGeneratedImage(data.image);
+      if (data?.imageUrl) {
+        setGeneratedImage(data.imageUrl);
         toast({
           title: "Visualização gerada!",
-          description: "Sua visualização foi criada com sucesso",
+          description: data.message || "Sua visualização foi criada com sucesso",
         });
+      } else {
+        throw new Error("Nenhuma imagem foi gerada");
       }
     } catch (error: any) {
       console.error("Error generating visualization:", error);

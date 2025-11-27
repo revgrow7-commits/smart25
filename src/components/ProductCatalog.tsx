@@ -25,6 +25,7 @@ interface Product {
   frame_size: string | null;
   graphic_size: string | null;
   is_featured: boolean | null;
+  product_group: string | null;
   categories: {
     name: string;
     slug: string;
@@ -63,9 +64,11 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -79,10 +82,17 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
   useEffect(() => {
     let filtered = products;
 
-    // Filter by category
+    // Filter by category (família)
     if (selectedCategory) {
       filtered = filtered.filter(
         (product) => product.categories?.slug === selectedCategory
+      );
+    }
+
+    // Filter by group (grupo)
+    if (selectedGroup) {
+      filtered = filtered.filter(
+        (product) => product.product_group === selectedGroup
       );
     }
 
@@ -96,7 +106,28 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
     }
 
     setFilteredProducts(filtered);
-  }, [searchTerm, products, selectedCategory]);
+    
+    // Update available groups based on selected category
+    if (selectedCategory) {
+      const availableGroups = Array.from(
+        new Set(
+          filtered
+            .filter(p => p.product_group)
+            .map(p => p.product_group as string)
+        )
+      ).sort();
+      setGroups(availableGroups);
+    } else {
+      const allGroups = Array.from(
+        new Set(
+          products
+            .filter(p => p.product_group)
+            .map(p => p.product_group as string)
+        )
+      ).sort();
+      setGroups(allGroups);
+    }
+  }, [searchTerm, products, selectedCategory, selectedGroup]);
 
   const fetchCategories = async () => {
     try {
@@ -192,14 +223,18 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar de categorias - only show if no categorySlug prop */}
+          {/* Sidebar de filtros hierárquicos - only show if no categorySlug prop */}
           {!categorySlug && (
-          <aside className="lg:w-64 flex-shrink-0">
+          <aside className="lg:w-64 flex-shrink-0 space-y-4">
+            {/* Filtro de Famílias (Categorias) */}
             <div className="bg-card border border-border rounded-lg p-4 sticky top-4">
-              <h3 className="font-bold text-lg mb-4">Categorias</h3>
+              <h3 className="font-bold text-lg mb-4">Famílias</h3>
               <nav className="space-y-2">
                 <button
-                  onClick={() => setSelectedCategory(null)}
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSelectedGroup(null);
+                  }}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left",
                     !selectedCategory
@@ -208,12 +243,15 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
                   )}
                 >
                   <Grid className="w-5 h-5" />
-                  <span>Todos os Produtos</span>
+                  <span>Todas as Famílias</span>
                 </button>
                 {categories.map((category) => (
                   <button
                     key={category.id}
-                    onClick={() => setSelectedCategory(category.slug)}
+                    onClick={() => {
+                      setSelectedCategory(category.slug);
+                      setSelectedGroup(null);
+                    }}
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left",
                       selectedCategory === category.slug
@@ -227,6 +265,42 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
                 ))}
               </nav>
             </div>
+
+            {/* Filtro de Grupos - só mostra se houver grupos disponíveis */}
+            {groups.length > 0 && (
+              <div className="bg-card border border-border rounded-lg p-4">
+                <h3 className="font-bold text-lg mb-4">Grupos</h3>
+                <nav className="space-y-2">
+                  <button
+                    onClick={() => setSelectedGroup(null)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left",
+                      !selectedGroup
+                        ? "bg-secondary text-secondary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    <Layers className="w-4 h-4" />
+                    <span>Todos os Grupos</span>
+                  </button>
+                  {groups.map((group) => (
+                    <button
+                      key={group}
+                      onClick={() => setSelectedGroup(group)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left text-sm",
+                        selectedGroup === group
+                          ? "bg-secondary text-secondary-foreground"
+                          : "hover:bg-muted text-foreground"
+                      )}
+                    >
+                      <Box className="w-4 h-4" />
+                      <span>{group}</span>
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            )}
           </aside>
           )}
 
@@ -265,6 +339,11 @@ const ProductCatalog = ({ categorySlug, limit }: ProductCatalogProps = {}) => {
                         {product.categories && (
                           <Badge className="bg-secondary/90 hover:bg-secondary">
                             {product.categories.name}
+                          </Badge>
+                        )}
+                        {product.product_group && (
+                          <Badge variant="outline" className="bg-background/90">
+                            {product.product_group}
                           </Badge>
                         )}
                       </div>

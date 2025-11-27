@@ -85,22 +85,31 @@ const Navbar = () => {
                 {t('nav.catalog')}
                 <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-card border-border z-50">
+              <DropdownMenuContent className="bg-card border-border z-50 w-72">
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                  {t('nav.allProducts')}
+                </div>
                 <DropdownMenuItem asChild>
-                  <a href="#catalogo" className="cursor-pointer">
-                    {t('nav.allProducts')}
+                  <a href="#catalogo" className="cursor-pointer font-medium">
+                    📦 Ver Todos os Produtos
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/visualizador-stand" className="cursor-pointer">
-                    {t('nav.visualizer')}
+                  <Link to="/visualizador-stand" className="cursor-pointer font-medium">
+                    🎨 {t('nav.visualizer')}
                   </Link>
                 </DropdownMenuItem>
-                {categories.map(category => <DropdownMenuItem key={category.id} asChild>
-                    <a href={`#catalogo`} className="cursor-pointer">
-                      {category.name}
+                
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2 border-t border-border">
+                  Famílias de Produtos
+                </div>
+                {categories.map(category => (
+                  <DropdownMenuItem key={category.id} asChild>
+                    <a href="#catalogo" className="cursor-pointer pl-6">
+                      → {category.name}
                     </a>
-                  </DropdownMenuItem>)}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 

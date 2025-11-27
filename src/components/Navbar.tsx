@@ -55,6 +55,9 @@ const Navbar = () => {
     }
   };
   const navLinks = [{
+    href: "/visualizador-stand",
+    label: t('nav.standSimulator')
+  }, {
     href: "#calculadora",
     label: t('nav.roi')
   }, {
@@ -163,7 +166,12 @@ const Navbar = () => {
             {categories.map(category => <a key={category.id} href="#catalogo" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-2 pl-4" onClick={() => setIsMobileMenuOpen(false)}>
                 → {category.name}
               </a>)}
-            {navLinks.map(link => link.href.startsWith('#') ? <a key={link.href} href={link.href} className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+            
+            <Link to="/visualizador-stand" className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+              {t('nav.standSimulator')}
+            </Link>
+            
+            {navLinks.filter(link => link.href !== '/visualizador-stand').map(link => link.href.startsWith('#') ? <a key={link.href} href={link.href} className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
                   {link.label}
                 </a> : <Link key={link.href} to={link.href} className="block text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
                   {link.label}

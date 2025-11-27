@@ -4,8 +4,8 @@ import pt from './locales/pt.json';
 import en from './locales/en.json';
 import es from './locales/es.json';
 
-// Função para detectar idioma baseado no IP
-const detectLanguageByIP = async (): Promise<string> => {
+// Função para detectar idioma baseado no IP de forma assíncrona
+const detectAndSetLanguageByIP = async () => {
   try {
     const response = await fetch('https://ipapi.co/json/');
     const data = await response.json();
@@ -30,29 +30,20 @@ const detectLanguageByIP = async (): Promise<string> => {
       'pe': 'es',
     };
     
-    return countryToLanguage[countryCode] || 'pt';
+    const detectedLanguage = countryToLanguage[countryCode] || 'pt';
+    
+    // Só aplica se não houver preferência salva
+    if (!localStorage.getItem('language')) {
+      localStorage.setItem('language', detectedLanguage);
+      i18n.changeLanguage(detectedLanguage);
+    }
   } catch (error) {
     console.warn('Falha ao detectar localização por IP:', error);
-    return 'pt';
   }
 };
 
-// Inicializar idioma
-const initializeLanguage = async () => {
-  const savedLanguage = localStorage.getItem('language');
-  
-  let initialLanguage = 'pt';
-  
-  if (savedLanguage) {
-    initialLanguage = savedLanguage;
-  } else {
-    // Detectar idioma por IP apenas se não houver preferência salva
-    initialLanguage = await detectLanguageByIP();
-    localStorage.setItem('language', initialLanguage);
-  }
-  
-  i18n.changeLanguage(initialLanguage);
-};
+// Obter idioma inicial de forma síncrona
+const savedLanguage = localStorage.getItem('language') || 'pt';
 
 i18n
   .use(initReactI18next)
@@ -62,7 +53,7 @@ i18n
       en: { translation: en },
       es: { translation: es }
     },
-    lng: 'pt', // Idioma inicial temporário
+    lng: savedLanguage,
     fallbackLng: 'pt',
     interpolation: {
       escapeValue: false
@@ -72,7 +63,7 @@ i18n
     }
   });
 
-// Inicializar o idioma após a configuração
-initializeLanguage();
+// Detectar idioma por IP em segundo plano (não bloqueia a inicialização)
+detectAndSetLanguageByIP();
 
 export default i18n;

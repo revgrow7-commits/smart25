@@ -74,9 +74,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
+          <a href="https://smart-canvas-labs.lovable.app/" className="flex items-center gap-3">
             <img alt="Smart Signage" className="h-12" src="/lovable-uploads/18a5c753-87c2-440b-ad3c-5f2b4c51cdad.jpg" />
-          </Link>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">

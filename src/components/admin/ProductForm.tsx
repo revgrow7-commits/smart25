@@ -372,16 +372,16 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="model_3d_url">URL do Modelo 3D</Label>
+          <Label htmlFor="model_3d_url">URL do Modelo 3D (.glb ou .gltf)</Label>
           <Input
             id="model_3d_url"
             type="url"
-            placeholder="https://sketchfab.com/models/..."
+            placeholder="https://example.com/model.glb"
             value={formData.model_3d_url}
             onChange={(e) => setFormData({ ...formData, model_3d_url: e.target.value })}
           />
           <p className="text-xs text-muted-foreground">
-            Cole a URL do modelo 3D (ex: Sketchfab embed)
+            Cole a URL direta do arquivo de modelo 3D (.glb ou .gltf) para visualização interativa
           </p>
         </div>
       </div>

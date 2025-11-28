@@ -56,7 +56,7 @@ const Navbar = () => {
   };
   const navLinks = [{
     href: "/",
-    label: t('nav.home') || 'Início',
+    label: "Home",
     icon: Home
   }, {
     href: "/visualizador-stand",
@@ -87,6 +87,11 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
+            <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Home
+            </Link>
+
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                 <Grid3x3 className="w-4 h-4" />
@@ -109,7 +114,7 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {navLinks.map(link => {
+            {navLinks.slice(1).map(link => {
               const Icon = link.icon;
               return link.href.startsWith('#') ? (
                 <a key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
@@ -171,6 +176,11 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border">
+            <Link to="/" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+              <Home className="w-4 h-4" />
+              Home
+            </Link>
+
             <Link to="/catalogo" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Grid3x3 className="w-4 h-4" />
               Ver Todos os Produtos
@@ -180,7 +190,7 @@ const Navbar = () => {
               Visualizador com IA
             </Link>
             
-            {navLinks.map(link => {
+            {navLinks.slice(1).map(link => {
               const Icon = link.icon;
               return link.href.startsWith('#') ? (
                 <a key={link.href} href={link.href} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>

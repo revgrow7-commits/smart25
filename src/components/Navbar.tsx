@@ -177,8 +177,16 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
         {/* Mobile Menu */}
-        {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border bg-background">
+        {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border bg-background relative z-50">
             <Link to="/" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Home className="w-4 h-4" />
               Home

@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Upload, X, Star } from "lucide-react";
+import { Upload, X, Star, Trash2 } from "lucide-react";
 
 interface ProductFormProps {
   productId?: string | null;
@@ -23,6 +23,7 @@ interface ProductImage {
 const ProductForm = ({ productId, onClose }: ProductFormProps) => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploading3D, setUploading3D] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [images, setImages] = useState<ProductImage[]>([]);
   const [formData, setFormData] = useState({
@@ -159,6 +160,73 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       ...img,
       is_primary: i === index
     })));
+  };
+
+  const handle3DModelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    const file = e.target.files[0];
+    
+    // Validar extensão do arquivo
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    if (fileExt !== 'glb' && fileExt !== 'gltf') {
+      toast.error("Por favor, selecione um arquivo .glb ou .gltf");
+      return;
+    }
+
+    // Validar tamanho (máximo 20MB)
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("O arquivo deve ter no máximo 20MB");
+      return;
+    }
+
+    setUploading3D(true);
+
+    try {
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('3d-models')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('3d-models')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, model_3d_url: publicUrl });
+      toast.success("Modelo 3D carregado com sucesso");
+    } catch (error) {
+      console.error('Erro ao fazer upload do modelo 3D:', error);
+      toast.error("Erro ao fazer upload do modelo 3D");
+    } finally {
+      setUploading3D(false);
+    }
+  };
+
+  const remove3DModel = async () => {
+    if (!formData.model_3d_url) return;
+
+    try {
+      // Extrair o nome do arquivo da URL
+      const urlParts = formData.model_3d_url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+
+      // Deletar do storage
+      const { error } = await supabase.storage
+        .from('3d-models')
+        .remove([fileName]);
+
+      if (error) throw error;
+
+      setFormData({ ...formData, model_3d_url: '' });
+      toast.success("Modelo 3D removido com sucesso");
+    } catch (error) {
+      console.error('Erro ao remover modelo 3D:', error);
+      toast.error("Erro ao remover modelo 3D");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -372,17 +440,64 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="model_3d_url">URL do Modelo 3D (.glb ou .gltf)</Label>
-          <Input
-            id="model_3d_url"
-            type="url"
-            placeholder="https://example.com/model.glb"
-            value={formData.model_3d_url}
-            onChange={(e) => setFormData({ ...formData, model_3d_url: e.target.value })}
-          />
-          <p className="text-xs text-muted-foreground">
-            Cole a URL direta do arquivo de modelo 3D (.glb ou .gltf) para visualização interativa
-          </p>
+          <Label>Modelo 3D (.glb ou .gltf)</Label>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('3d-model-upload')?.click()}
+                disabled={uploading3D || !!formData.model_3d_url}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {uploading3D ? 'Fazendo upload...' : 'Upload Modelo 3D'}
+              </Button>
+              <input
+                id="3d-model-upload"
+                type="file"
+                accept=".glb,.gltf"
+                className="hidden"
+                onChange={handle3DModelUpload}
+                disabled={uploading3D || !!formData.model_3d_url}
+              />
+              <span className="text-sm text-muted-foreground">
+                Máximo 20MB | Formatos: .glb, .gltf
+              </span>
+            </div>
+
+            {formData.model_3d_url && (
+              <div className="border border-border rounded-lg p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">Modelo 3D carregado</p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    onClick={remove3DModel}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Remover
+                  </Button>
+                </div>
+                
+                <div className="aspect-video rounded-lg overflow-hidden bg-muted border border-border">
+                  <model-viewer
+                    src={formData.model_3d_url}
+                    alt="Preview do modelo 3D"
+                    camera-controls
+                    auto-rotate
+                    shadow-intensity="1"
+                    style={{ width: '100%', height: '100%' }}
+                  >
+                  </model-viewer>
+                </div>
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+              Faça upload de um arquivo .glb ou .gltf para visualização 3D interativa no catálogo
+            </p>
+          </div>
         </div>
       </div>
 
@@ -458,7 +573,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       </div>
 
       <div className="flex gap-4 pt-4">
-        <Button type="submit" disabled={loading || uploading} className="flex-1">
+        <Button type="submit" disabled={loading || uploading || uploading3D} className="flex-1">
           {loading ? "Salvando..." : "Salvar Produto"}
         </Button>
         {productId && (

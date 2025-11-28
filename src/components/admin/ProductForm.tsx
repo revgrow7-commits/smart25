@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload, X, Star, Trash2, RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import placeholderImage from "@/assets/3d-model-placeholder.png";
 
 interface ProductFormProps {
   productId?: string | null;
@@ -24,6 +26,8 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploading3D, setUploading3D] = useState(false);
+  const [modelLoading, setModelLoading] = useState(false);
+  const [modelProgress, setModelProgress] = useState(0);
   const [categories, setCategories] = useState<any[]>([]);
   const [images, setImages] = useState<ProductImage[]>([]);
   const [formData, setFormData] = useState({
@@ -481,17 +485,43 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
                 </div>
                 
                 <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                  {modelLoading && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                      <div className="w-64 space-y-4">
+                        <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
+                        <Progress value={modelProgress} className="w-full" />
+                        <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <model-viewer
                     id="admin-model-viewer"
                     src={formData.model_3d_url}
+                    poster={placeholderImage}
+                    loading="eager"
+                    reveal="interaction"
                     alt="Preview do modelo 3D"
-                    camera-controls
-                    auto-rotate
+                    camera-controls="true"
+                    auto-rotate="true"
                     shadow-intensity="1"
                     exposure="1.2"
                     min-field-of-view="10deg"
                     max-field-of-view="45deg"
                     style={{ width: '100%', height: '100%' }}
+                    {...{
+                      onLoad: () => {
+                        setModelLoading(false);
+                        setModelProgress(100);
+                      },
+                      onProgress: (event: any) => {
+                        const progress = Math.round((event.detail.totalProgress || 0) * 100);
+                        setModelProgress(progress);
+                        if (progress < 100) {
+                          setModelLoading(true);
+                        }
+                      }
+                    } as any}
                   >
                   </model-viewer>
                   

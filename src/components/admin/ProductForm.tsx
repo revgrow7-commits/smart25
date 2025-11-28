@@ -26,7 +26,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploading3D, setUploading3D] = useState(false);
-  const [modelLoading, setModelLoading] = useState(false);
+  const [modelLoading, setModelLoading] = useState(true);
   const [modelProgress, setModelProgress] = useState(0);
   const [categories, setCategories] = useState<any[]>([]);
   const [images, setImages] = useState<ProductImage[]>([]);
@@ -53,6 +53,31 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       fetchProductImages();
     }
   }, [productId]);
+
+  useEffect(() => {
+    const modelViewer = document.getElementById('admin-model-viewer') as any;
+    
+    if (modelViewer && formData.model_3d_url) {
+      const handleProgress = (event: any) => {
+        const progress = Math.round((event.detail.totalProgress || 0) * 100);
+        setModelProgress(progress);
+        setModelLoading(progress < 100);
+      };
+
+      const handleLoad = () => {
+        setModelLoading(false);
+        setModelProgress(100);
+      };
+
+      modelViewer.addEventListener('progress', handleProgress);
+      modelViewer.addEventListener('load', handleLoad);
+
+      return () => {
+        modelViewer.removeEventListener('progress', handleProgress);
+        modelViewer.removeEventListener('load', handleLoad);
+      };
+    }
+  }, [formData.model_3d_url]);
 
   const fetchCategories = async () => {
     const { data } = await supabase.from('categories').select('*').order('name');
@@ -498,29 +523,18 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
                   <model-viewer
                     id="admin-model-viewer"
                     src={formData.model_3d_url}
-                    poster={placeholderImage}
-                    loading="eager"
-                    reveal="interaction"
                     alt="Preview do modelo 3D"
-                    camera-controls="true"
-                    auto-rotate="true"
-                    shadow-intensity="1"
-                    exposure="1.2"
-                    min-field-of-view="10deg"
-                    max-field-of-view="45deg"
                     style={{ width: '100%', height: '100%' }}
                     {...{
-                      onLoad: () => {
-                        setModelLoading(false);
-                        setModelProgress(100);
-                      },
-                      onProgress: (event: any) => {
-                        const progress = Math.round((event.detail.totalProgress || 0) * 100);
-                        setModelProgress(progress);
-                        if (progress < 100) {
-                          setModelLoading(true);
-                        }
-                      }
+                      poster: placeholderImage,
+                      loading: "eager",
+                      reveal: "auto",
+                      "camera-controls": true,
+                      "auto-rotate": true,
+                      "shadow-intensity": "1",
+                      exposure: "1.2",
+                      "min-field-of-view": "10deg",
+                      "max-field-of-view": "45deg",
                     } as any}
                   >
                   </model-viewer>

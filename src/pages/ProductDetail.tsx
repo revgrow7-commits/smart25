@@ -47,7 +47,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [modelLoading, setModelLoading] = useState(false);
+  const [modelLoading, setModelLoading] = useState(true);
   const [modelProgress, setModelProgress] = useState(0);
 
   useEffect(() => {
@@ -55,6 +55,31 @@ const ProductDetail = () => {
       fetchProduct();
     }
   }, [id]);
+
+  useEffect(() => {
+    const modelViewer = document.getElementById('product-model-viewer') as any;
+    
+    if (modelViewer) {
+      const handleProgress = (event: any) => {
+        const progress = Math.round((event.detail.totalProgress || 0) * 100);
+        setModelProgress(progress);
+        setModelLoading(progress < 100);
+      };
+
+      const handleLoad = () => {
+        setModelLoading(false);
+        setModelProgress(100);
+      };
+
+      modelViewer.addEventListener('progress', handleProgress);
+      modelViewer.addEventListener('load', handleLoad);
+
+      return () => {
+        modelViewer.removeEventListener('progress', handleProgress);
+        modelViewer.removeEventListener('load', handleLoad);
+      };
+    }
+  }, [product?.model_3d_url]);
 
   const fetchProduct = async () => {
     try {
@@ -366,30 +391,19 @@ const ProductDetail = () => {
                     <model-viewer
                       id="product-model-viewer"
                       src={product.model_3d_url}
-                      poster={placeholderImage}
-                      loading="eager"
-                      reveal="interaction"
                       alt={`Modelo 3D de ${product.name}`}
-                      ar="true"
-                      camera-controls="true"
-                      auto-rotate="true"
-                      shadow-intensity="1"
-                      exposure="1.2"
-                      min-field-of-view="10deg"
-                      max-field-of-view="45deg"
                       style={{ width: '100%', height: '100%' }}
                       {...{
-                        onLoad: () => {
-                          setModelLoading(false);
-                          setModelProgress(100);
-                        },
-                        onProgress: (event: any) => {
-                          const progress = Math.round((event.detail.totalProgress || 0) * 100);
-                          setModelProgress(progress);
-                          if (progress < 100) {
-                            setModelLoading(true);
-                          }
-                        }
+                        poster: placeholderImage,
+                        loading: "eager",
+                        reveal: "auto",
+                        ar: true,
+                        "camera-controls": true,
+                        "auto-rotate": true,
+                        "shadow-intensity": "1",
+                        exposure: "1.2",
+                        "min-field-of-view": "10deg",
+                        "max-field-of-view": "45deg",
                       } as any}
                     >
                     </model-viewer>

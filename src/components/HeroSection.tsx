@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -97,9 +98,9 @@ const HeroSection = () => {
                 {t('hero.requestDemo')}
                 <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <a href="#catalogo" className="px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-sm md:text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 inline-flex items-center justify-center">
+              <Link to="/catalogo" className="px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-sm md:text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 inline-flex items-center justify-center">
                 {t('hero.viewCatalog')}
-              </a>
+              </Link>
             </div>
           </div>
 

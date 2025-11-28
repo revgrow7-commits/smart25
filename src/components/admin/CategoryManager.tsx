@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Edit, Trash2, Plus, Monitor, Tv, Projector, Smartphone, Tablet, Speaker, Camera, Router, Headphones, HardDrive, Box, Package, Grid3x3, Shapes, LayoutGrid } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -13,7 +14,26 @@ interface Category {
   name: string;
   slug: string;
   description: string | null;
+  icon: string | null;
 }
+
+const iconOptions = [
+  { value: 'Monitor', label: 'Monitor', Icon: Monitor },
+  { value: 'Tv', label: 'TV', Icon: Tv },
+  { value: 'Projector', label: 'Projetor', Icon: Projector },
+  { value: 'Smartphone', label: 'Smartphone', Icon: Smartphone },
+  { value: 'Tablet', label: 'Tablet', Icon: Tablet },
+  { value: 'Speaker', label: 'Alto-falante', Icon: Speaker },
+  { value: 'Camera', label: 'Câmera', Icon: Camera },
+  { value: 'Router', label: 'Roteador', Icon: Router },
+  { value: 'Headphones', label: 'Fones', Icon: Headphones },
+  { value: 'HardDrive', label: 'Disco', Icon: HardDrive },
+  { value: 'Box', label: 'Caixa', Icon: Box },
+  { value: 'Package', label: 'Pacote', Icon: Package },
+  { value: 'Grid3x3', label: 'Grade', Icon: Grid3x3 },
+  { value: 'Shapes', label: 'Formas', Icon: Shapes },
+  { value: 'LayoutGrid', label: 'Layout', Icon: LayoutGrid },
+];
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -23,6 +43,7 @@ const CategoryManager = () => {
     name: '',
     slug: '',
     description: '',
+    icon: '',
   });
 
   const fetchCategories = async () => {
@@ -78,7 +99,7 @@ const CategoryManager = () => {
         toast.success("Categoria criada");
       }
 
-      setFormData({ name: '', slug: '', description: '' });
+      setFormData({ name: '', slug: '', description: '', icon: '' });
       setEditing(null);
       fetchCategories();
     } catch (error: any) {
@@ -97,6 +118,7 @@ const CategoryManager = () => {
       name: category.name,
       slug: category.slug,
       description: category.description || '',
+      icon: category.icon || '',
     });
   };
 
@@ -160,6 +182,31 @@ const CategoryManager = () => {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="icon">Ícone</Label>
+            <Select
+              value={formData.icon}
+              onValueChange={(value) => setFormData({ ...formData, icon: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione um ícone" />
+              </SelectTrigger>
+              <SelectContent>
+                {iconOptions.map((option) => {
+                  const Icon = option.Icon;
+                  return (
+                    <SelectItem key={option.value} value={option.value}>
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {option.label}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="flex gap-4">
             <Button type="submit" className="flex-1">
               <Plus className="mr-2 h-4 w-4" />
@@ -171,7 +218,7 @@ const CategoryManager = () => {
                 variant="outline"
                 onClick={() => {
                   setEditing(null);
-                  setFormData({ name: '', slug: '', description: '' });
+                  setFormData({ name: '', slug: '', description: '', icon: '' });
                 }}
               >
                 Cancelar
@@ -190,15 +237,22 @@ const CategoryManager = () => {
           </p>
         ) : (
           <div className="space-y-3">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors"
-              >
-                <div>
-                  <p className="font-semibold">{category.name}</p>
-                  <p className="text-sm text-muted-foreground">{category.slug}</p>
-                </div>
+            {categories.map((category) => {
+              const iconOption = iconOptions.find(opt => opt.value === category.icon);
+              const CategoryIcon = iconOption?.Icon;
+              
+              return (
+                <div
+                  key={category.id}
+                  className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {CategoryIcon && <CategoryIcon className="w-5 h-5 text-primary" />}
+                    <div>
+                      <p className="font-semibold">{category.name}</p>
+                      <p className="text-sm text-muted-foreground">{category.slug}</p>
+                    </div>
+                  </div>
 
                 <div className="flex gap-2">
                   <Button
@@ -217,7 +271,8 @@ const CategoryManager = () => {
                   </Button>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         )}
       </Card>

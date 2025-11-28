@@ -240,21 +240,6 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
             <div className="bg-card border border-border rounded-lg p-3 md:p-4 lg:sticky lg:top-4">
               <h3 className="font-bold text-base md:text-lg mb-3 md:mb-4">Famílias</h3>
               <nav className="space-y-1.5 md:space-y-2">
-                <button
-                  onClick={() => {
-                    setSelectedCategory(null);
-                    setSelectedGroup(null);
-                  }}
-                  className={cn(
-                    "w-full flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all text-left text-sm md:text-base",
-                    !selectedCategory
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted text-foreground"
-                  )}
-                >
-                  <Grid className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
-                  <span>Todas as Famílias</span>
-                </button>
                 {categories.map((category) => (
                   <button
                     key={category.id}

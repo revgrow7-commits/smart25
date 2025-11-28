@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Upload, X, Star, Trash2 } from "lucide-react";
+import { Upload, X, Star, Trash2, RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
 
 interface ProductFormProps {
   productId?: string | null;
@@ -480,16 +480,82 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
                   </Button>
                 </div>
                 
-                <div className="aspect-video rounded-lg overflow-hidden bg-muted border border-border">
+                <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
                   <model-viewer
+                    id="admin-model-viewer"
                     src={formData.model_3d_url}
                     alt="Preview do modelo 3D"
                     camera-controls
                     auto-rotate
                     shadow-intensity="1"
+                    exposure="1.2"
+                    min-field-of-view="10deg"
+                    max-field-of-view="45deg"
                     style={{ width: '100%', height: '100%' }}
                   >
                   </model-viewer>
+                  
+                  <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => {
+                        const viewer = document.getElementById('admin-model-viewer') as any;
+                        if (viewer) viewer.resetTurntableRotation();
+                      }}
+                      title="Resetar Visualização"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => {
+                        const viewer = document.getElementById('admin-model-viewer') as any;
+                        if (viewer) viewer.fieldOfView = Math.max(10, viewer.fieldOfView - 5);
+                      }}
+                      title="Aumentar Zoom"
+                    >
+                      <ZoomIn className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => {
+                        const viewer = document.getElementById('admin-model-viewer') as any;
+                        if (viewer) viewer.fieldOfView = Math.min(45, viewer.fieldOfView + 5);
+                      }}
+                      title="Diminuir Zoom"
+                    >
+                      <ZoomOut className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => {
+                        const viewer = document.getElementById('admin-model-viewer') as any;
+                        if (viewer) {
+                          const rotating = viewer.getAttribute('auto-rotate');
+                          if (rotating !== null) {
+                            viewer.removeAttribute('auto-rotate');
+                          } else {
+                            viewer.setAttribute('auto-rotate', '');
+                          }
+                        }
+                      }}
+                      title="Auto-rotação On/Off"
+                    >
+                      <RotateCw className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}

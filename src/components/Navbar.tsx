@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import LogoProcessor from "@/components/LogoProcessor";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo2.jpg";
@@ -114,6 +114,25 @@ const Navbar = () => {
                     Visualizador com IA
                   </Link>
                 </DropdownMenuItem>
+                
+                {categories.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground px-2">
+                      Categorias
+                    </DropdownMenuLabel>
+                    {categories.map((category) => (
+                      <DropdownMenuItem key={category.id} asChild>
+                        <Link 
+                          to={`/catalogo?category=${category.slug}`}
+                          className="cursor-pointer flex items-center gap-2 pl-6"
+                        >
+                          {category.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -200,6 +219,22 @@ const Navbar = () => {
               <Wand2 className="w-4 h-4" />
               Visualizador com IA
             </Link>
+            
+            {categories.length > 0 && (
+              <div className="border-t border-border pt-2 mt-2">
+                <p className="text-xs text-muted-foreground mb-2 px-2">Categorias</p>
+                {categories.map((category) => (
+                  <Link 
+                    key={category.id}
+                    to={`/catalogo?category=${category.slug}`}
+                    className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2 pl-6"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
             
             {navLinks.slice(1).map(link => {
               const Icon = link.icon;

@@ -29,57 +29,59 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background py-4 md:py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-bold mb-2">
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">
               Painel <span className="gradient-text">Administrativo</span>
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Gerencie produtos, categorias e uploads do catálogo
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="outline" onClick={signOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
+          <div className="flex items-center gap-3 md:gap-4">
+            <span className="text-xs md:text-sm text-muted-foreground hidden sm:inline">{user?.email}</span>
+            <Button variant="outline" size="sm" onClick={signOut} className="w-full sm:w-auto">
+              <LogOut className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Sair</span>
             </Button>
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid bg-card">
-            <TabsTrigger value="products" className="gap-2">
-              <Package className="h-4 w-4" />
-              Produtos
-            </TabsTrigger>
-            <TabsTrigger value="featured" className="gap-2">
-              <Star className="h-4 w-4" />
-              Destaques
-            </TabsTrigger>
-            <TabsTrigger value="categories" className="gap-2">
-              <Grid3x3 className="h-4 w-4" />
-              Categorias
-            </TabsTrigger>
-            <TabsTrigger value="hero" className="gap-2">
-              <Image className="h-4 w-4" />
-              Hero
-            </TabsTrigger>
-            <TabsTrigger value="upload" className="gap-2">
-              <Upload className="h-4 w-4" />
-              Upload Excel
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
-              <Settings className="h-4 w-4" />
-              Configurações
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
+          <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+            <TabsList className="inline-flex w-max md:w-full md:grid md:grid-cols-6 bg-card min-w-max">
+              <TabsTrigger value="products" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Package className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Produtos</span>
+              </TabsTrigger>
+              <TabsTrigger value="featured" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Star className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Destaques</span>
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Grid3x3 className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Categorias</span>
+              </TabsTrigger>
+              <TabsTrigger value="hero" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Image className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Hero</span>
+              </TabsTrigger>
+              <TabsTrigger value="upload" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Upload className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Upload</span>
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <Settings className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Config</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="products" className="space-y-6">
+          <TabsContent value="products" className="space-y-4 md:space-y-6">
             {editingProduct ? (
-              <Card className="p-6">
+              <Card className="p-4 md:p-6">
                 <ProductForm
                   productId={editingProduct}
                   onClose={() => setEditingProduct(null)}
@@ -87,7 +89,7 @@ const Admin = () => {
               </Card>
             ) : (
               <>
-                <Card className="p-6">
+                <Card className="p-4 md:p-6">
                   <ProductForm onClose={() => {}} />
                 </Card>
                 <ProductList onEdit={setEditingProduct} />
@@ -112,9 +114,9 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="settings">
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Configurações do Sistema</h3>
-              <p className="text-muted-foreground">
+            <Card className="p-4 md:p-6">
+              <h3 className="text-lg md:text-xl font-semibold mb-4">Configurações do Sistema</h3>
+              <p className="text-sm md:text-base text-muted-foreground">
                 Configurações adicionais estarão disponíveis em breve.
               </p>
             </Card>

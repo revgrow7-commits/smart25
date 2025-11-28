@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Upload, Grid3x3, Settings, Loader2, LogOut, Image } from "lucide-react";
+import { Package, Upload, Grid3x3, Settings, Loader2, LogOut, Image, Star } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
 import CategoryManager from "@/components/admin/CategoryManager";
 import { HeroImageManager } from "@/components/admin/HeroImageManager";
+import FeaturedProductsManager from "@/components/admin/FeaturedProductsManager";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
@@ -49,10 +50,14 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid bg-card">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid bg-card">
             <TabsTrigger value="products" className="gap-2">
               <Package className="h-4 w-4" />
               Produtos
+            </TabsTrigger>
+            <TabsTrigger value="featured" className="gap-2">
+              <Star className="h-4 w-4" />
+              Destaques
             </TabsTrigger>
             <TabsTrigger value="categories" className="gap-2">
               <Grid3x3 className="h-4 w-4" />
@@ -88,6 +93,10 @@ const Admin = () => {
                 <ProductList onEdit={setEditingProduct} />
               </>
             )}
+          </TabsContent>
+
+          <TabsContent value="featured">
+            <FeaturedProductsManager />
           </TabsContent>
 
           <TabsContent value="categories">

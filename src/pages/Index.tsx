@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import FeaturedProducts from "@/components/FeaturedProducts";
 import ProductCatalog from "@/components/ProductCatalog";
 import AIVisualizer from "@/components/AIVisualizer";
 import ROICalculator from "@/components/ROICalculator";
@@ -17,6 +18,7 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <HeroSection />
+      <FeaturedProducts />
       <ProductCatalog productGroup="Stand Booth1" limit={3} showFilters={false} />
       <AIVisualizer />
       <ROICalculator />

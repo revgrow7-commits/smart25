@@ -29,75 +29,75 @@ const HeroSection = () => {
     }
   });
   
-  return <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20">
+  return <section className="relative min-h-screen flex items-center overflow-hidden bg-background pt-20 md:pt-24">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] animate-pulse" style={{
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-purple-500/10 rounded-full blur-[120px] animate-pulse" style={{
         animationDelay: '700ms'
       }}></div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 py-6 md:py-10">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
+      <div className="container relative z-10 mx-auto px-4 py-8 md:py-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           {/* Left Column - Content */}
-          <div className="space-y-4 md:space-y-5 max-w-2xl">
+          <div className="space-y-5 md:space-y-6 max-w-2xl">
             {/* Badge */}
             <div className="inline-block">
-              <div className="px-6 py-2.5 rounded-full border-2 border-primary/40 bg-primary/10 text-primary font-medium text-sm">
+              <div className="px-4 md:px-6 py-2 md:py-2.5 rounded-full border-2 border-primary/40 bg-primary/10 text-primary font-medium text-xs md:text-sm">
                 {t('hero.badge')}
               </div>
             </div>
 
             {/* Title */}
             <div className="space-y-2">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
                 {t('hero.title1')}
               </h1>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.1] tracking-tight text-primary">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-primary">
                 {t('hero.title2')}
               </h1>
             </div>
             
             {/* Description */}
-            <p className="text-lg md:text-xl text-muted-foreground/90 leading-relaxed max-w-xl">
+            <p className="text-base md:text-lg lg:text-xl text-muted-foreground/90 leading-relaxed max-w-xl">
               {t('hero.description')}
             </p>
 
             {/* Stats Row */}
-            <div className="flex gap-8 md:gap-12 py-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-yellow-400" />
-                  <span className="text-5xl md:text-6xl font-bold text-foreground">90%</span>
+            <div className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-3 md:py-4">
+              <div className="space-y-1 flex-shrink-0">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Zap className="h-4 w-4 md:h-5 md:w-5 text-yellow-400" />
+                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">90%</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">{t('hero.stat1')}</p>
+                <p className="text-xs md:text-sm text-muted-foreground/80">{t('hero.stat1')}</p>
               </div>
               
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-green-400" />
-                  <span className="text-5xl md:text-6xl font-bold text-foreground">5x+</span>
+              <div className="space-y-1 flex-shrink-0">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-green-400" />
+                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">5x+</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">{t('hero.stat2')}</p>
+                <p className="text-xs md:text-sm text-muted-foreground/80">{t('hero.stat2')}</p>
               </div>
               
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-primary" />
-                  <span className="text-5xl md:text-6xl font-bold text-foreground">45%</span>
+              <div className="space-y-1 flex-shrink-0">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <DollarSign className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">45%</span>
                 </div>
-                <p className="text-sm text-muted-foreground/80">{t('hero.stat3')}</p>
+                <p className="text-xs md:text-sm text-muted-foreground/80">{t('hero.stat3')}</p>
               </div>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button className="group px-8 py-4 bg-gradient-to-r from-primary via-[hsl(340,100%,60%)] to-primary text-white font-semibold text-base rounded-xl hover:shadow-[0_0_40px_hsl(345,100%,55%,0.5)] transition-all duration-300 flex items-center justify-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
+              <button className="group px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary via-[hsl(340,100%,60%)] to-primary text-white font-semibold text-sm md:text-base rounded-xl hover:shadow-[0_0_40px_hsl(345,100%,55%,0.5)] transition-all duration-300 flex items-center justify-center gap-2">
                 {t('hero.requestDemo')}
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <a href="#catalogo" className="px-8 py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 inline-flex items-center justify-center">
+              <a href="#catalogo" className="px-6 md:px-8 py-3 md:py-4 bg-transparent border-2 border-primary/40 text-foreground font-semibold text-sm md:text-base rounded-xl hover:bg-primary/5 hover:border-primary/60 transition-all duration-300 inline-flex items-center justify-center">
                 {t('hero.viewCatalog')}
               </a>
             </div>

@@ -28,8 +28,8 @@ const Index = () => {
       <ProductChatbot />
       
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+      <footer className="bg-card border-t border-border py-6 md:py-8">
+        <div className="container mx-auto px-4 text-center text-xs md:text-sm text-muted-foreground">
           <p className="mb-2">{t('footer.rights')}</p>
           <p>{t('footer.patent')}</p>
         </div>

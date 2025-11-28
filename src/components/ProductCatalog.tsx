@@ -103,7 +103,10 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
       filtered = filtered.filter(
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.item_code.toLowerCase().includes(searchTerm.toLowerCase())
+          product.item_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (product.product_group && product.product_group.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (product.categories?.name && product.categories.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -220,7 +223,7 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
               <Input 
-                placeholder="Buscar..." 
+                placeholder="Buscar por nome, código, descrição, grupo ou categoria..." 
                 className="pl-9 md:pl-10 bg-card border-border text-sm md:text-base"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

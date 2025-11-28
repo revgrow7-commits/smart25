@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Package, Ruler, Weight, Box, Play } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import "@google/model-viewer";
 
 interface ProductImage {
   id: string;
@@ -342,18 +343,44 @@ const ProductDetail = () => {
             <TabsContent value="3d" className="mt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Modelo 3D - Visualização de Stand</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Box className="h-5 w-5" />
+                    Modelo 3D - Visualização Interativa
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                    <iframe
+                  <div className="rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                    <model-viewer
                       src={product.model_3d_url}
-                      className="w-full h-full"
-                      title={`Modelo 3D de ${product.name}`}
-                    />
+                      alt={`Modelo 3D de ${product.name}`}
+                      ar
+                      camera-controls
+                      auto-rotate
+                      shadow-intensity="1"
+                      exposure="1.2"
+                      min-field-of-view="10deg"
+                      max-field-of-view="45deg"
+                      style={{ width: '100%', height: '100%' }}
+                    >
+                      <div 
+                        slot="poster" 
+                        style={{ 
+                          backgroundColor: 'hsl(var(--muted))', 
+                          width: '100%', 
+                          height: '100%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          fontSize: '1.5em',
+                          color: 'hsl(var(--muted-foreground))'
+                        }}
+                      >
+                        Carregando Modelo 3D...
+                      </div>
+                    </model-viewer>
                   </div>
                   <p className="text-sm text-muted-foreground mt-4">
-                    Use o mouse ou toque na tela para rotacionar e explorar o modelo 3D do stand.
+                    Use o mouse ou toque na tela para rotacionar, zoom e explorar o modelo 3D. Em dispositivos compatíveis, você pode visualizar em Realidade Aumentada.
                   </p>
                 </CardContent>
               </Card>

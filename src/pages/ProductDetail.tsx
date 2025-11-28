@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import placeholderImage from "@/assets/3d-model-placeholder.png";
 
 interface ProductImage {
   id: string;
@@ -45,6 +47,8 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [modelLoading, setModelLoading] = useState(false);
+  const [modelProgress, setModelProgress] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -349,34 +353,45 @@ const ProductDetail = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                    {modelLoading && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                        <div className="w-64 space-y-4">
+                          <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
+                          <Progress value={modelProgress} className="w-full" />
+                          <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
+                        </div>
+                      </div>
+                    )}
+                    
                     <model-viewer
                       id="product-model-viewer"
                       src={product.model_3d_url}
+                      poster={placeholderImage}
+                      loading="eager"
+                      reveal="interaction"
                       alt={`Modelo 3D de ${product.name}`}
-                      ar
-                      camera-controls
-                      auto-rotate
+                      ar="true"
+                      camera-controls="true"
+                      auto-rotate="true"
                       shadow-intensity="1"
                       exposure="1.2"
                       min-field-of-view="10deg"
                       max-field-of-view="45deg"
                       style={{ width: '100%', height: '100%' }}
+                      {...{
+                        onLoad: () => {
+                          setModelLoading(false);
+                          setModelProgress(100);
+                        },
+                        onProgress: (event: any) => {
+                          const progress = Math.round((event.detail.totalProgress || 0) * 100);
+                          setModelProgress(progress);
+                          if (progress < 100) {
+                            setModelLoading(true);
+                          }
+                        }
+                      } as any}
                     >
-                      <div 
-                        slot="poster" 
-                        style={{ 
-                          backgroundColor: 'hsl(var(--muted))', 
-                          width: '100%', 
-                          height: '100%', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          fontSize: '1.5em',
-                          color: 'hsl(var(--muted-foreground))'
-                        }}
-                      >
-                        Carregando Modelo 3D...
-                      </div>
                     </model-viewer>
                     
                     <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">

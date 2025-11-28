@@ -98,10 +98,10 @@ const Navbar = () => {
                   {t('nav.allProducts')}
                 </div>
                 <DropdownMenuItem asChild>
-                  <a href="#catalogo" className="cursor-pointer font-medium flex items-center gap-2">
+                  <Link to="/catalogo" className="cursor-pointer font-medium flex items-center gap-2">
                     <Grid3x3 className="w-4 h-4" />
                     Ver Todos os Produtos
-                  </a>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/visualizador-stand" className="cursor-pointer font-medium flex items-center gap-2">
@@ -115,9 +115,9 @@ const Navbar = () => {
                 </div>
                 {categories.map(category => (
                   <DropdownMenuItem key={category.id} asChild>
-                    <a href="#catalogo" className="cursor-pointer pl-6">
+                    <Link to="/catalogo" className="cursor-pointer pl-6">
                       → {category.name}
-                    </a>
+                    </Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -185,17 +185,17 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border">
-            <a href="#catalogo" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link to="/catalogo" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Grid3x3 className="w-4 h-4" />
               {t('nav.catalog')}
-            </a>
+            </Link>
             <Link to="/visualizador-stand" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2 pl-4" onClick={() => setIsMobileMenuOpen(false)}>
               <Wand2 className="w-4 h-4" />
               {t('nav.visualizer')}
             </Link>
-            {categories.map(category => <a key={category.id} href="#catalogo" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-2 pl-4" onClick={() => setIsMobileMenuOpen(false)}>
+            {categories.map(category => <Link key={category.id} to="/catalogo" className="block text-sm text-muted-foreground hover:text-primary transition-colors py-2 pl-4" onClick={() => setIsMobileMenuOpen(false)}>
                 → {category.name}
-              </a>)}
+              </Link>)}
             
             {navLinks.map(link => {
               const Icon = link.icon;

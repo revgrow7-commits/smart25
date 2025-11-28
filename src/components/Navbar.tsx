@@ -178,17 +178,17 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border">
-            <Link to="/" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+        {isMobileMenuOpen && <div className="md:hidden py-4 space-y-4 border-t border-border bg-background">
+            <Link to="/" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Home className="w-4 h-4" />
               Home
             </Link>
 
-            <Link to="/catalogo" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link to="/catalogo" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Grid3x3 className="w-4 h-4" />
               Ver Todos os Produtos
             </Link>
-            <Link to="/visualizador-stand" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link to="/visualizador-stand" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Wand2 className="w-4 h-4" />
               Visualizador com IA
             </Link>
@@ -196,12 +196,12 @@ const Navbar = () => {
             {navLinks.slice(1).map(link => {
               const Icon = link.icon;
               return link.href.startsWith('#') ? (
-                <a key={link.href} href={link.href} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+                <a key={link.href} href={link.href} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
                   {Icon && <Icon className="w-4 h-4" />}
                   {link.label}
                 </a>
               ) : (
-                <Link key={link.href} to={link.href} className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link key={link.href} to={link.href} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
                   {Icon && <Icon className="w-4 h-4" />}
                   {link.label}
                 </Link>
@@ -212,7 +212,7 @@ const Navbar = () => {
               <p className="text-xs text-muted-foreground mb-2 px-2">Idioma / Language</p>
               <button 
                 onClick={() => changeLanguage('pt')} 
-                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'pt' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'pt' ? 'bg-accent text-primary' : 'text-foreground hover:text-primary'}`}
               >
                 <span className="text-lg">🇧🇷</span>
                 <span>Português</span>
@@ -220,7 +220,7 @@ const Navbar = () => {
               </button>
               <button 
                 onClick={() => changeLanguage('en')} 
-                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'en' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'en' ? 'bg-accent text-primary' : 'text-foreground hover:text-primary'}`}
               >
                 <span className="text-lg">🇺🇸</span>
                 <span>English</span>
@@ -228,7 +228,7 @@ const Navbar = () => {
               </button>
               <button 
                 onClick={() => changeLanguage('es')} 
-                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'es' ? 'bg-accent text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                className={`flex items-center gap-2 w-full text-left text-sm transition-colors py-2 px-2 rounded ${i18n.language === 'es' ? 'bg-accent text-primary' : 'text-foreground hover:text-primary'}`}
               >
                 <span className="text-lg">🇪🇸</span>
                 <span>Español</span>

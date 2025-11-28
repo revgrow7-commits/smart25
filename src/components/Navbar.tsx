@@ -1,17 +1,37 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3 } from "lucide-react";
+import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3, Monitor, Tv, Projector, Smartphone, Tablet, Speaker, Camera, Router, Headphones, HardDrive, Package, Shapes, LayoutGrid } from "lucide-react";
 import { Link } from "react-router-dom";
 import LogoProcessor from "@/components/LogoProcessor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo2.jpg";
+
 interface Category {
   id: string;
   name: string;
   slug: string;
+  icon: string | null;
 }
+
+const iconMap: Record<string, any> = {
+  Monitor,
+  Tv,
+  Projector,
+  Smartphone,
+  Tablet,
+  Speaker,
+  Camera,
+  Router,
+  Headphones,
+  HardDrive,
+  Box,
+  Package,
+  Grid3x3,
+  Shapes,
+  LayoutGrid,
+};
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,7 +68,7 @@ const Navbar = () => {
       const {
         data,
         error
-      } = await supabase.from("categories").select("id, name, slug").order("name");
+      } = await supabase.from("categories").select("id, name, slug, icon").order("name");
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
@@ -121,16 +141,20 @@ const Navbar = () => {
                     <DropdownMenuLabel className="text-xs text-muted-foreground px-2">
                       Categorias
                     </DropdownMenuLabel>
-                    {categories.map((category) => (
-                      <DropdownMenuItem key={category.id} asChild>
-                        <Link 
-                          to={`/catalogo?category=${category.slug}`}
-                          className="cursor-pointer flex items-center gap-2 pl-6"
-                        >
-                          {category.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
+                    {categories.map((category) => {
+                      const CategoryIcon = category.icon ? iconMap[category.icon] : null;
+                      return (
+                        <DropdownMenuItem key={category.id} asChild>
+                          <Link 
+                            to={`/catalogo?category=${category.slug}`}
+                            className="cursor-pointer flex items-center gap-2 pl-6"
+                          >
+                            {CategoryIcon && <CategoryIcon className="w-4 h-4" />}
+                            {category.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
                   </>
                 )}
               </DropdownMenuContent>
@@ -223,16 +247,20 @@ const Navbar = () => {
             {categories.length > 0 && (
               <div className="border-t border-border pt-2 mt-2">
                 <p className="text-xs text-muted-foreground mb-2 px-2">Categorias</p>
-                {categories.map((category) => (
-                  <Link 
-                    key={category.id}
-                    to={`/catalogo?category=${category.slug}`}
-                    className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2 pl-6"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {category.name}
-                  </Link>
-                ))}
+                {categories.map((category) => {
+                  const CategoryIcon = category.icon ? iconMap[category.icon] : null;
+                  return (
+                    <Link 
+                      key={category.id}
+                      to={`/catalogo?category=${category.slug}`}
+                      className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2 pl-6"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {CategoryIcon && <CategoryIcon className="w-4 h-4" />}
+                      {category.name}
+                    </Link>
+                  );
+                })}
               </div>
             )}
             

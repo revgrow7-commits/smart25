@@ -6,6 +6,7 @@ import LogoProcessor from "@/components/LogoProcessor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
+import logo from "@/assets/logo2.jpg";
 interface Category {
   id: string;
   name: string;
@@ -82,8 +83,10 @@ const Navbar = () => {
   return <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-background/95 backdrop-blur-lg border-b border-border shadow-lg' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo removed */}
-          <div className="flex items-center"></div>
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="Smart Signage" className="h-10 w-auto" />
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">

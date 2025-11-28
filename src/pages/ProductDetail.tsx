@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Package, Ruler, Weight, Box, Play } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import "@google/model-viewer";
 
 interface ProductImage {
   id: string;

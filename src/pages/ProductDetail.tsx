@@ -237,17 +237,17 @@ const ProductDetail = () => {
               )}
             </div>
 
-            {/* Especificações Rápidas */}
-            <div className="bg-muted/30 border border-border rounded-xl p-6 space-y-4">
-              <h3 className="font-semibold text-lg">Especificações</h3>
-              <div className="grid grid-cols-1 gap-4">
+            {/* Especificações Detalhadas */}
+            <div className="bg-muted/30 border border-border rounded-xl p-6 space-y-6">
+              <h3 className="font-semibold text-lg">Especificações Técnicas</h3>
+              <div className="grid grid-cols-1 gap-6">
                 {product.frame_size && (
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <Ruler className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Área</p>
+                      <p className="text-sm text-muted-foreground">Tamanho da Moldura</p>
                       <p className="font-semibold text-base">{product.frame_size}</p>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ const ProductDetail = () => {
                       <Package className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Composição</p>
+                      <p className="text-sm text-muted-foreground">Tamanho do Gráfico</p>
                       <p className="font-semibold text-base">{product.graphic_size}</p>
                     </div>
                   </div>
@@ -283,9 +283,33 @@ const ProductDetail = () => {
                       <Box className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Embalagem</p>
+                      <p className="text-sm text-muted-foreground">Tamanho da Embalagem</p>
                       <p className="font-semibold text-base">{product.packing_size}</p>
                     </div>
+                  </div>
+                )}
+                
+                {product.pcs_per_ctn && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Package className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Peças por Caixa</p>
+                      <p className="font-semibold text-base">{product.pcs_per_ctn}</p>
+                    </div>
+                  </div>
+                )}
+
+                {product.specifications && Object.keys(product.specifications).length > 0 && (
+                  <div className="space-y-3 pt-4 border-t border-border">
+                    <h4 className="font-semibold text-base">Detalhes Adicionais</h4>
+                    {Object.entries(product.specifications).map(([key, value]) => (
+                      <div key={key} className="flex justify-between py-2 border-b border-border/50">
+                        <span className="text-muted-foreground capitalize text-sm">{key.replace(/_/g, ' ')}</span>
+                        <span className="font-medium text-sm">{String(value)}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -324,74 +348,16 @@ const ProductDetail = () => {
         </div>
 
         {/* Tabs de Conteúdo Expandido */}
-        <Tabs defaultValue="specs" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
-            <TabsTrigger value="specs">Especificações</TabsTrigger>
-            {product.video_url && (
-              <TabsTrigger value="video">Vídeo</TabsTrigger>
-            )}
-            {(product.model_3d_url || product.sketchfab_url) && (
-              <TabsTrigger value="3d">Modelo 3D</TabsTrigger>
-            )}
-          </TabsList>
-
-          <TabsContent value="specs" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Especificações Técnicas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {product.frame_size && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Tamanho da Moldura</p>
-                      <p className="text-lg font-semibold">{product.frame_size}</p>
-                    </div>
-                  )}
-                  
-                  {product.graphic_size && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Tamanho do Gráfico</p>
-                      <p className="text-lg font-semibold">{product.graphic_size}</p>
-                    </div>
-                  )}
-                  
-                  {product.gross_weight && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Peso Bruto</p>
-                      <p className="text-lg font-semibold">{product.gross_weight}</p>
-                    </div>
-                  )}
-                  
-                  {product.packing_size && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Tamanho da Embalagem</p>
-                      <p className="text-lg font-semibold">{product.packing_size}</p>
-                    </div>
-                  )}
-                  
-                  {product.pcs_per_ctn && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Peças por Caixa</p>
-                      <p className="text-lg font-semibold">{product.pcs_per_ctn}</p>
-                    </div>
-                  )}
-
-                  {product.specifications && Object.keys(product.specifications).length > 0 && (
-                    <div className="md:col-span-2 space-y-3 pt-4 border-t border-border">
-                      <h4 className="font-semibold text-lg">Detalhes Adicionais</h4>
-                      {Object.entries(product.specifications).map(([key, value]) => (
-                        <div key={key} className="flex justify-between py-2 border-b border-border/50">
-                          <span className="text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
-                          <span className="font-medium">{String(value)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+        {(product.video_url || product.model_3d_url || product.sketchfab_url) && (
+          <Tabs defaultValue={product.video_url ? "video" : "3d"} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:inline-grid">
+              {product.video_url && (
+                <TabsTrigger value="video">Vídeo</TabsTrigger>
+              )}
+              {(product.model_3d_url || product.sketchfab_url) && (
+                <TabsTrigger value="3d">Modelo 3D</TabsTrigger>
+              )}
+            </TabsList>
 
           {product.video_url && (
             <TabsContent value="video" className="mt-6">
@@ -544,7 +510,8 @@ const ProductDetail = () => {
               </Card>
             </TabsContent>
           )}
-        </Tabs>
+          </Tabs>
+        )}
       </div>
 
       {/* Footer */}

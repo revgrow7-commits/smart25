@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart, Sparkles, Image as ImageIcon, Video } from "lucide-react";
+import { ArrowLeft, Package, Ruler, Weight, Box, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart, Sparkles, Image as ImageIcon, Video } from "lucide-react";
 import { useBudget } from "@/contexts/BudgetContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -101,7 +101,6 @@ const ProductDetail = () => {
 
       setProduct(data);
       
-      // Define a imagem principal como selecionada
       const primaryImage = data.product_images.find((img: ProductImage) => img.is_primary);
       if (primaryImage) {
         setSelectedImage(primaryImage.image_url);
@@ -176,45 +175,56 @@ const ProductDetail = () => {
           Voltar ao Catálogo
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-6 lg:gap-10 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,0.85fr] gap-8 lg:gap-12">
           {/* Visualizador com Abas */}
-          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-4">
             <Tabs defaultValue="galeria" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="galeria" className="flex items-center gap-2">
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1.5 rounded-xl">
+                <TabsTrigger 
+                  value="galeria" 
+                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg"
+                >
                   <ImageIcon className="w-4 h-4" />
-                  Galeria
+                  <span className="hidden sm:inline">Galeria</span>
                 </TabsTrigger>
-                <TabsTrigger value="3d" className="flex items-center gap-2" disabled={!product.model_3d_url && !product.sketchfab_url}>
+                <TabsTrigger 
+                  value="3d" 
+                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" 
+                  disabled={!product.model_3d_url && !product.sketchfab_url}
+                >
                   <Box className="w-4 h-4" />
-                  3D
+                  <span className="hidden sm:inline">3D</span>
                 </TabsTrigger>
-                <TabsTrigger value="video" className="flex items-center gap-2" disabled={!product.video_url}>
+                <TabsTrigger 
+                  value="video" 
+                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" 
+                  disabled={!product.video_url}
+                >
                   <Video className="w-4 h-4" />
-                  Vídeo
+                  <span className="hidden sm:inline">Vídeo</span>
                 </TabsTrigger>
               </TabsList>
 
               {/* Galeria de Imagens */}
-              <TabsContent value="galeria" className="space-y-4">
-                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted border border-border shadow-lg">
+              <TabsContent value="galeria" className="space-y-3 mt-4">
+                <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md">
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
-                    className="w-full h-full object-contain p-4"
+                    className="w-full h-full object-contain p-6"
                   />
                 </div>
                 
                 {product.product_images.length > 1 && (
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-5 gap-2">
                     {product.product_images.map((image) => (
                       <button
                         key={image.id}
                         onClick={() => setSelectedImage(image.image_url)}
-                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
                           selectedImage === image.image_url
-                            ? "border-primary shadow-md"
-                            : "border-border hover:border-primary/50"
+                            ? "border-primary shadow-md scale-105"
+                            : "border-border/50 hover:border-primary/50"
                         }`}
                       >
                         <img
@@ -229,9 +239,9 @@ const ProductDetail = () => {
               </TabsContent>
 
               {/* Visualização 3D */}
-              <TabsContent value="3d">
+              <TabsContent value="3d" className="mt-4">
                 {product.sketchfab_url ? (
-                  <div className="relative rounded-2xl overflow-hidden bg-muted border border-border shadow-lg" style={{ height: '600px' }}>
+                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md" style={{ height: '600px' }}>
                     <iframe
                       src={product.sketchfab_url}
                       className="w-full h-full"
@@ -241,7 +251,7 @@ const ProductDetail = () => {
                     />
                   </div>
                 ) : product.model_3d_url ? (
-                  <div className="relative rounded-2xl overflow-hidden bg-muted border border-border shadow-lg" style={{ height: '600px' }}>
+                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md" style={{ height: '600px' }}>
                     {modelLoading && (
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
                         <div className="w-64 space-y-4">
@@ -338,9 +348,9 @@ const ProductDetail = () => {
               </TabsContent>
 
               {/* Vídeo */}
-              <TabsContent value="video">
+              <TabsContent value="video" className="mt-4">
                 {product.video_url && (
-                  <div className="aspect-video rounded-2xl overflow-hidden bg-muted border border-border shadow-lg">
+                  <div className="aspect-video rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md">
                     <iframe
                       src={product.video_url}
                       className="w-full h-full"
@@ -356,139 +366,162 @@ const ProductDetail = () => {
             {/* Botão Simular com IA */}
             <Button
               size="lg"
-              className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full h-14 text-base font-semibold bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary hover:via-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
               onClick={() => navigate('/visualizador')}
             >
-              <Sparkles className="mr-2 h-6 w-6" />
+              <Sparkles className="mr-2 h-5 w-5" />
               Simular com IA
             </Button>
           </div>
 
           {/* Informações do Produto */}
-          <div className="space-y-6 lg:space-y-8">
+          <div className="space-y-5">
+            {/* Badges e Título */}
             <div>
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {product.is_featured && (
-                  <Badge className="bg-primary text-sm px-3 py-1">Destaque</Badge>
+                  <Badge className="bg-primary/90 text-primary-foreground text-xs px-3 py-1.5 font-semibold">
+                    Destaque
+                  </Badge>
                 )}
                 {product.categories && (
-                  <Badge variant="secondary" className="text-sm px-3 py-1">{product.categories.name}</Badge>
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 font-medium">
+                    {product.categories.name}
+                  </Badge>
                 )}
               </div>
               
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight">
                 {product.name}
               </h1>
               
-              <p className="text-base text-muted-foreground mb-6">
-                Código: <span className="font-semibold">{product.item_code}</span>
+              <p className="text-sm text-muted-foreground">
+                Código: <span className="font-semibold text-foreground">{product.item_code}</span>
               </p>
-
-              {product.description && (
-                <p className="text-base text-foreground/80 leading-relaxed">
-                  {product.description}
-                </p>
-              )}
             </div>
 
-            {/* Especificações Detalhadas */}
-            <div className="bg-muted/30 border border-border rounded-xl p-6 space-y-6">
-              <h3 className="font-semibold text-lg">Especificações Técnicas</h3>
-              <div className="grid grid-cols-1 gap-6">
+            {/* Descrição */}
+            {product.description && (
+              <p className="text-sm text-foreground/70 leading-relaxed border-l-4 border-primary/30 pl-4 py-2">
+                {product.description}
+              </p>
+            )}
+
+            {/* Especificações Técnicas */}
+            <Card className="border-border/50 shadow-sm bg-muted/20">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold">Especificações Técnicas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
                 {product.frame_size && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Ruler className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-3 pb-3 border-b border-border/50 last:border-0">
+                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                      <Ruler className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Tamanho da Moldura</p>
-                      <p className="font-semibold text-base">{product.frame_size}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">Tamanho da Moldura</p>
+                      <p className="font-semibold text-sm truncate">{product.frame_size}</p>
                     </div>
                   </div>
                 )}
                 
                 {product.graphic_size && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Package className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-3 pb-3 border-b border-border/50 last:border-0">
+                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                      <Package className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Tamanho do Gráfico</p>
-                      <p className="font-semibold text-base">{product.graphic_size}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">Tamanho do Gráfico</p>
+                      <p className="font-semibold text-sm truncate">{product.graphic_size}</p>
                     </div>
                   </div>
                 )}
                 
                 {product.gross_weight && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Weight className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-3 pb-3 border-b border-border/50 last:border-0">
+                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                      <Weight className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Peso Bruto</p>
-                      <p className="font-semibold text-base">{product.gross_weight}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">Peso Bruto</p>
+                      <p className="font-semibold text-sm truncate">{product.gross_weight}</p>
                     </div>
                   </div>
                 )}
                 
                 {product.packing_size && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Box className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-3 pb-3 border-b border-border/50 last:border-0">
+                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                      <Box className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Tamanho da Embalagem</p>
-                      <p className="font-semibold text-base">{product.packing_size}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">Tamanho da Embalagem</p>
+                      <p className="font-semibold text-sm truncate">{product.packing_size}</p>
                     </div>
                   </div>
                 )}
                 
                 {product.pcs_per_ctn && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Package className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-3 pb-3 border-b border-border/50 last:border-0">
+                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                      <Package className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Peças por Caixa</p>
-                      <p className="font-semibold text-base">{product.pcs_per_ctn}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">Peças por Caixa</p>
+                      <p className="font-semibold text-sm truncate">{product.pcs_per_ctn}</p>
                     </div>
                   </div>
                 )}
+              </CardContent>
+            </Card>
 
-                {product.specifications && Object.keys(product.specifications).length > 0 && (
-                  <div className="space-y-3 pt-4 border-t border-border">
-                    <h4 className="font-semibold text-base">Detalhes Adicionais</h4>
+            {/* Detalhes Adicionais */}
+            {product.specifications && Object.keys(product.specifications).length > 0 && (
+              <Card className="border-border/50 shadow-sm bg-muted/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-semibold">Detalhes Adicionais</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
                     {Object.entries(product.specifications).map(([key, value]) => (
-                      <div key={key} className="flex justify-between py-2 border-b border-border/50">
-                        <span className="text-muted-foreground capitalize text-sm">{key.replace(/_/g, ' ')}</span>
-                        <span className="font-medium text-sm">{String(value)}</span>
+                      <div key={key} className="flex justify-between items-center py-2 border-b border-border/30 last:border-0">
+                        <span className="text-xs text-muted-foreground capitalize">
+                          {key.replace(/_/g, " ")}
+                        </span>
+                        <span className="font-medium text-xs text-right ml-2">{String(value)}</span>
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
-            </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Botões de Ação */}
-            <div className="space-y-3">
-              <Button 
-                size="lg" 
-                className="w-full btn-primary text-base h-14 font-semibold"
+            <div className="flex flex-col gap-2.5 pt-2">
+              <Button
+                size="lg"
+                className="w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => {
+                  toast({
+                    title: "Orçamento solicitado",
+                    description: "Entraremos em contato em breve!",
+                  });
+                }}
               >
                 Solicitar Orçamento
               </Button>
               
               <Button
-                variant={isInBudget(product.id) ? "secondary" : "outline"}
                 size="lg"
+                variant="outline"
+                className="w-full h-12 text-base font-semibold border-2 hover:bg-muted/50 transition-all duration-300"
                 onClick={handleAddToBudget}
                 disabled={isInBudget(product.id)}
-                className="w-full h-12"
               >
                 {isInBudget(product.id) ? (
                   <>
                     <ShoppingCart className="mr-2 h-5 w-5" />
-                    No Orçamento
+                    Já está no Orçamento
                   </>
                 ) : (
                   <>
@@ -498,11 +531,9 @@ const ProductDetail = () => {
                 )}
               </Button>
             </div>
-
           </div>
         </div>
       </div>
-
 
       {/* Footer */}
       <footer className="bg-card border-t border-border py-8 mt-12">

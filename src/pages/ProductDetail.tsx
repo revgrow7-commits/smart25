@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart, Sparkles } from "lucide-react";
 import { useBudget } from "@/contexts/BudgetContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -184,6 +184,28 @@ const ProductDetail = () => {
                 alt={product.name}
                 className="w-full h-full object-contain p-4"
               />
+            </div>
+            
+            {/* Botões de Simulação */}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1 h-12 font-semibold transition-all duration-300 hover:scale-105"
+                onClick={() => navigate('/visualizador')}
+              >
+                <Box className="mr-2 h-5 w-5" />
+                Simule 3D
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1 h-12 font-semibold transition-all duration-300 hover:scale-105"
+                onClick={() => navigate('/visualizador')}
+              >
+                <Sparkles className="mr-2 h-5 w-5" />
+                Simule com IA
+              </Button>
             </div>
             
             {product.product_images.length > 1 && (

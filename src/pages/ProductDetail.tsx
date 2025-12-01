@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart } from "lucide-react";
 import { useBudget } from "@/contexts/BudgetContext";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -344,26 +343,12 @@ const ProductDetail = () => {
                 )}
               </Button>
             </div>
-          </div>
-        </div>
 
-        {/* Tabs de Conteúdo Expandido */}
-        {(product.video_url || product.model_3d_url || product.sketchfab_url) && (
-          <Tabs defaultValue={product.video_url ? "video" : "3d"} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:inline-grid">
-              {product.video_url && (
-                <TabsTrigger value="video">Vídeo</TabsTrigger>
-              )}
-              {(product.model_3d_url || product.sketchfab_url) && (
-                <TabsTrigger value="3d">Modelo 3D</TabsTrigger>
-              )}
-            </TabsList>
-
-          {product.video_url && (
-            <TabsContent value="video" className="mt-6">
+            {/* Vídeo de Demonstração */}
+            {product.video_url && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-lg">
                     <Play className="h-5 w-5" />
                     Vídeo de Demonstração
                   </CardTitle>
@@ -380,22 +365,20 @@ const ProductDetail = () => {
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-          )}
+            )}
 
-          {(product.model_3d_url || product.sketchfab_url) && (
-            <TabsContent value="3d" className="mt-6">
+            {/* Modelo 3D */}
+            {(product.model_3d_url || product.sketchfab_url) && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-lg">
                     <Box className="h-5 w-5" />
                     Modelo 3D - Visualização Interativa
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {product.sketchfab_url ? (
-                    // Renderiza iframe do Sketchfab
-                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '500px' }}>
                       <iframe
                         src={product.sketchfab_url}
                         className="w-full h-full"
@@ -405,8 +388,7 @@ const ProductDetail = () => {
                       />
                     </div>
                   ) : (
-                    // Renderiza model-viewer para arquivo .glb
-                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '500px' }}>
                       {modelLoading && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
                           <div className="w-64 space-y-4">
@@ -508,11 +490,11 @@ const ProductDetail = () => {
                   </p>
                 </CardContent>
               </Card>
-            </TabsContent>
-          )}
-          </Tabs>
-        )}
+            )}
+          </div>
+        </div>
       </div>
+
 
       {/* Footer */}
       <footer className="bg-card border-t border-border py-8 mt-12">

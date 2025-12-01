@@ -123,12 +123,6 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-card border-border z-50 w-72">
                 <DropdownMenuItem asChild>
-                  <Link to="/catalogo" className="cursor-pointer font-medium flex items-center gap-2">
-                    <Grid3x3 className="w-4 h-4" />
-                    Ver Todos os Produtos
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link to="/visualizador-stand" className="cursor-pointer font-medium flex items-center gap-2">
                     <Wand2 className="w-4 h-4" />
                     Visualizador com IA
@@ -235,10 +229,6 @@ const Navbar = () => {
               Home
             </Link>
 
-            <Link to="/catalogo" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
-              <Grid3x3 className="w-4 h-4" />
-              Ver Todos os Produtos
-            </Link>
             <Link to="/visualizador-stand" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Wand2 className="w-4 h-4" />
               Visualizador com IA

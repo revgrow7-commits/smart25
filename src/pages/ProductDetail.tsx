@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
+import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart } from "lucide-react";
+import { useBudget } from "@/contexts/BudgetContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import placeholderImage from "@/assets/3d-model-placeholder.png";
@@ -45,6 +46,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addItem, isInBudget } = useBudget();
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -119,6 +121,24 @@ const ProductDetail = () => {
     }
   };
 
+  const handleAddToBudget = () => {
+    if (product) {
+      addItem({
+        id: product.id,
+        name: product.name,
+        item_code: product.item_code,
+        image_url: selectedImage || "/placeholder.svg",
+        description: product.description || undefined,
+        frame_size: product.frame_size || undefined,
+        graphic_size: product.graphic_size || undefined,
+      });
+      toast({
+        title: "Adicionado ao orçamento",
+        description: `${product.name} foi adicionado ao seu orçamento.`,
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -156,26 +176,26 @@ const ProductDetail = () => {
           Voltar ao Catálogo
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-6 lg:gap-10 mb-12">
           {/* Galeria de Imagens */}
-          <div className="space-y-4">
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted border border-border">
+          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted border border-border shadow-lg">
               <img
                 src={selectedImage || "/placeholder.svg"}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain p-4"
               />
             </div>
             
             {product.product_images.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-3">
                 {product.product_images.map((image) => (
                   <button
                     key={image.id}
                     onClick={() => setSelectedImage(image.image_url)}
                     className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === image.image_url
-                        ? "border-primary"
+                        ? "border-primary shadow-md"
                         : "border-border hover:border-primary/50"
                     }`}
                   >
@@ -191,86 +211,115 @@ const ProductDetail = () => {
           </div>
 
           {/* Informações do Produto */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:space-y-8">
             <div>
-              <div className="flex gap-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {product.is_featured && (
-                  <Badge className="bg-primary">Destaque</Badge>
+                  <Badge className="bg-primary text-sm px-3 py-1">Destaque</Badge>
                 )}
                 {product.categories && (
-                  <Badge variant="secondary">{product.categories.name}</Badge>
+                  <Badge variant="secondary" className="text-sm px-3 py-1">{product.categories.name}</Badge>
                 )}
               </div>
               
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight">
                 {product.name}
               </h1>
               
-              <p className="text-lg text-muted-foreground mb-4">
-                Código: {product.item_code}
+              <p className="text-base text-muted-foreground mb-6">
+                Código: <span className="font-semibold">{product.item_code}</span>
               </p>
 
               {product.description && (
-                <p className="text-foreground/90 leading-relaxed">
+                <p className="text-base text-foreground/80 leading-relaxed">
                   {product.description}
                 </p>
               )}
             </div>
 
             {/* Especificações Rápidas */}
-            <div className="grid grid-cols-2 gap-4">
-              {product.frame_size && (
-                <Card>
-                  <CardContent className="p-4 flex items-center gap-3">
-                    <Ruler className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Moldura</p>
-                      <p className="font-semibold">{product.frame_size}</p>
+            <div className="bg-muted/30 border border-border rounded-xl p-6 space-y-4">
+              <h3 className="font-semibold text-lg">Especificações</h3>
+              <div className="grid grid-cols-1 gap-4">
+                {product.frame_size && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Ruler className="h-5 w-5 text-primary" />
                     </div>
-                  </CardContent>
-                </Card>
-              )}
-              
-              {product.graphic_size && (
-                <Card>
-                  <CardContent className="p-4 flex items-center gap-3">
-                    <Package className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Gráfico</p>
-                      <p className="font-semibold">{product.graphic_size}</p>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Área</p>
+                      <p className="font-semibold text-base">{product.frame_size}</p>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
-              
-              {product.gross_weight && (
-                <Card>
-                  <CardContent className="p-4 flex items-center gap-3">
-                    <Weight className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Peso</p>
-                      <p className="font-semibold">{product.gross_weight}</p>
+                  </div>
+                )}
+                
+                {product.graphic_size && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Package className="h-5 w-5 text-primary" />
                     </div>
-                  </CardContent>
-                </Card>
-              )}
-              
-              {product.packing_size && (
-                <Card>
-                  <CardContent className="p-4 flex items-center gap-3">
-                    <Box className="h-5 w-5 text-primary" />
-                    <div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Composição</p>
+                      <p className="font-semibold text-base">{product.graphic_size}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {product.gross_weight && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Weight className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Peso Bruto</p>
+                      <p className="font-semibold text-base">{product.gross_weight}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {product.packing_size && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Box className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
                       <p className="text-sm text-muted-foreground">Embalagem</p>
-                      <p className="font-semibold">{product.packing_size}</p>
+                      <p className="font-semibold text-base">{product.packing_size}</p>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <Button size="lg" className="w-full btn-primary">
-              Solicitar Orçamento
-            </Button>
+            {/* Botões de Ação */}
+            <div className="space-y-3">
+              <Button 
+                size="lg" 
+                className="w-full btn-primary text-base h-14 font-semibold"
+              >
+                Solicitar Orçamento
+              </Button>
+              
+              <Button
+                variant={isInBudget(product.id) ? "secondary" : "outline"}
+                size="lg"
+                onClick={handleAddToBudget}
+                disabled={isInBudget(product.id)}
+                className="w-full h-12"
+              >
+                {isInBudget(product.id) ? (
+                  <>
+                    <ShoppingCart className="mr-2 h-5 w-5" />
+                    No Orçamento
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2 h-5 w-5" />
+                    Adicionar ao Orçamento
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 

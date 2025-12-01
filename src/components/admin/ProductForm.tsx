@@ -617,13 +617,28 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
           <Input
             id="sketchfab_url"
             type="url"
-            placeholder="https://sketchfab.com/models/..."
+            placeholder="https://sketchfab.com/3d-models/..."
             value={formData.sketchfab_url}
-            onChange={(e) => setFormData({ ...formData, sketchfab_url: e.target.value })}
+            onChange={(e) => {
+              let url = e.target.value.trim();
+              
+              // Converter URL do Sketchfab para formato embed automaticamente
+              if (url && url.includes('sketchfab.com')) {
+                // Extrair o ID do modelo da URL
+                const modelIdMatch = url.match(/\/(?:models|3d-models)\/[^\/]+-([a-f0-9]+)/i);
+                if (modelIdMatch && modelIdMatch[1]) {
+                  const modelId = modelIdMatch[1];
+                  url = `https://sketchfab.com/models/${modelId}/embed`;
+                  toast.success("URL convertida para formato embed automaticamente");
+                }
+              }
+              
+              setFormData({ ...formData, sketchfab_url: url });
+            }}
             disabled={!!formData.model_3d_url}
           />
           <p className="text-xs text-muted-foreground">
-            Cole a URL do modelo no Sketchfab. {formData.model_3d_url && "(Desabilitado: remova o modelo 3D primeiro)"}
+            Cole qualquer URL do Sketchfab (será convertida automaticamente para embed). {formData.model_3d_url && "(Desabilitado: remova o modelo 3D primeiro)"}
           </p>
           
           {formData.sketchfab_url && !formData.model_3d_url && (

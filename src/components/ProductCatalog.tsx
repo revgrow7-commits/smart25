@@ -347,19 +347,6 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent"></div>
                       
-                      {/* Ícones 3D e IA */}
-                      <div className="absolute top-2 md:top-4 right-2 md:right-4 flex gap-1 md:gap-2">
-                        {(product.model_3d_url || product.sketchfab_url) && (
-                          <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1">
-                            <Box className="w-3 h-3" />
-                            3D
-                          </Badge>
-                        )}
-                        <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
-                          IA
-                        </Badge>
-                      </div>
 
                       <div className="absolute top-2 md:top-4 left-2 md:left-4 flex flex-wrap gap-1 md:gap-2">
                         {product.is_featured && (
@@ -407,27 +394,43 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
                         )}
                       </div>
                       
-                      <div className="flex gap-2">
-                        <Button 
-                          className="flex-1 btn-primary text-sm md:text-base"
-                          onClick={() => navigate(`/produto/${product.id}`)}
-                        >
-                          <Eye className="mr-2 h-3 w-3 md:h-4 md:w-4" />
-                          Ver Detalhes
-                        </Button>
-                        <Button
-                          variant={isInBudget(product.id) ? "secondary" : "outline"}
-                          size="icon"
-                          onClick={(e) => handleAddToBudget(product, e)}
-                          disabled={isInBudget(product.id)}
-                          className="flex-shrink-0"
-                        >
-                          {isInBudget(product.id) ? (
-                            <ShoppingCart className="h-4 w-4" />
-                          ) : (
-                            <Plus className="h-4 w-4" />
+                      <div className="space-y-2">
+                        {/* Ícones 3D e IA */}
+                        <div className="flex gap-2 justify-end">
+                          {(product.model_3d_url || product.sketchfab_url) && (
+                            <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1">
+                              <Box className="w-3 h-3" />
+                              3D
+                            </Badge>
                           )}
-                        </Button>
+                          <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            IA
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <Button 
+                            className="flex-1 btn-primary text-sm md:text-base"
+                            onClick={() => navigate(`/produto/${product.id}`)}
+                          >
+                            <Eye className="mr-2 h-3 w-3 md:h-4 md:w-4" />
+                            Ver Detalhes
+                          </Button>
+                          <Button
+                            variant={isInBudget(product.id) ? "secondary" : "outline"}
+                            size="icon"
+                            onClick={(e) => handleAddToBudget(product, e)}
+                            disabled={isInBudget(product.id)}
+                            className="flex-shrink-0"
+                          >
+                            {isInBudget(product.id) ? (
+                              <ShoppingCart className="h-4 w-4" />
+                            ) : (
+                              <Plus className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </Card>

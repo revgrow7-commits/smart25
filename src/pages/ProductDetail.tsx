@@ -206,12 +206,12 @@ const ProductDetail = () => {
               </TabsList>
 
               {/* Galeria de Imagens */}
-              <TabsContent value="galeria" className="space-y-3 mt-4">
-                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md" style={{ height: '650px' }}>
+              <TabsContent value="galeria" className="space-y-3 mt-2">
+                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md" style={{ height: '750px' }}>
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
-                    className="w-full h-full object-contain p-3"
+                    className="w-full h-full object-contain p-2"
                   />
                 </div>
                 

@@ -6,7 +6,8 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart, Sparkles } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, Package, Ruler, Weight, Box, Play, RotateCcw, RotateCw, ZoomIn, ZoomOut, Plus, ShoppingCart, Sparkles, Image as ImageIcon, Video } from "lucide-react";
 import { useBudget } from "@/contexts/BudgetContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
@@ -176,59 +177,191 @@ const ProductDetail = () => {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-6 lg:gap-10 mb-12">
-          {/* Galeria de Imagens */}
+          {/* Visualizador com Abas */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted border border-border shadow-lg">
-              <img
-                src={selectedImage || "/placeholder.svg"}
-                alt={product.name}
-                className="w-full h-full object-contain p-4"
-              />
-            </div>
-            
-            {/* Botões de Simulação */}
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                size="lg"
-                className="flex-1 h-12 font-semibold transition-all duration-300 hover:scale-105"
-                onClick={() => navigate('/visualizador')}
-              >
-                <Box className="mr-2 h-5 w-5" />
-                Simule 3D
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="flex-1 h-12 font-semibold transition-all duration-300 hover:scale-105"
-                onClick={() => navigate('/visualizador')}
-              >
-                <Sparkles className="mr-2 h-5 w-5" />
-                Simule com IA
-              </Button>
-            </div>
-            
-            {product.product_images.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
-                {product.product_images.map((image) => (
-                  <button
-                    key={image.id}
-                    onClick={() => setSelectedImage(image.image_url)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === image.image_url
-                        ? "border-primary shadow-md"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <img
-                      src={image.image_url}
-                      alt={image.alt_text || product.name}
-                      className="w-full h-full object-cover"
+            <Tabs defaultValue="galeria" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-4">
+                <TabsTrigger value="galeria" className="flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4" />
+                  Galeria
+                </TabsTrigger>
+                <TabsTrigger value="3d" className="flex items-center gap-2" disabled={!product.model_3d_url && !product.sketchfab_url}>
+                  <Box className="w-4 h-4" />
+                  3D
+                </TabsTrigger>
+                <TabsTrigger value="video" className="flex items-center gap-2" disabled={!product.video_url}>
+                  <Video className="w-4 h-4" />
+                  Vídeo
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Galeria de Imagens */}
+              <TabsContent value="galeria" className="space-y-4">
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted border border-border shadow-lg">
+                  <img
+                    src={selectedImage || "/placeholder.svg"}
+                    alt={product.name}
+                    className="w-full h-full object-contain p-4"
+                  />
+                </div>
+                
+                {product.product_images.length > 1 && (
+                  <div className="grid grid-cols-4 gap-3">
+                    {product.product_images.map((image) => (
+                      <button
+                        key={image.id}
+                        onClick={() => setSelectedImage(image.image_url)}
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImage === image.image_url
+                            ? "border-primary shadow-md"
+                            : "border-border hover:border-primary/50"
+                        }`}
+                      >
+                        <img
+                          src={image.image_url}
+                          alt={image.alt_text || product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* Visualização 3D */}
+              <TabsContent value="3d">
+                {product.sketchfab_url ? (
+                  <div className="relative rounded-2xl overflow-hidden bg-muted border border-border shadow-lg" style={{ height: '600px' }}>
+                    <iframe
+                      src={product.sketchfab_url}
+                      className="w-full h-full"
+                      allow="autoplay; fullscreen; xr-spatial-tracking"
+                      allowFullScreen
+                      title={`Modelo 3D de ${product.name}`}
                     />
-                  </button>
-                ))}
-              </div>
-            )}
+                  </div>
+                ) : product.model_3d_url ? (
+                  <div className="relative rounded-2xl overflow-hidden bg-muted border border-border shadow-lg" style={{ height: '600px' }}>
+                    {modelLoading && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                        <div className="w-64 space-y-4">
+                          <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
+                          <Progress value={modelProgress} className="w-full" />
+                          <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <model-viewer
+                      id="product-model-viewer"
+                      src={product.model_3d_url}
+                      alt={`Modelo 3D de ${product.name}`}
+                      style={{ width: '100%', height: '100%' }}
+                      {...{
+                        poster: placeholderImage,
+                        loading: "eager",
+                        reveal: "auto",
+                        ar: true,
+                        "camera-controls": true,
+                        "auto-rotate": true,
+                        "shadow-intensity": "1",
+                        exposure: "1.2",
+                        "min-field-of-view": "10deg",
+                        "max-field-of-view": "45deg",
+                      } as any}
+                    >
+                    </model-viewer>
+                    
+                    <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => {
+                          const viewer = document.getElementById('product-model-viewer') as any;
+                          if (viewer) viewer.resetTurntableRotation();
+                        }}
+                        title="Resetar Visualização"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => {
+                          const viewer = document.getElementById('product-model-viewer') as any;
+                          if (viewer) viewer.fieldOfView = Math.max(10, viewer.fieldOfView - 5);
+                        }}
+                        title="Aumentar Zoom"
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => {
+                          const viewer = document.getElementById('product-model-viewer') as any;
+                          if (viewer) viewer.fieldOfView = Math.min(45, viewer.fieldOfView + 5);
+                        }}
+                        title="Diminuir Zoom"
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => {
+                          const viewer = document.getElementById('product-model-viewer') as any;
+                          if (viewer) {
+                            const rotating = viewer.getAttribute('auto-rotate');
+                            if (rotating !== null) {
+                              viewer.removeAttribute('auto-rotate');
+                            } else {
+                              viewer.setAttribute('auto-rotate', '');
+                            }
+                          }
+                        }}
+                        title="Auto-rotação On/Off"
+                      >
+                        <RotateCw className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+              </TabsContent>
+
+              {/* Vídeo */}
+              <TabsContent value="video">
+                {product.video_url && (
+                  <div className="aspect-video rounded-2xl overflow-hidden bg-muted border border-border shadow-lg">
+                    <iframe
+                      src={product.video_url}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={`Vídeo de ${product.name}`}
+                    />
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+
+            {/* Botão Simular com IA */}
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate('/visualizador')}
+            >
+              <Sparkles className="mr-2 h-6 w-6" />
+              Simular com IA
+            </Button>
           </div>
 
           {/* Informações do Produto */}
@@ -366,153 +499,6 @@ const ProductDetail = () => {
               </Button>
             </div>
 
-            {/* Vídeo de Demonstração */}
-            {product.video_url && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Play className="h-5 w-5" />
-                    Vídeo de Demonstração
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                    <iframe
-                      src={product.video_url}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      title={`Vídeo de ${product.name}`}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Modelo 3D */}
-            {(product.model_3d_url || product.sketchfab_url) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Box className="h-5 w-5" />
-                    Modelo 3D - Visualização Interativa
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {product.sketchfab_url ? (
-                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '500px' }}>
-                      <iframe
-                        src={product.sketchfab_url}
-                        className="w-full h-full"
-                        allow="autoplay; fullscreen; xr-spatial-tracking"
-                        allowFullScreen
-                        title={`Modelo 3D de ${product.name}`}
-                      />
-                    </div>
-                  ) : (
-                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '500px' }}>
-                      {modelLoading && (
-                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-                          <div className="w-64 space-y-4">
-                            <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
-                            <Progress value={modelProgress} className="w-full" />
-                            <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
-                          </div>
-                        </div>
-                      )}
-                      
-                      <model-viewer
-                        id="product-model-viewer"
-                        src={product.model_3d_url}
-                        alt={`Modelo 3D de ${product.name}`}
-                        style={{ width: '100%', height: '100%' }}
-                        {...{
-                          poster: placeholderImage,
-                          loading: "eager",
-                          reveal: "auto",
-                          ar: true,
-                          "camera-controls": true,
-                          "auto-rotate": true,
-                          "shadow-intensity": "1",
-                          exposure: "1.2",
-                          "min-field-of-view": "10deg",
-                          "max-field-of-view": "45deg",
-                        } as any}
-                      >
-                      </model-viewer>
-                      
-                      <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                          onClick={() => {
-                            const viewer = document.getElementById('product-model-viewer') as any;
-                            if (viewer) viewer.resetTurntableRotation();
-                          }}
-                          title="Resetar Visualização"
-                        >
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                          onClick={() => {
-                            const viewer = document.getElementById('product-model-viewer') as any;
-                            if (viewer) viewer.fieldOfView = Math.max(10, viewer.fieldOfView - 5);
-                          }}
-                          title="Aumentar Zoom"
-                        >
-                          <ZoomIn className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                          onClick={() => {
-                            const viewer = document.getElementById('product-model-viewer') as any;
-                            if (viewer) viewer.fieldOfView = Math.min(45, viewer.fieldOfView + 5);
-                          }}
-                          title="Diminuir Zoom"
-                        >
-                          <ZoomOut className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                          onClick={() => {
-                            const viewer = document.getElementById('product-model-viewer') as any;
-                            if (viewer) {
-                              const rotating = viewer.getAttribute('auto-rotate');
-                              if (rotating !== null) {
-                                viewer.removeAttribute('auto-rotate');
-                              } else {
-                                viewer.setAttribute('auto-rotate', '');
-                              }
-                            }
-                          }}
-                          title="Auto-rotação On/Off"
-                        >
-                          <RotateCw className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  <p className="text-sm text-muted-foreground mt-4">
-                    {product.sketchfab_url 
-                      ? "Modelo 3D fornecido pelo Sketchfab. Use o mouse para interagir com o modelo."
-                      : "Use o mouse ou toque na tela para rotacionar, zoom e explorar o modelo 3D. Em dispositivos compatíveis, você pode visualizar em Realidade Aumentada."
-                    }
-                  </p>
-                </CardContent>
-              </Card>
-            )}
           </div>
         </div>
       </div>

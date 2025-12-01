@@ -44,6 +44,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
     status: 'active',
     video_url: '',
     model_3d_url: '',
+    sketchfab_url: '',
   });
 
   useEffect(() => {
@@ -112,6 +113,7 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
       status: data.status || 'active',
       video_url: data.video_url || '',
       model_3d_url: data.model_3d_url || '',
+      sketchfab_url: data.sketchfab_url || '',
     });
   };
 
@@ -608,6 +610,48 @@ const ProductForm = ({ productId, onClose }: ProductFormProps) => {
               Faça upload de um arquivo .glb ou .gltf para visualização 3D interativa no catálogo
             </p>
           </div>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="sketchfab_url">URL do Sketchfab (Alternativa ao modelo 3D)</Label>
+          <Input
+            id="sketchfab_url"
+            type="url"
+            placeholder="https://sketchfab.com/models/..."
+            value={formData.sketchfab_url}
+            onChange={(e) => setFormData({ ...formData, sketchfab_url: e.target.value })}
+            disabled={!!formData.model_3d_url}
+          />
+          <p className="text-xs text-muted-foreground">
+            Cole a URL do modelo no Sketchfab. {formData.model_3d_url && "(Desabilitado: remova o modelo 3D primeiro)"}
+          </p>
+          
+          {formData.sketchfab_url && !formData.model_3d_url && (
+            <div className="border border-border rounded-lg p-4 space-y-4 mt-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Preview do Sketchfab</p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setFormData({ ...formData, sketchfab_url: '' })}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Remover
+                </Button>
+              </div>
+              
+              <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                <iframe
+                  src={formData.sketchfab_url}
+                  className="w-full h-full"
+                  allow="autoplay; fullscreen; xr-spatial-tracking"
+                  allowFullScreen
+                  title="Preview do modelo 3D do Sketchfab"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

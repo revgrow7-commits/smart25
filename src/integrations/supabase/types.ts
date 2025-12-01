@@ -159,6 +159,7 @@ export type Database = {
           pcs_per_ctn: number | null
           price: number | null
           product_group: string | null
+          sketchfab_url: string | null
           specifications: Json | null
           status: string | null
           updated_at: string
@@ -180,6 +181,7 @@ export type Database = {
           pcs_per_ctn?: number | null
           price?: number | null
           product_group?: string | null
+          sketchfab_url?: string | null
           specifications?: Json | null
           status?: string | null
           updated_at?: string
@@ -201,6 +203,7 @@ export type Database = {
           pcs_per_ctn?: number | null
           price?: number | null
           product_group?: string | null
+          sketchfab_url?: string | null
           specifications?: Json | null
           status?: string | null
           updated_at?: string

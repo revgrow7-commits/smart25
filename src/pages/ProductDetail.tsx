@@ -33,6 +33,7 @@ interface Product {
   is_featured: boolean | null;
   video_url: string | null;
   model_3d_url: string | null;
+  sketchfab_url: string | null;
   specifications: any;
   categories: {
     name: string;
@@ -280,7 +281,7 @@ const ProductDetail = () => {
             {product.video_url && (
               <TabsTrigger value="video">Vídeo</TabsTrigger>
             )}
-            {product.model_3d_url && (
+            {(product.model_3d_url || product.sketchfab_url) && (
               <TabsTrigger value="3d">Modelo 3D</TabsTrigger>
             )}
           </TabsList>
@@ -367,7 +368,7 @@ const ProductDetail = () => {
             </TabsContent>
           )}
 
-          {product.model_3d_url && (
+          {(product.model_3d_url || product.sketchfab_url) && (
             <TabsContent value="3d" className="mt-6">
               <Card>
                 <CardHeader>
@@ -377,101 +378,118 @@ const ProductDetail = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
-                    {modelLoading && (
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-                        <div className="w-64 space-y-4">
-                          <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
-                          <Progress value={modelProgress} className="w-full" />
-                          <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <model-viewer
-                      id="product-model-viewer"
-                      src={product.model_3d_url}
-                      alt={`Modelo 3D de ${product.name}`}
-                      style={{ width: '100%', height: '100%' }}
-                      {...{
-                        poster: placeholderImage,
-                        loading: "eager",
-                        reveal: "auto",
-                        ar: true,
-                        "camera-controls": true,
-                        "auto-rotate": true,
-                        "shadow-intensity": "1",
-                        exposure: "1.2",
-                        "min-field-of-view": "10deg",
-                        "max-field-of-view": "45deg",
-                      } as any}
-                    >
-                    </model-viewer>
-                    
-                    <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                        onClick={() => {
-                          const viewer = document.getElementById('product-model-viewer') as any;
-                          if (viewer) viewer.resetTurntableRotation();
-                        }}
-                        title="Resetar Visualização"
-                      >
-                        <RotateCcw className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                        onClick={() => {
-                          const viewer = document.getElementById('product-model-viewer') as any;
-                          if (viewer) viewer.fieldOfView = Math.max(10, viewer.fieldOfView - 5);
-                        }}
-                        title="Aumentar Zoom"
-                      >
-                        <ZoomIn className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                        onClick={() => {
-                          const viewer = document.getElementById('product-model-viewer') as any;
-                          if (viewer) viewer.fieldOfView = Math.min(45, viewer.fieldOfView + 5);
-                        }}
-                        title="Diminuir Zoom"
-                      >
-                        <ZoomOut className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
-                        onClick={() => {
-                          const viewer = document.getElementById('product-model-viewer') as any;
-                          if (viewer) {
-                            const rotating = viewer.getAttribute('auto-rotate');
-                            if (rotating !== null) {
-                              viewer.removeAttribute('auto-rotate');
-                            } else {
-                              viewer.setAttribute('auto-rotate', '');
-                            }
-                          }
-                        }}
-                        title="Auto-rotação On/Off"
-                      >
-                        <RotateCw className="h-4 w-4" />
-                      </Button>
+                  {product.sketchfab_url ? (
+                    // Renderiza iframe do Sketchfab
+                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                      <iframe
+                        src={product.sketchfab_url}
+                        className="w-full h-full"
+                        allow="autoplay; fullscreen; xr-spatial-tracking"
+                        allowFullScreen
+                        title={`Modelo 3D de ${product.name}`}
+                      />
                     </div>
-                  </div>
+                  ) : (
+                    // Renderiza model-viewer para arquivo .glb
+                    <div className="relative rounded-lg overflow-hidden bg-muted border border-border" style={{ height: '600px' }}>
+                      {modelLoading && (
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                          <div className="w-64 space-y-4">
+                            <p className="text-center text-sm font-medium">Carregando modelo 3D...</p>
+                            <Progress value={modelProgress} className="w-full" />
+                            <p className="text-center text-xs text-muted-foreground">{modelProgress}%</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <model-viewer
+                        id="product-model-viewer"
+                        src={product.model_3d_url}
+                        alt={`Modelo 3D de ${product.name}`}
+                        style={{ width: '100%', height: '100%' }}
+                        {...{
+                          poster: placeholderImage,
+                          loading: "eager",
+                          reveal: "auto",
+                          ar: true,
+                          "camera-controls": true,
+                          "auto-rotate": true,
+                          "shadow-intensity": "1",
+                          exposure: "1.2",
+                          "min-field-of-view": "10deg",
+                          "max-field-of-view": "45deg",
+                        } as any}
+                      >
+                      </model-viewer>
+                      
+                      <div className="absolute bottom-4 right-4 flex gap-2 bg-background/90 backdrop-blur-sm rounded-lg p-2 border border-border shadow-lg">
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                          onClick={() => {
+                            const viewer = document.getElementById('product-model-viewer') as any;
+                            if (viewer) viewer.resetTurntableRotation();
+                          }}
+                          title="Resetar Visualização"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                          onClick={() => {
+                            const viewer = document.getElementById('product-model-viewer') as any;
+                            if (viewer) viewer.fieldOfView = Math.max(10, viewer.fieldOfView - 5);
+                          }}
+                          title="Aumentar Zoom"
+                        >
+                          <ZoomIn className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                          onClick={() => {
+                            const viewer = document.getElementById('product-model-viewer') as any;
+                            if (viewer) viewer.fieldOfView = Math.min(45, viewer.fieldOfView + 5);
+                          }}
+                          title="Diminuir Zoom"
+                        >
+                          <ZoomOut className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 hover:bg-primary hover:text-primary-foreground"
+                          onClick={() => {
+                            const viewer = document.getElementById('product-model-viewer') as any;
+                            if (viewer) {
+                              const rotating = viewer.getAttribute('auto-rotate');
+                              if (rotating !== null) {
+                                viewer.removeAttribute('auto-rotate');
+                              } else {
+                                viewer.setAttribute('auto-rotate', '');
+                              }
+                            }
+                          }}
+                          title="Auto-rotação On/Off"
+                        >
+                          <RotateCw className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                   <p className="text-sm text-muted-foreground mt-4">
-                    Use o mouse ou toque na tela para rotacionar, zoom e explorar o modelo 3D. Em dispositivos compatíveis, você pode visualizar em Realidade Aumentada.
+                    {product.sketchfab_url 
+                      ? "Modelo 3D fornecido pelo Sketchfab. Use o mouse para interagir com o modelo."
+                      : "Use o mouse ou toque na tela para rotacionar, zoom e explorar o modelo 3D. Em dispositivos compatíveis, você pode visualizar em Realidade Aumentada."
+                    }
                   </p>
                 </CardContent>
               </Card>

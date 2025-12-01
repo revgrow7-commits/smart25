@@ -81,5 +81,19 @@
   "footer": {
     "rights": "© 2025 Smart Signage by Indústria Visual. Todos os direitos reservados.",
     "patent": "Produto patenteado e desenvolvido com alumínio 100% reciclável."
+  },
+  "budget": {
+    "title": "Orçamento",
+    "addToBudget": "Adicionar ao Orçamento",
+    "inBudget": "No Orçamento",
+    "itemsSelected": "produtos selecionados",
+    "itemSelected": "produto selecionado",
+    "requestQuote": "Solicitar Orçamento",
+    "clearAll": "Limpar Tudo",
+    "sendRequest": "Enviar Solicitação",
+    "quoteRequested": "Orçamento solicitado!",
+    "quoteRequestedDesc": "Em breve entraremos em contato.",
+    "addedToBudget": "Adicionado ao orçamento",
+    "selectedProducts": "Produtos selecionados:"
   }
 }

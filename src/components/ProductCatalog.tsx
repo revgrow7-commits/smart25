@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Grid, Layers, Box, Lightbulb, Package } from "lucide-react";
+import { Eye, Grid, Layers, Box, Lightbulb, Package, Sparkles, ShoppingCart, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useBudget } from "@/contexts/BudgetContext";
 
 interface ProductImage {
   id: string;
@@ -26,6 +27,8 @@ interface Product {
   graphic_size: string | null;
   is_featured: boolean | null;
   product_group: string | null;
+  model_3d_url: string | null;
+  sketchfab_url: string | null;
   categories: {
     name: string;
     slug: string;
@@ -64,6 +67,7 @@ interface ProductCatalogProps {
 
 const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true }: ProductCatalogProps = {}) => {
   const navigate = useNavigate();
+  const { addItem, isInBudget } = useBudget();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [groups, setGroups] = useState<string[]>([]);
@@ -208,6 +212,23 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
     return "/placeholder.svg";
   };
 
+  const handleAddToBudget = (product: Product, e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      name: product.name,
+      item_code: product.item_code,
+      image_url: getPrimaryImage(product),
+      description: product.description || undefined,
+      frame_size: product.frame_size || undefined,
+      graphic_size: product.graphic_size || undefined,
+    });
+    toast({
+      title: "Adicionado ao orçamento",
+      description: `${product.name} foi adicionado ao seu orçamento.`,
+    });
+  };
+
   return (
     <section id="catalogo" className="py-8 md:py-12 lg:py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -325,6 +346,21 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent"></div>
+                      
+                      {/* Ícones 3D e IA */}
+                      <div className="absolute top-2 md:top-4 right-2 md:right-4 flex gap-1 md:gap-2">
+                        {(product.model_3d_url || product.sketchfab_url) && (
+                          <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1">
+                            <Box className="w-3 h-3" />
+                            3D
+                          </Badge>
+                        )}
+                        <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          IA
+                        </Badge>
+                      </div>
+
                       <div className="absolute top-2 md:top-4 left-2 md:left-4 flex flex-wrap gap-1 md:gap-2">
                         {product.is_featured && (
                           <Badge className="bg-primary/90 hover:bg-primary text-xs">
@@ -371,13 +407,28 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
                         )}
                       </div>
                       
-                      <Button 
-                        className="w-full btn-primary text-sm md:text-base"
-                        onClick={() => navigate(`/produto/${product.id}`)}
-                      >
-                        <Eye className="mr-2 h-3 w-3 md:h-4 md:w-4" />
-                        Ver Detalhes
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          className="flex-1 btn-primary text-sm md:text-base"
+                          onClick={() => navigate(`/produto/${product.id}`)}
+                        >
+                          <Eye className="mr-2 h-3 w-3 md:h-4 md:w-4" />
+                          Ver Detalhes
+                        </Button>
+                        <Button
+                          variant={isInBudget(product.id) ? "secondary" : "outline"}
+                          size="icon"
+                          onClick={(e) => handleAddToBudget(product, e)}
+                          disabled={isInBudget(product.id)}
+                          className="flex-shrink-0"
+                        >
+                          {isInBudget(product.id) ? (
+                            <ShoppingCart className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 ))}

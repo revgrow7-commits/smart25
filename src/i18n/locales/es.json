@@ -81,5 +81,19 @@
   "footer": {
     "rights": "© 2025 Smart Signage by Indústria Visual. Todos los derechos reservados.",
     "patent": "Producto patentado y desarrollado con aluminio 100% reciclable."
+  },
+  "budget": {
+    "title": "Presupuesto",
+    "addToBudget": "Añadir al Presupuesto",
+    "inBudget": "En Presupuesto",
+    "itemsSelected": "productos seleccionados",
+    "itemSelected": "producto seleccionado",
+    "requestQuote": "Solicitar Presupuesto",
+    "clearAll": "Limpiar Todo",
+    "sendRequest": "Enviar Solicitud",
+    "quoteRequested": "¡Presupuesto solicitado!",
+    "quoteRequestedDesc": "Pronto nos pondremos en contacto.",
+    "addedToBudget": "Añadido al presupuesto",
+    "selectedProducts": "Productos seleccionados:"
   }
 }

@@ -130,6 +130,20 @@ const FeaturedProducts = () => {
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
+                
+                {/* Badges sobre a imagem */}
+                <div className="absolute top-2 right-2 flex gap-2">
+                  {(product.model_3d_url || product.sketchfab_url) && (
+                    <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1 shadow-lg">
+                      <Box className="w-3 h-3" />
+                      3D
+                    </Badge>
+                  )}
+                  <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1 shadow-lg">
+                    <Sparkles className="w-3 h-3" />
+                    IA
+                  </Badge>
+                </div>
               </div>
               <CardContent className="p-4 md:p-6">
                 <div className="mb-2">
@@ -146,20 +160,6 @@ const FeaturedProducts = () => {
                     ${product.price.toFixed(2)}
                   </p>
                 )}
-                
-                {/* Ícones 3D e IA */}
-                <div className="flex gap-2 justify-end mb-3">
-                  {(product.model_3d_url || product.sketchfab_url) && (
-                    <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1">
-                      <Box className="w-3 h-3" />
-                      3D
-                    </Badge>
-                  )}
-                  <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    IA
-                  </Badge>
-                </div>
                 
                 <Button
                   variant={isInBudget(product.id) ? "secondary" : "outline"}

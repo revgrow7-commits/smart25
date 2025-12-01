@@ -207,11 +207,11 @@ const ProductDetail = () => {
 
               {/* Galeria de Imagens */}
               <TabsContent value="galeria" className="space-y-3 mt-4">
-                <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md">
+                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md" style={{ height: '650px' }}>
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
-                    className="w-full h-full object-contain p-6"
+                    className="w-full h-full object-contain p-3"
                   />
                 </div>
                 

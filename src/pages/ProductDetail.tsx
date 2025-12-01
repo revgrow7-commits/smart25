@@ -211,7 +211,7 @@ const ProductDetail = () => {
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
-                    className="w-full h-full object-contain p-2"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 

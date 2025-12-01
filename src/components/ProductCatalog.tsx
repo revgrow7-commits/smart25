@@ -398,12 +398,12 @@ const ProductCatalog = ({ categorySlug, limit, productGroup, showFilters = true 
                         {/* Ícones 3D e IA */}
                         <div className="flex gap-2 justify-end">
                           {(product.model_3d_url || product.sketchfab_url) && (
-                            <Badge className="bg-primary/90 hover:bg-primary text-xs flex items-center gap-1">
+                            <Badge className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary text-xs flex items-center gap-1 transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer">
                               <Box className="w-3 h-3" />
                               3D
                             </Badge>
                           )}
-                          <Badge className="bg-accent/90 hover:bg-accent text-accent-foreground text-xs flex items-center gap-1">
+                          <Badge className="bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent text-accent-foreground text-xs flex items-center gap-1 transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer">
                             <Sparkles className="w-3 h-3" />
                             IA
                           </Badge>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ArrowRight, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const TrainingLeadForm = () => {
   const [formData, setFormData] = useState({
@@ -26,21 +27,36 @@ const TrainingLeadForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const { error } = await supabase.from("training_leads").insert({
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        city: formData.city,
+        profile: formData.profile,
+      });
 
-    toast.success("Inscrição realizada com sucesso!", {
-      description: "Em breve você receberá acesso às aulas.",
-    });
+      if (error) throw error;
 
-    setFormData({
-      name: "",
-      email: "",
-      whatsapp: "",
-      city: "",
-      profile: "",
-    });
-    setIsSubmitting(false);
+      toast.success("Inscrição realizada com sucesso!", {
+        description: "Em breve você receberá acesso às aulas.",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        whatsapp: "",
+        city: "",
+        profile: "",
+      });
+    } catch (error) {
+      console.error("Error saving lead:", error);
+      toast.error("Erro ao enviar inscrição", {
+        description: "Por favor, tente novamente.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

@@ -50,11 +50,11 @@ const TrainingCurriculum = () => {
   ];
 
   return (
-    <section id="curriculum" className="py-16 md:py-24 relative bg-[#0d0520]/50">
+    <section id="curriculum" className="py-16 md:py-24 relative bg-[#050515]/50">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-12">
           O que você vai aprender na{" "}
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <span className="text-red-500">
             Escola de Treinamento Smart Signage
           </span>
         </h2>
@@ -63,25 +63,25 @@ const TrainingCurriculum = () => {
           {modules.map((module, index) => (
             <div
               key={index}
-              className="group p-6 rounded-2xl bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]"
+              className="group p-6 rounded-2xl bg-gradient-to-br from-[#0a0a2e]/80 to-[#15153e]/60 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(220,38,38,0.2)]"
             >
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-red-600 to-red-800 shadow-[0_0_20px_rgba(220,38,38,0.3)]">
                   <module.icon className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-xs font-medium text-purple-400 bg-purple-500/20 px-3 py-1 rounded-full">
+                <span className="text-xs font-medium text-red-400 bg-red-500/20 px-3 py-1 rounded-full">
                   Módulo {index + 1}
                 </span>
               </div>
 
-              <h3 className="text-lg font-semibold text-white mb-4 group-hover:text-purple-300 transition-colors">
+              <h3 className="text-lg font-semibold text-white mb-4 group-hover:text-red-300 transition-colors">
                 {module.title.replace(`Módulo ${index + 1} — `, "")}
               </h3>
 
               <ul className="space-y-2">
                 {module.topics.map((topic, topicIndex) => (
                   <li key={topicIndex} className="flex items-start gap-2 text-gray-400 text-sm">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-red-400 mt-1">•</span>
                     {topic}
                   </li>
                 ))}

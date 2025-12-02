@@ -22,7 +22,7 @@ const TrainingSchool = () => {
         <meta name="keywords" content="stands modulares, montagem de stands, treinamento montadores, feiras e eventos" />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-b from-[#0a0118] via-[#1a0a2e] to-[#0a0118]">
+      <div className="min-h-screen bg-gradient-to-b from-[#0a0a2e] via-[#0f0a3e] to-[#0a0a2e]">
         <TrainingNav />
         <TrainingHero />
         <TrainingWhyModular />

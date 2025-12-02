@@ -15,7 +15,7 @@ const TrainingWhyModular = () => {
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-6">
             Por que os stands modulares estão dominando o mercado de{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="text-red-500">
               feiras e eventos?
             </span>
           </h2>
@@ -24,7 +24,7 @@ const TrainingWhyModular = () => {
             Empresas que participam de várias feiras por ano estão migrando dos stands de madeira para os stands modulares. O motivo é simples: menos custo, menos dor de cabeça logística e muito mais reaproveitamento. Isso abre uma oportunidade enorme para montadores, agências e equipes de eventos que dominam esses sistemas.
           </p>
 
-          <h3 className="text-xl font-semibold text-purple-400 text-center mb-8">
+          <h3 className="text-xl font-semibold text-red-400 text-center mb-8">
             Com stands modulares, você ganha:
           </h3>
 
@@ -32,10 +32,10 @@ const TrainingWhyModular = () => {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="flex items-start gap-4 p-4 rounded-xl bg-purple-900/20 border border-purple-500/20 hover:border-purple-500/40 transition-colors"
+                className="flex items-start gap-4 p-4 rounded-xl bg-[#0a0a2e]/50 border border-red-500/20 hover:border-red-500/40 transition-colors"
               >
-                <div className="p-3 rounded-lg bg-gradient-to-br from-purple-600/30 to-pink-600/30 border border-purple-500/30 shrink-0">
-                  <benefit.icon className="h-6 w-6 text-purple-400" />
+                <div className="p-3 rounded-lg bg-gradient-to-br from-red-600/30 to-red-800/30 border border-red-500/30 shrink-0">
+                  <benefit.icon className="h-6 w-6 text-red-400" />
                 </div>
                 <p className="text-gray-300">{benefit.text}</p>
               </div>

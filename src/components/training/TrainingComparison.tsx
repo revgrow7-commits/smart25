@@ -35,7 +35,7 @@ const TrainingComparison = () => {
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-6">
             Stands modulares vs stands de madeira:{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="text-red-500">
               qual compensa mais?
             </span>
           </h2>
@@ -45,9 +45,9 @@ const TrainingComparison = () => {
           </p>
 
           {/* Comparison Table */}
-          <div className="rounded-2xl overflow-hidden border border-purple-500/30 bg-purple-900/20">
+          <div className="rounded-2xl overflow-hidden border border-red-500/30 bg-[#0a0a2e]/50">
             {/* Header */}
-            <div className="grid grid-cols-3 bg-gradient-to-r from-purple-900/50 to-pink-900/50">
+            <div className="grid grid-cols-3 bg-gradient-to-r from-[#0a0a2e] to-[#15153e]">
               <div className="p-4 text-gray-400 text-sm font-medium">Aspecto</div>
               <div className="p-4 text-center">
                 <span className="inline-flex items-center gap-2 text-green-400 font-semibold">
@@ -68,8 +68,8 @@ const TrainingComparison = () => {
               <div
                 key={index}
                 className={`grid grid-cols-3 ${
-                  index % 2 === 0 ? "bg-purple-900/10" : "bg-transparent"
-                } border-t border-purple-500/20`}
+                  index % 2 === 0 ? "bg-[#0a0a2e]/30" : "bg-transparent"
+                } border-t border-red-500/20`}
               >
                 <div className="p-4 text-gray-300 font-medium text-sm">
                   {row.aspect}
@@ -86,7 +86,7 @@ const TrainingComparison = () => {
 
           <p className="text-gray-400 text-center mt-8 text-lg">
             Para empresas que participam de várias feiras ao longo do ano, os{" "}
-            <span className="text-purple-400 font-medium">stands modulares</span> quase sempre oferecem o melhor custo-benefício, principalmente quando há reaproveitamento da estrutura.
+            <span className="text-red-400 font-medium">stands modulares</span> quase sempre oferecem o melhor custo-benefício, principalmente quando há reaproveitamento da estrutura.
           </p>
         </div>
       </div>

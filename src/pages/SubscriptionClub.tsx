@@ -36,37 +36,27 @@ const SubscriptionClub = () => {
           <h2 className="text-3xl font-bold text-center mb-12">
             Benefícios Exclusivos
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: Zap,
-                title: "Acesso Antecipado",
-                description: "Seja o primeiro a conhecer nossos novos produtos e lançamentos exclusivos."
+                title: "Descontos Progressivos",
+                description: "Quanto mais você utiliza, maior o desconto. Benefícios que crescem com sua parceria."
               },
               {
                 icon: Gift,
-                title: "Descontos Especiais",
-                description: "Descontos exclusivos em toda a nossa linha de produtos."
-              },
-              {
-                icon: Users,
-                title: "Comunidade VIP",
-                description: "Acesso à comunidade exclusiva de membros com suporte prioritário."
+                title: "Programe sua Demanda",
+                description: "Planeje suas necessidades com antecedência e garanta disponibilidade e melhores condições."
               },
               {
                 icon: Star,
-                title: "Produtos Exclusivos",
-                description: "Produtos especiais disponíveis apenas para membros do clube."
+                title: "Impressão por m²",
+                description: "Modelo de precificação transparente por metro quadrado, sem surpresas no orçamento."
               },
               {
-                icon: Crown,
-                title: "Atendimento Premium",
-                description: "Canal de atendimento exclusivo com resposta prioritária."
-              },
-              {
-                icon: Check,
-                title: "Frete Grátis",
-                description: "Frete grátis em todas as suas compras como membro."
+                icon: Users,
+                title: "Reuso de Estruturas",
+                description: "Reutilize estruturas existentes com novas artes, economia inteligente e sustentável."
               }
             ].map((benefit, index) => (
               <Card key={index} className="border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg">

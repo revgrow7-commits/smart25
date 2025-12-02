@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Linkedin, MessageCircle, MapPin } from "lucide-react";
+import { Instagram, Facebook, Linkedin, MessageCircle, MapPin, Lightbulb } from "lucide-react";
 
 const SubscriptionFooter = () => {
   return (
@@ -16,7 +16,10 @@ const SubscriptionFooter = () => {
               <span className="text-white">rt</span>
               <span className="text-red-500">signage</span>
             </h3>
-            <p className="text-gray-400 text-xs mb-3">by Indústria Visual</p>
+            <p className="text-gray-400 text-xs mb-3 flex items-center gap-1">
+              by Indústria Visual
+              <Lightbulb className="w-4 h-4 text-gray-400" />
+            </p>
             <p className="text-gray-400 text-sm">
               Soluções inteligentes em sinalização e estruturas para eventos em todo o Brasil.
             </p>

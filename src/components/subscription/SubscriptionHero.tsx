@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Lightbulb } from "lucide-react";
 
 const SubscriptionHero = () => {
   return (
@@ -32,7 +32,10 @@ const SubscriptionHero = () => {
               <span className="text-white">rt</span>
               <span className="text-red-500">signage</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">by Indústria Visual</p>
+            <p className="text-gray-400 text-sm mt-2 flex items-center justify-center gap-2">
+              by Indústria Visual
+              <Lightbulb className="w-5 h-5 text-gray-400" />
+            </p>
           </div>
 
           {/* Badge */}

@@ -60,15 +60,15 @@ const TrainingLeadForm = () => {
   };
 
   return (
-    <section id="lead-form" className="py-16 md:py-24 relative bg-[#0d0520]/50">
+    <section id="lead-form" className="py-16 md:py-24 relative bg-[#050515]/50">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(139,92,246,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(220,38,38,0.1),transparent_50%)]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-4">
             Entre agora para a{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="text-red-500">
               Escola de Treinamento Smart Signage
             </span>
           </h2>
@@ -88,7 +88,7 @@ const TrainingLeadForm = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="bg-purple-900/30 border-purple-500/30 text-white placeholder:text-gray-500 focus:border-purple-400"
+                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
                   placeholder="Seu nome"
                 />
               </div>
@@ -103,7 +103,7 @@ const TrainingLeadForm = () => {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-purple-900/30 border-purple-500/30 text-white placeholder:text-gray-500 focus:border-purple-400"
+                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -117,7 +117,7 @@ const TrainingLeadForm = () => {
                   required
                   value={formData.whatsapp}
                   onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                  className="bg-purple-900/30 border-purple-500/30 text-white placeholder:text-gray-500 focus:border-purple-400"
+                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
                   placeholder="(00) 00000-0000"
                 />
               </div>
@@ -131,7 +131,7 @@ const TrainingLeadForm = () => {
                   required
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="bg-purple-900/30 border-purple-500/30 text-white placeholder:text-gray-500 focus:border-purple-400"
+                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
                   placeholder="Sua cidade"
                 />
               </div>
@@ -146,10 +146,10 @@ const TrainingLeadForm = () => {
                 onValueChange={(value) => setFormData({ ...formData, profile: value })}
                 required
               >
-                <SelectTrigger className="bg-purple-900/30 border-purple-500/30 text-white">
+                <SelectTrigger className="bg-[#0a0a2e]/50 border-red-500/30 text-white">
                   <SelectValue placeholder="Selecione seu perfil" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1a0a2e] border-purple-500/30">
+                <SelectContent className="bg-[#0a0a2e] border-red-500/30">
                   <SelectItem value="montador">Montador</SelectItem>
                   <SelectItem value="agencia">Agência</SelectItem>
                   <SelectItem value="empresa">Empresa</SelectItem>
@@ -159,7 +159,7 @@ const TrainingLeadForm = () => {
             </div>
 
             <div className="flex items-start gap-3 text-gray-400 text-sm">
-              <Shield className="h-5 w-5 text-purple-400 shrink-0 mt-0.5" />
+              <Shield className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
               <p>
                 Não se preocupe: não enviamos spam. Você receberá apenas conteúdos relevantes sobre stands modulares, montagem e oportunidades de negócio.
               </p>
@@ -168,7 +168,7 @@ const TrainingLeadForm = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white py-6 text-lg rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)]"
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-6 text-lg rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.4)]"
             >
               {isSubmitting ? "Enviando..." : "Quero me inscrever na Escola"}
               <ArrowRight className="ml-2 h-5 w-5" />

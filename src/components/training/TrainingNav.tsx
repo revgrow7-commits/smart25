@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const TrainingNav = () => {
@@ -23,12 +23,15 @@ const TrainingNav = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0118]/90 backdrop-blur-md border-b border-purple-500/20">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a2e]/95 backdrop-blur-md border-b border-red-500/20">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <GraduationCap className="h-8 w-8 text-purple-400" />
-            <span className="font-bold text-white">Smart Signage Academy</span>
+            <span className="font-bold text-xl tracking-tight">
+              <span className="text-white">smart</span>
+              <span className="text-red-500">signage</span>
+              <span className="text-white font-light ml-1">academy</span>
+            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -37,14 +40,14 @@ const TrainingNav = () => {
               <button
                 key={item.href}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-300 hover:text-purple-400 transition-colors text-sm"
+                className="text-gray-300 hover:text-red-400 transition-colors text-sm"
               >
                 {item.label}
               </button>
             ))}
             <button
               onClick={() => scrollToSection("#lead-form")}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-[0_0_20px_rgba(220,38,38,0.3)]"
             >
               Inscreva-se
             </button>
@@ -61,19 +64,19 @@ const TrainingNav = () => {
 
         {/* Mobile Nav */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-purple-500/20">
+          <div className="md:hidden py-4 border-t border-red-500/20">
             {navItems.map((item) => (
               <button
                 key={item.href}
                 onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left py-2 text-gray-300 hover:text-purple-400 transition-colors"
+                className="block w-full text-left py-2 text-gray-300 hover:text-red-400 transition-colors"
               >
                 {item.label}
               </button>
             ))}
             <button
               onClick={() => scrollToSection("#lead-form")}
-              className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
             >
               Inscreva-se
             </button>

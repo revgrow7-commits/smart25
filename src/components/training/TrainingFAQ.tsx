@@ -30,7 +30,7 @@ const TrainingFAQ = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-12">
           Perguntas frequentes sobre a{" "}
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <span className="text-red-500">
             Escola de Treinamento
           </span>
         </h2>
@@ -41,9 +41,9 @@ const TrainingFAQ = () => {
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border border-purple-500/20 rounded-xl bg-purple-900/20 px-6 data-[state=open]:border-purple-500/40"
+                className="border border-red-500/20 rounded-xl bg-[#0a0a2e]/50 px-6 data-[state=open]:border-red-500/40"
               >
-                <AccordionTrigger className="text-white hover:text-purple-300 text-left py-5">
+                <AccordionTrigger className="text-white hover:text-red-300 text-left py-5">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400 pb-5">

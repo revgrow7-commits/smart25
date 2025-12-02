@@ -10,7 +10,7 @@ import SubscriptionFooter from "@/components/subscription/SubscriptionFooter";
 
 const SubscriptionClub = () => {
   return (
-    <div className="min-h-screen bg-[#0a0015]">
+    <div className="min-h-screen bg-[#0a0a2e]">
       <Navbar />
       <SubscriptionHero />
       <SubscriptionBenefits />

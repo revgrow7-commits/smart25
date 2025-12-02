@@ -1,6 +1,7 @@
 import { Zap, Users, Recycle, Play, Download, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import academyHero from "@/assets/smart-signage-academy-hero.jpg";
+import trainingStand from "@/assets/training-hero-stand.png";
 
 const TrainingHero = () => {
   const benefits = [
@@ -87,23 +88,18 @@ const TrainingHero = () => {
             </div>
           </div>
 
-          {/* Image/Illustration Placeholder */}
+          {/* Stand Image */}
           <div className="relative">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-[#0a0a2e]/80 to-[#1a0a3e]/80 border border-red-500/30 p-8 relative overflow-hidden backdrop-blur-sm">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgxMzksMTQ3LDE3NCwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50" />
-              
-              <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center mb-6 shadow-[0_0_60px_rgba(220,38,38,0.5)]">
-                  <Users className="h-16 w-16 text-white" />
-                </div>
-                <p className="text-xl font-semibold text-white mb-2">Montagem Profissional</p>
-                <p className="text-gray-400">Stands modulares com tecido tensionado</p>
-              </div>
-
-              {/* Decorative elements */}
-              <div className="absolute top-4 right-4 w-20 h-20 border-2 border-red-500/30 rounded-lg" />
-              <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-cyan-500/30 rounded-lg" />
+            <div className="rounded-2xl overflow-hidden border border-red-500/30 shadow-[0_0_40px_rgba(220,38,38,0.2)]">
+              <img 
+                src={trainingStand} 
+                alt="Stand modular Smart Signage em feira de eventos" 
+                className="w-full h-auto object-cover"
+              />
             </div>
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-20 h-20 border-2 border-red-500/30 rounded-lg" />
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 border-2 border-cyan-500/30 rounded-lg" />
           </div>
         </div>
       </div>

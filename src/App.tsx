@@ -13,6 +13,7 @@ import AccessDenied from "./pages/AccessDenied";
 import ProductDetail from "./pages/ProductDetail";
 import StandVisualizer from "./pages/StandVisualizer";
 import Catalog from "./pages/Catalog";
+import SubscriptionClub from "./pages/SubscriptionClub";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/produto/:id" element={<ProductDetail />} />
             <Route path="/visualizador-stand" element={<StandVisualizer />} />
+            <Route path="/clube-assinatura" element={<SubscriptionClub />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

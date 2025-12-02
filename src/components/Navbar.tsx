@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3, Monitor, Tv, Projector, Smartphone, Tablet, Speaker, Camera, Router, Headphones, HardDrive, Package, Shapes, LayoutGrid } from "lucide-react";
+import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3, Monitor, Tv, Projector, Smartphone, Tablet, Speaker, Camera, Router, Headphones, HardDrive, Package, Shapes, LayoutGrid, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import LogoProcessor from "@/components/LogoProcessor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
@@ -115,6 +115,11 @@ const Navbar = () => {
               Home
             </Link>
 
+            <Link to="/clube-assinatura" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+              <Crown className="w-4 h-4" />
+              Clube de Assinatura
+            </Link>
+
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
                 <Grid3x3 className="w-4 h-4" />
@@ -227,6 +232,11 @@ const Navbar = () => {
             <Link to="/" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
               <Home className="w-4 h-4" />
               Home
+            </Link>
+
+            <Link to="/clube-assinatura" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>
+              <Crown className="w-4 h-4" />
+              Clube de Assinatura
             </Link>
 
             <Link to="/visualizador-stand" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-2" onClick={() => setIsMobileMenuOpen(false)}>

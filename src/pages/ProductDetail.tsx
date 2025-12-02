@@ -165,11 +165,11 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4">
         <Button
           variant="ghost"
           onClick={() => navigate("/#catalogo")}
-          className="mb-6"
+          className="mb-3"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar ao Catálogo
@@ -177,9 +177,9 @@ const ProductDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,0.85fr] gap-8 lg:gap-12">
           {/* Visualizador com Abas */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Tabs defaultValue="galeria" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1.5 rounded-xl">
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1 rounded-xl">
                 <TabsTrigger 
                   value="galeria" 
                   className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg"
@@ -206,7 +206,7 @@ const ProductDetail = () => {
               </TabsList>
 
               {/* Galeria de Imagens */}
-              <TabsContent value="galeria" className="space-y-3 mt-2">
+              <TabsContent value="galeria" className="space-y-2 mt-0">
                 <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md" style={{ height: '750px' }}>
                   <img
                     src={selectedImage || "/placeholder.svg"}

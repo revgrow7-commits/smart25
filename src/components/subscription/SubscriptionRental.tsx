@@ -9,6 +9,7 @@ import {
   ArrowRight,
   CheckCircle2
 } from "lucide-react";
+import standModularImage from "@/assets/stand-modular-smart-signage.png";
 
 const rentalFeatures = [
   {
@@ -95,6 +96,23 @@ const SubscriptionRental = () => {
             Como assinante do Clube Smart Signage, você tem acesso exclusivo ao nosso sistema de 
             locação de estruturas com condições especiais e economia de até 40%.
           </p>
+        </div>
+
+        {/* Stand Modular Visual Section */}
+        <div className="mb-20 relative">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl md:text-4xl font-bold text-white">
+              Stand Modular <span className="bg-gradient-to-r from-cyan-400 to-red-400 bg-clip-text text-transparent">Inteligente</span>
+            </h3>
+          </div>
+          <div className="relative max-w-4xl mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-transparent to-red-500/20 rounded-3xl blur-3xl" />
+            <img 
+              src={standModularImage} 
+              alt="Stand Modular Smart Signage" 
+              className="relative w-full h-auto rounded-2xl shadow-[0_0_60px_rgba(6,182,212,0.2)]"
+            />
+          </div>
         </div>
 
         {/* Features Grid */}

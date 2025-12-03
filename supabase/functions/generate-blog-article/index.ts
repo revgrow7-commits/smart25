@@ -39,31 +39,32 @@ REGRAS OBRIGATÓRIAS:
 8. Exemplos do mundo real (varejo, feiras, franquias, eventos)
 9. Foco em: custo-benefício, montagem rápida, modularidade, sustentabilidade
 
-FORMATO DE RESPOSTA:
-Retorne APENAS um objeto JSON válido, sem markdown, sem code blocks, sem concatenação de strings.
-O campo "content" deve ser uma única string HTML contínua (não use + para concatenar).
+FORMATO DE RESPOSTA CRÍTICO:
+- Retorne APENAS JSON válido
+- SEM markdown, SEM code blocks, SEM backticks
+- SEM concatenação de strings (+ entre aspas)
+- NO HTML: NÃO use atributos com aspas (como border="1"). Use apenas tags simples: <table>, <tr>, <td>, <th>, <thead>, <tbody>
+- Aspas duplas apenas para valores JSON, NUNCA dentro do HTML
 
-Estrutura JSON esperada:
+Estrutura JSON:
 {
-  "title": "Título otimizado para SEO (máx 60 caracteres)",
-  "slug": "slug-url-amigavel",
-  "excerpt": "Resumo do artigo em 2-3 frases (máx 160 caracteres)",
-  "content": "<h2>Seção 1</h2><p>Conteúdo...</p><h2>Seção 2</h2><p>Mais conteúdo...</p>",
-  "meta_title": "Meta título SEO (máx 60 caracteres)",
-  "meta_description": "Meta descrição SEO (máx 160 caracteres)",
-  "keywords": ["palavra1", "palavra2", "palavra3"],
+  "title": "Título SEO máx 60 chars",
+  "slug": "slug-url",
+  "excerpt": "Resumo máx 160 chars",
+  "content": "<h2>Seção</h2><p>Texto</p><table><thead><tr><th>Col1</th></tr></thead><tbody><tr><td>Valor</td></tr></tbody></table>",
+  "meta_title": "Meta título máx 60 chars",
+  "meta_description": "Meta descrição máx 160 chars",
+  "keywords": ["palavra1", "palavra2"],
   "reading_time": 5
 }
 
-IMPORTANTE: O campo "content" deve ser uma string HTML única e contínua, NÃO use concatenação JavaScript.
-
-ESTRUTURA DO CONTEÚDO HTML:
-1. Introdução (resposta direta + contextualização)
-2. Seções principais com H2 e H3
-3. Lista ou checklist prático
-4. Tabela comparativa (quando aplicável)
-5. FAQ com 4-6 perguntas
-6. Conclusão com CTA sutil B2B`;
+ESTRUTURA DO CONTEÚDO:
+1. Introdução (resposta direta)
+2. Seções com H2/H3
+3. Listas práticas
+4. Tabela comparativa (SEM atributos HTML)
+5. FAQ 4-6 perguntas
+6. Conclusão com CTA`;
 
     const userPrompt = `Crie um artigo completo sobre o tema: "${topic}"
 ${category ? `Categoria do artigo: ${category}` : ''}
@@ -131,13 +132,17 @@ IMPORTANTE: Retorne APENAS o objeto JSON puro, sem code blocks (\`\`\`), sem mar
       }
       cleanContent = cleanContent.trim();
       
-      // Try to fix JavaScript string concatenation if present (e.g., "string" + "string")
-      // This handles cases where AI returns JS-style string concatenation
+      // Fix JavaScript string concatenation if present
       if (cleanContent.includes('" + "') || cleanContent.includes("' + '")) {
         cleanContent = cleanContent
           .replace(/"\s*\+\s*"/g, '')
           .replace(/'\s*\+\s*'/g, '');
       }
+      
+      // Remove HTML attributes with quotes that break JSON (e.g., border="1")
+      // Replace attribute patterns like attr="value" with just the tag
+      cleanContent = cleanContent.replace(/(\s+\w+)=\\\\?"[^"]*\\\\?"/g, '');
+      cleanContent = cleanContent.replace(/(\s+\w+)=\\"[^"]*\\"/g, '');
       
       articleData = JSON.parse(cleanContent);
     } catch (parseError) {

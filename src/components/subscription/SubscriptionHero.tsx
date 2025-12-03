@@ -80,16 +80,21 @@ const SubscriptionHero = () => {
 
           {/* 3D Stand illustration placeholder */}
           <div className="mt-16 relative">
-            <div className="w-full max-w-2xl mx-auto h-64 md:h-80 rounded-2xl bg-gradient-to-br from-[#0a0a2e]/80 to-[#1a0a3e]/80 border border-red-500/20 backdrop-blur-sm flex items-center justify-center">
+            <a 
+              href="https://catalogo-smart-594992343441.us-west1.run.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full max-w-2xl mx-auto h-64 md:h-80 rounded-2xl bg-gradient-to-br from-[#0a0a2e]/80 to-[#1a0a3e]/80 border border-red-500/20 backdrop-blur-sm flex items-center justify-center group hover:border-cyan-400/40 transition-all duration-300 cursor-pointer"
+            >
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-xl bg-gradient-to-br from-red-500/30 to-cyan-500/30 border border-red-400/30 flex items-center justify-center animate-pulse">
+                <div className="w-24 h-24 mx-auto mb-4 rounded-xl bg-gradient-to-br from-red-500/30 to-cyan-500/30 border border-red-400/30 flex items-center justify-center animate-pulse group-hover:scale-110 transition-transform duration-300">
                   <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-red-400 to-cyan-400 opacity-50" />
                 </div>
-                <p className="text-cyan-300/60 text-sm">Stand Modular Inteligente</p>
+                <p className="text-cyan-300/60 text-sm group-hover:text-cyan-300 transition-colors">Stand Modular Inteligente</p>
               </div>
               {/* Glowing contour effect */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/20 shadow-[inset_0_0_30px_rgba(6,182,212,0.1)]" />
-            </div>
+              <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/20 shadow-[inset_0_0_30px_rgba(6,182,212,0.1)] group-hover:border-cyan-400/40 group-hover:shadow-[inset_0_0_40px_rgba(6,182,212,0.2)] transition-all duration-300" />
+            </a>
           </div>
         </div>
       </div>

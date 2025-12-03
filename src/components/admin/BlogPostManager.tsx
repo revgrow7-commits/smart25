@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Sparkles, Loader2 } from "lucide-react";
 
 interface BlogPost {
   id: string;
@@ -34,6 +34,10 @@ interface BlogPost {
 const BlogPostManager = () => {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiCategory, setAiCategory] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -190,40 +194,149 @@ const BlogPostManager = () => {
     saveMutation.mutate(editingPost ? { ...formData, id: editingPost.id } : formData);
   };
 
+  const handleGenerateWithAI = async () => {
+    if (!aiTopic.trim()) {
+      toast.error("Digite um tema para o artigo");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const categoryName = categories?.find(c => c.id === aiCategory)?.name;
+      
+      const response = await supabase.functions.invoke('generate-blog-article', {
+        body: { topic: aiTopic, category: categoryName }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message || "Erro ao gerar artigo");
+      }
+
+      const { article } = response.data;
+      
+      if (!article) {
+        throw new Error("Nenhum artigo foi gerado");
+      }
+
+      // Fill the form with generated content
+      setFormData({
+        title: article.title || "",
+        slug: article.slug || "",
+        excerpt: article.excerpt || "",
+        content: article.content || "",
+        featured_image: "",
+        category_id: aiCategory || "",
+        meta_title: article.meta_title || "",
+        meta_description: article.meta_description || "",
+        keywords: Array.isArray(article.keywords) ? article.keywords.join(", ") : "",
+        is_published: false,
+        reading_time: article.reading_time || 5,
+        author: "Smart Signage"
+      });
+
+      setIsAIDialogOpen(false);
+      setIsDialogOpen(true);
+      setAiTopic("");
+      toast.success("Artigo gerado com sucesso! Revise e salve.");
+    } catch (error) {
+      console.error("Error generating article:", error);
+      toast.error(error instanceof Error ? error.message : "Erro ao gerar artigo com IA");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-4">
         <CardTitle>Gerenciar Artigos do Blog</CardTitle>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => resetForm()}>
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Artigo
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingPost ? "Editar Artigo" : "Novo Artigo"}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+        <div className="flex gap-2">
+          <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 hover:from-purple-600 hover:to-pink-600">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Gerar com IA
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Gerar Artigo com IA</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label>Título *</Label>
+                  <Label>Tema do Artigo *</Label>
                   <Input 
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
+                    value={aiTopic}
+                    onChange={(e) => setAiTopic(e.target.value)}
+                    placeholder="Ex: Vantagens dos stands modulares para feiras"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Slug (URL)</Label>
-                  <Input 
-                    value={formData.slug}
-                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    placeholder="auto-gerado se vazio"
-                  />
+                  <Label>Categoria</Label>
+                  <Select value={aiCategory} onValueChange={setAiCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories?.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+                <p className="text-sm text-muted-foreground">
+                  A IA irá gerar um artigo completo otimizado para SEO com base no tema fornecido.
+                </p>
+                <Button 
+                  onClick={handleGenerateWithAI} 
+                  disabled={isGenerating || !aiTopic.trim()}
+                  className="w-full"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Gerando artigo...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Gerar Artigo
+                    </>
+                  )}
+                </Button>
               </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => resetForm()}>
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Artigo
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{editingPost ? "Editar Artigo" : "Novo Artigo"}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Título *</Label>
+                    <Input 
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Slug (URL)</Label>
+                    <Input 
+                      value={formData.slug}
+                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                      placeholder="auto-gerado se vazio"
+                    />
+                  </div>
+                </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -336,6 +449,7 @@ const BlogPostManager = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (

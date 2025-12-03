@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import SubscriptionHero from "@/components/subscription/SubscriptionHero";
 import SubscriptionBenefits from "@/components/subscription/SubscriptionBenefits";
 import SubscriptionTimeline from "@/components/subscription/SubscriptionTimeline";
+import SubscriptionRental from "@/components/subscription/SubscriptionRental";
 import SubscriptionPricing from "@/components/subscription/SubscriptionPricing";
 import SubscriptionSegments from "@/components/subscription/SubscriptionSegments";
 import SubscriptionTestimonials from "@/components/subscription/SubscriptionTestimonials";
@@ -15,6 +16,7 @@ const SubscriptionClub = () => {
       <SubscriptionHero />
       <SubscriptionBenefits />
       <SubscriptionTimeline />
+      <SubscriptionRental />
       <SubscriptionPricing />
       <SubscriptionSegments />
       <SubscriptionTestimonials />

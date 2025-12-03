@@ -108,11 +108,11 @@ const BlogPost = () => {
         <link rel="canonical" href={`${window.location.origin}/blog/${post.slug}`} />
       </Helmet>
 
-      <div className="min-h-screen bg-[#FFF8E7]">
+      <div className="min-h-screen bg-background">
         <Navbar />
         
         {/* Breadcrumb */}
-        <div className="pt-24 pb-4 bg-[#FFF8E7]">
+        <div className="pt-24 pb-4 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <nav className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -127,7 +127,7 @@ const BlogPost = () => {
         </div>
 
         {/* Back Link */}
-        <div className="bg-[#FFF8E7]">
+        <div className="bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <Link 
@@ -142,7 +142,7 @@ const BlogPost = () => {
         </div>
         
         {/* Header */}
-        <header className="pb-8 bg-[#FFF8E7]">
+        <header className="pb-8 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               {category && (
@@ -195,7 +195,7 @@ const BlogPost = () => {
         )}
 
         {/* Content */}
-        <article className="py-8 md:py-12 bg-[#FFF8E7]">
+        <article className="py-8 md:py-12 bg-card/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               {/* Article Content with Custom Styling */}

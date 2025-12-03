@@ -13,7 +13,8 @@ const plans = [
       "1 skin inclusa/mês",
       "Suporte por email",
       "Entrega em 48h úteis",
-      "Desconto Bronze (5%)"
+      "Desconto Bronze (5%)",
+      "10% OFF em locação de estrutura"
     ],
     popular: false,
     cta: "Começar Agora"
@@ -30,7 +31,9 @@ const plans = [
       "Suporte prioritário",
       "Entrega em 24h úteis",
       "Desconto Silver (10%)",
-      "Treinamento Smart Academy"
+      "Treinamento Smart Academy",
+      "20% OFF em locação de estrutura",
+      "Prioridade de reserva"
     ],
     popular: true,
     cta: "Escolher Plano"
@@ -48,7 +51,9 @@ const plans = [
       "Entrega expressa",
       "Desconto Gold (15%)",
       "Treinamento completo",
-      "Consultoria de design"
+      "Consultoria de design",
+      "30% OFF em locação de estrutura",
+      "Montagem inclusa"
     ],
     popular: false,
     cta: "Falar com Consultor"
@@ -67,7 +72,9 @@ const plans = [
       "Desconto Platinum (20%)",
       "Treinamento in-company",
       "Dashboard de gestão",
-      "SLA garantido"
+      "SLA garantido",
+      "40% OFF em locação de estrutura",
+      "Estrutura dedicada disponível"
     ],
     popular: false,
     cta: "Solicitar Proposta"

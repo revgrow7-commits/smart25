@@ -1,10 +1,20 @@
-import { Box, Calendar, Printer, Layers, TrendingUp, GraduationCap } from "lucide-react";
+import { Box, Calendar, Printer, Layers, TrendingUp, GraduationCap, Package, Truck } from "lucide-react";
 
 const benefits = [
+  {
+    icon: Package,
+    title: "Aluguel de Estruturas",
+    description: "Alugue estruturas modulares premium com até 40% de desconto exclusivo para assinantes."
+  },
   {
     icon: Box,
     title: "Kit Modular Inteligente",
     description: "Estruturas modulares que se adaptam a qualquer tamanho de evento e espaço disponível."
+  },
+  {
+    icon: Truck,
+    title: "Logística Completa",
+    description: "Entrega, montagem e desmontagem inclusos para assinantes em todo o Brasil."
   },
   {
     icon: Calendar,

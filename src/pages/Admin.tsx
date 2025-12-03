@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Upload, Grid3x3, Settings, Loader2, LogOut, Image, Star, GraduationCap } from "lucide-react";
+import { Package, Upload, Grid3x3, Settings, Loader2, LogOut, Image, Star, GraduationCap, FileText } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
@@ -10,6 +10,7 @@ import CategoryManager from "@/components/admin/CategoryManager";
 import { HeroImageManager } from "@/components/admin/HeroImageManager";
 import FeaturedProductsManager from "@/components/admin/FeaturedProductsManager";
 import TrainingLeadsManager from "@/components/admin/TrainingLeadsManager";
+import BlogPostManager from "@/components/admin/BlogPostManager";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
@@ -52,7 +53,7 @@ const Admin = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
           <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-            <TabsList className="inline-flex w-max md:w-full md:grid md:grid-cols-7 bg-card min-w-max">
+            <TabsList className="inline-flex w-max md:w-full md:grid md:grid-cols-8 bg-card min-w-max">
               <TabsTrigger value="products" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
                 <Package className="h-3 w-3 md:h-4 md:w-4" />
                 <span className="hidden sm:inline">Produtos</span>
@@ -64,6 +65,10 @@ const Admin = () => {
               <TabsTrigger value="categories" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
                 <Grid3x3 className="h-3 w-3 md:h-4 md:w-4" />
                 <span className="hidden sm:inline">Categorias</span>
+              </TabsTrigger>
+              <TabsTrigger value="blog" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
+                <FileText className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Blog</span>
               </TabsTrigger>
               <TabsTrigger value="hero" className="gap-1 md:gap-2 text-xs md:text-sm whitespace-nowrap">
                 <Image className="h-3 w-3 md:h-4 md:w-4" />
@@ -108,6 +113,10 @@ const Admin = () => {
 
           <TabsContent value="categories">
             <CategoryManager />
+          </TabsContent>
+
+          <TabsContent value="blog">
+            <BlogPostManager />
           </TabsContent>
 
           <TabsContent value="hero">

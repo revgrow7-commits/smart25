@@ -338,115 +338,115 @@ const BlogPostManager = () => {
                   </div>
                 </div>
 
-              <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Categoria</Label>
+                    <Select 
+                      value={formData.category_id} 
+                      onValueChange={(value) => setFormData({ ...formData, category_id: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione uma categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Tempo de leitura (min)</Label>
+                    <Input 
+                      type="number"
+                      value={formData.reading_time}
+                      onChange={(e) => setFormData({ ...formData, reading_time: parseInt(e.target.value) })}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label>Categoria</Label>
-                  <Select 
-                    value={formData.category_id} 
-                    onValueChange={(value) => setFormData({ ...formData, category_id: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories?.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label>Resumo (Excerpt)</Label>
+                  <Textarea 
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                    rows={2}
+                  />
                 </div>
+
                 <div className="space-y-2">
-                  <Label>Tempo de leitura (min)</Label>
-                  <Input 
-                    type="number"
-                    value={formData.reading_time}
-                    onChange={(e) => setFormData({ ...formData, reading_time: parseInt(e.target.value) })}
+                  <Label>Conteúdo (HTML) *</Label>
+                  <Textarea 
+                    value={formData.content}
+                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    rows={10}
+                    required
+                    placeholder="<h2>Título da Seção</h2><p>Conteúdo...</p>"
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label>Resumo (Excerpt)</Label>
-                <Textarea 
-                  value={formData.excerpt}
-                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  rows={2}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Conteúdo (HTML) *</Label>
-                <Textarea 
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  rows={10}
-                  required
-                  placeholder="<h2>Título da Seção</h2><p>Conteúdo...</p>"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Imagem de Destaque (URL)</Label>
-                <Input 
-                  value={formData.featured_image}
-                  onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Meta Title (SEO)</Label>
+                  <Label>Imagem de Destaque (URL)</Label>
                   <Input 
-                    value={formData.meta_title}
-                    onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
-                    maxLength={60}
+                    value={formData.featured_image}
+                    onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Meta Title (SEO)</Label>
+                    <Input 
+                      value={formData.meta_title}
+                      onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                      maxLength={60}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Keywords (separadas por vírgula)</Label>
+                    <Input 
+                      value={formData.keywords}
+                      onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label>Keywords (separadas por vírgula)</Label>
-                  <Input 
-                    value={formData.keywords}
-                    onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                  <Label>Meta Description (SEO)</Label>
+                  <Textarea 
+                    value={formData.meta_description}
+                    onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                    maxLength={160}
+                    rows={2}
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label>Meta Description (SEO)</Label>
-                <Textarea 
-                  value={formData.meta_description}
-                  onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
-                  maxLength={160}
-                  rows={2}
-                />
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Switch 
-                    checked={formData.is_published}
-                    onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
-                  />
-                  <Label>Publicado</Label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Switch 
+                      checked={formData.is_published}
+                      onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                    />
+                    <Label>Publicado</Label>
+                  </div>
+                  <div className="space-y-2 flex-1">
+                    <Label>Autor</Label>
+                    <Input 
+                      value={formData.author}
+                      onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2 flex-1">
-                  <Label>Autor</Label>
-                  <Input 
-                    value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  />
-                </div>
-              </div>
 
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={saveMutation.isPending}>
-                  {saveMutation.isPending ? "Salvando..." : "Salvar"}
-                </Button>
-              </div>
-            </form>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" disabled={saveMutation.isPending}>
+                    {saveMutation.isPending ? "Salvando..." : "Salvar"}
+                  </Button>
+                </div>
+              </form>
           </DialogContent>
         </Dialog>
         </div>

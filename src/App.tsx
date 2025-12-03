@@ -15,6 +15,8 @@ import StandVisualizer from "./pages/StandVisualizer";
 import Catalog from "./pages/Catalog";
 import SubscriptionClub from "./pages/SubscriptionClub";
 import TrainingSchool from "./pages/TrainingSchool";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
             <Route path="/visualizador-stand" element={<StandVisualizer />} />
             <Route path="/clube-assinatura" element={<SubscriptionClub />} />
             <Route path="/escola-montadores" element={<TrainingSchool />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

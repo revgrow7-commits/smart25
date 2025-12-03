@@ -30,7 +30,7 @@ serve(async (req) => {
 
 REGRAS OBRIGATÓRIAS:
 1. Responda a pergunta principal nos primeiros 2 parágrafos
-2. Use estrutura clara: H1 (título), H2 (seções), H3 (detalhes)
+2. Use estrutura clara: H2 (seções), H3 (detalhes)
 3. Parágrafos curtos e diretos
 4. Inclua listas, bullets e tabelas quando fizer sentido
 5. Reduza "enchimento" - foque em informação útil
@@ -39,17 +39,23 @@ REGRAS OBRIGATÓRIAS:
 8. Exemplos do mundo real (varejo, feiras, franquias, eventos)
 9. Foco em: custo-benefício, montagem rápida, modularidade, sustentabilidade
 
-FORMATO DO ARTIGO (retorne em JSON):
+FORMATO DE RESPOSTA:
+Retorne APENAS um objeto JSON válido, sem markdown, sem code blocks, sem concatenação de strings.
+O campo "content" deve ser uma única string HTML contínua (não use + para concatenar).
+
+Estrutura JSON esperada:
 {
   "title": "Título otimizado para SEO (máx 60 caracteres)",
   "slug": "slug-url-amigavel",
   "excerpt": "Resumo do artigo em 2-3 frases (máx 160 caracteres)",
-  "content": "Conteúdo completo em HTML com tags h2, h3, p, ul, li, table, etc.",
+  "content": "<h2>Seção 1</h2><p>Conteúdo...</p><h2>Seção 2</h2><p>Mais conteúdo...</p>",
   "meta_title": "Meta título SEO (máx 60 caracteres)",
   "meta_description": "Meta descrição SEO (máx 160 caracteres)",
   "keywords": ["palavra1", "palavra2", "palavra3"],
   "reading_time": 5
 }
+
+IMPORTANTE: O campo "content" deve ser uma string HTML única e contínua, NÃO use concatenação JavaScript.
 
 ESTRUTURA DO CONTEÚDO HTML:
 1. Introdução (resposta direta + contextualização)
@@ -57,19 +63,14 @@ ESTRUTURA DO CONTEÚDO HTML:
 3. Lista ou checklist prático
 4. Tabela comparativa (quando aplicável)
 5. FAQ com 4-6 perguntas
-6. Conclusão com CTA sutil B2B
-
-Use classes CSS para estilização:
-- prose para texto
-- Tabelas com border e padding
-- Listas com marcadores claros`;
+6. Conclusão com CTA sutil B2B`;
 
     const userPrompt = `Crie um artigo completo sobre o tema: "${topic}"
 ${category ? `Categoria do artigo: ${category}` : ''}
 
 O artigo deve ser otimizado para SEO tradicional (Google) e para motores de IA (ChatGPT Search, Perplexity, Google AI Overviews).
 
-Retorne APENAS o JSON válido, sem markdown ou texto adicional.`;
+IMPORTANTE: Retorne APENAS o objeto JSON puro, sem code blocks (\`\`\`), sem markdown, sem concatenação de strings (+). O campo content deve ser uma única string HTML.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -115,7 +116,7 @@ Retorne APENAS o JSON válido, sem markdown ou texto adicional.`;
 
     console.log("Raw AI response:", content);
 
-    // Parse the JSON response - handle potential markdown wrapping
+    // Parse the JSON response - handle potential formatting issues
     let articleData;
     try {
       // Remove markdown code blocks if present
@@ -130,10 +131,19 @@ Retorne APENAS o JSON válido, sem markdown ou texto adicional.`;
       }
       cleanContent = cleanContent.trim();
       
+      // Try to fix JavaScript string concatenation if present (e.g., "string" + "string")
+      // This handles cases where AI returns JS-style string concatenation
+      if (cleanContent.includes('" + "') || cleanContent.includes("' + '")) {
+        cleanContent = cleanContent
+          .replace(/"\s*\+\s*"/g, '')
+          .replace(/'\s*\+\s*'/g, '');
+      }
+      
       articleData = JSON.parse(cleanContent);
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
-      throw new Error("Failed to parse AI response as JSON");
+      console.error("Content that failed to parse:", content.substring(0, 500));
+      throw new Error("Failed to parse AI response as JSON. The AI may have returned invalid format.");
     }
 
     console.log("Parsed article data:", articleData);

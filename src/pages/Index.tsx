@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
+import VideoShowcase from "@/components/VideoShowcase";
 import AIVisualizer from "@/components/AIVisualizer";
 import ROICalculator from "@/components/ROICalculator";
 import ComparisonTable from "@/components/ComparisonTable";
@@ -17,6 +18,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <FeaturedProducts />
+      <VideoShowcase />
       <AIVisualizer />
       <ROICalculator />
       <ComparisonTable />

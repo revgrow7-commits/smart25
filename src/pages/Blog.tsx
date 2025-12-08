@@ -37,6 +37,7 @@ const Blog = () => {
   const { data: posts, isLoading } = useQuery({
     queryKey: ['blog-posts', selectedCategory, searchTerm],
     queryFn: async () => {
+      const now = new Date().toISOString();
       let query = supabase
         .from('blog_posts')
         .select(`
@@ -44,6 +45,7 @@ const Blog = () => {
           blog_categories (name, slug, icon)
         `)
         .eq('is_published', true)
+        .or(`scheduled_at.is.null,scheduled_at.lte.${now}`)
         .order('published_at', { ascending: false });
 
       if (selectedCategory) {

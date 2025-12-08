@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Sparkles, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Sparkles, Loader2, CalendarClock } from "lucide-react";
 
 interface BlogPost {
   id: string;
@@ -27,6 +27,7 @@ interface BlogPost {
   keywords: string[] | null;
   is_published: boolean;
   published_at: string | null;
+  scheduled_at: string | null;
   reading_time: number;
   author: string;
 }
@@ -50,6 +51,7 @@ const BlogPostManager = () => {
     meta_description: "",
     keywords: "",
     is_published: false,
+    scheduled_at: "",
     reading_time: 5,
     author: "Smart Signage"
   });
@@ -92,6 +94,7 @@ const BlogPostManager = () => {
         keywords: data.keywords ? data.keywords.split(',').map(k => k.trim()) : null,
         is_published: data.is_published,
         published_at: data.is_published ? new Date().toISOString() : null,
+        scheduled_at: data.scheduled_at ? new Date(data.scheduled_at).toISOString() : null,
         reading_time: data.reading_time,
         author: data.author
       };
@@ -163,6 +166,7 @@ const BlogPostManager = () => {
       meta_description: "",
       keywords: "",
       is_published: false,
+      scheduled_at: "",
       reading_time: 5,
       author: "Smart Signage"
     });
@@ -183,6 +187,7 @@ const BlogPostManager = () => {
       meta_description: post.meta_description || "",
       keywords: post.keywords?.join(', ') || "",
       is_published: post.is_published,
+      scheduled_at: post.scheduled_at ? new Date(post.scheduled_at).toISOString().slice(0, 16) : "",
       reading_time: post.reading_time,
       author: post.author
     });
@@ -230,6 +235,7 @@ const BlogPostManager = () => {
         meta_description: article.meta_description || "",
         keywords: Array.isArray(article.keywords) ? article.keywords.join(", ") : "",
         is_published: false,
+        scheduled_at: "",
         reading_time: article.reading_time || 5,
         author: "Smart Signage"
       });
@@ -421,21 +427,36 @@ const BlogPostManager = () => {
                   />
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Switch 
-                      checked={formData.is_published}
-                      onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <CalendarClock className="w-4 h-4" />
+                      Agendar Publicação
+                    </Label>
+                    <Input 
+                      type="datetime-local"
+                      value={formData.scheduled_at}
+                      onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
                     />
-                    <Label>Publicado</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Deixe vazio para publicar imediatamente ao marcar como publicado
+                    </p>
                   </div>
-                  <div className="space-y-2 flex-1">
+                  <div className="space-y-2">
                     <Label>Autor</Label>
                     <Input 
                       value={formData.author}
                       onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                     />
                   </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch 
+                    checked={formData.is_published}
+                    onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                  />
+                  <Label>Publicado</Label>
                 </div>
 
                 <div className="flex justify-end gap-2">
@@ -461,12 +482,15 @@ const BlogPostManager = () => {
                 <TableHead>Título</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Agendamento</TableHead>
                 <TableHead>Data</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {posts?.map((post) => (
+              {posts?.map((post) => {
+                const isScheduled = post.scheduled_at && new Date(post.scheduled_at) > new Date();
+                return (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell>{(post.blog_categories as any)?.name || '-'}</TableCell>
@@ -474,6 +498,21 @@ const BlogPostManager = () => {
                     <Badge variant={post.is_published ? "default" : "secondary"}>
                       {post.is_published ? "Publicado" : "Rascunho"}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {post.scheduled_at ? (
+                      <div className="flex items-center gap-1">
+                        <CalendarClock className="w-3 h-3" />
+                        <span className={isScheduled ? "text-amber-600" : "text-green-600"}>
+                          {new Date(post.scheduled_at).toLocaleString('pt-BR', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </span>
+                      </div>
+                    ) : '-'}
                   </TableCell>
                   <TableCell>
                     {post.published_at 
@@ -509,7 +548,7 @@ const BlogPostManager = () => {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              )})}
             </TableBody>
           </Table>
         )}

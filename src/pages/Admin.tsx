@@ -27,6 +27,7 @@ const Admin = () => {
   }
 
   if (!isAdmin) {
+    navigate("/auth");
     return null;
   }
 

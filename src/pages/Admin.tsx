@@ -15,6 +15,7 @@ import BlogPostManager from "@/components/admin/BlogPostManager";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
+  const navigate = useNavigate();
   const { user, isAdmin, loading, signOut } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<string | null>(null);

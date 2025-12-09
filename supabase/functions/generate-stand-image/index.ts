@@ -13,48 +13,45 @@ serve(async (req) => {
 
   try {
     const { prompt, referenceImage } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
-    if (!GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY não encontrada');
-      throw new Error('GEMINI_API_KEY não configurada');
+    if (!LOVABLE_API_KEY) {
+      console.error('LOVABLE_API_KEY não encontrada');
+      throw new Error('LOVABLE_API_KEY não configurada');
     }
 
     console.log('=== INÍCIO DA GERAÇÃO ===');
     console.log('Prompt recebido:', prompt?.substring(0, 100) + '...');
     console.log('Referência de imagem:', referenceImage ? 'SIM' : 'NÃO');
 
-    // Preparar conteúdo para o Gemini
-    const parts: any[] = [{ text: prompt }];
+    // Preparar conteúdo para o Lovable AI
+    const content: any[] = [{ type: "text", text: prompt }];
 
-    // Se houver imagem de referência, adicionar como inline_data
+    // Se houver imagem de referência, adicionar como image_url
     if (referenceImage) {
-      // Extrair base64 e mimeType da imagem
-      const match = referenceImage.match(/^data:(.+);base64,(.+)$/);
-      if (match) {
-        parts.push({
-          inline_data: {
-            mime_type: match[1],
-            data: match[2]
-          }
-        });
-      }
+      content.push({
+        type: "image_url",
+        image_url: {
+          url: referenceImage
+        }
+      });
     }
 
-    console.log('Chamando Gemini API...');
+    console.log('Chamando Lovable AI Gateway...');
     
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        contents: [{
-          parts: parts
+        model: 'google/gemini-2.5-flash-image-preview',
+        messages: [{
+          role: 'user',
+          content: content
         }],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"]
-        }
+        modalities: ['image', 'text']
       }),
     });
 
@@ -62,7 +59,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Erro na API Gemini:', response.status, errorText);
+      console.error('Erro na Lovable AI:', response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -74,29 +71,33 @@ serve(async (req) => {
         );
       }
 
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'Créditos insuficientes. Adicione créditos à sua conta Lovable.' }),
+          { 
+            status: 402, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+
       throw new Error(`Erro na geração: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('Resposta recebida do Gemini');
+    console.log('Resposta recebida do Lovable AI');
     
-    // Extrair a imagem gerada do formato Gemini
+    // Extrair a imagem gerada do formato Lovable AI
     let imageUrl = null;
     let textResponse = '';
     
-    const candidates = data.candidates || [];
-    for (const candidate of candidates) {
-      const content = candidate.content;
-      if (content && content.parts) {
-        for (const part of content.parts) {
-          if (part.inlineData) {
-            // Converter para data URL
-            imageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-          }
-          if (part.text) {
-            textResponse = part.text;
-          }
-        }
+    const message = data.choices?.[0]?.message;
+    if (message) {
+      textResponse = message.content || '';
+      
+      // Verificar se há imagens na resposta
+      if (message.images && message.images.length > 0) {
+        imageUrl = message.images[0].image_url?.url;
       }
     }
     

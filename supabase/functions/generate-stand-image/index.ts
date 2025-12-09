@@ -13,53 +13,48 @@ serve(async (req) => {
 
   try {
     const { prompt, referenceImage } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY não encontrada');
-      throw new Error('LOVABLE_API_KEY não configurada');
+    if (!GEMINI_API_KEY) {
+      console.error('GEMINI_API_KEY não encontrada');
+      throw new Error('GEMINI_API_KEY não configurada');
     }
 
     console.log('=== INÍCIO DA GERAÇÃO ===');
     console.log('Prompt recebido:', prompt?.substring(0, 100) + '...');
     console.log('Referência de imagem:', referenceImage ? 'SIM' : 'NÃO');
 
-    // Preparar mensagens para o modelo
-    const messages: any[] = [
-      {
-        role: "user",
-        content: []
-      }
-    ];
+    // Preparar conteúdo para o Gemini
+    const parts: any[] = [{ text: prompt }];
 
-    // Adicionar prompt de texto
-    messages[0].content.push({
-      type: "text",
-      text: prompt
-    });
-
-    // Se houver imagem de referência, adicionar
+    // Se houver imagem de referência, adicionar como inline_data
     if (referenceImage) {
-      messages[0].content.push({
-        type: "image_url",
-        image_url: {
-          url: referenceImage
-        }
-      });
+      // Extrair base64 e mimeType da imagem
+      const match = referenceImage.match(/^data:(.+);base64,(.+)$/);
+      if (match) {
+        parts.push({
+          inline_data: {
+            mime_type: match[1],
+            data: match[2]
+          }
+        });
+      }
     }
 
-    console.log('Chamando Lovable AI Gateway...');
+    console.log('Chamando Gemini API...');
     
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-image-preview',
-        messages: messages,
-        modalities: ["image", "text"]
+        contents: [{
+          parts: parts
+        }],
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
       }),
     });
 
@@ -67,7 +62,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Erro na API:', response.status, errorText);
+      console.error('Erro na API Gemini:', response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -78,28 +73,34 @@ serve(async (req) => {
           }
         );
       }
-      
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'Créditos insuficientes. Adicione mais créditos em seu workspace Lovable.' }),
-          { 
-            status: 402, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
-      }
 
       throw new Error(`Erro na geração: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('Resposta recebida. Estrutura:', JSON.stringify(Object.keys(data)));
-    console.log('Choices:', data.choices ? data.choices.length : 0);
+    console.log('Resposta recebida do Gemini');
     
-    // Extrair a imagem gerada
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    // Extrair a imagem gerada do formato Gemini
+    let imageUrl = null;
+    let textResponse = '';
     
-    console.log('ImageUrl encontrada:', imageUrl ? 'SIM (tamanho: ' + imageUrl.length + ')' : 'NÃO');
+    const candidates = data.candidates || [];
+    for (const candidate of candidates) {
+      const content = candidate.content;
+      if (content && content.parts) {
+        for (const part of content.parts) {
+          if (part.inlineData) {
+            // Converter para data URL
+            imageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+          }
+          if (part.text) {
+            textResponse = part.text;
+          }
+        }
+      }
+    }
+    
+    console.log('ImageUrl encontrada:', imageUrl ? 'SIM' : 'NÃO');
     
     if (!imageUrl) {
       console.error('Estrutura completa da resposta:', JSON.stringify(data, null, 2));
@@ -111,7 +112,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         imageUrl: imageUrl,
-        message: data.choices?.[0]?.message?.content || 'Imagem gerada com sucesso'
+        message: textResponse || 'Imagem gerada com sucesso'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

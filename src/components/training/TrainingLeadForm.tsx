@@ -12,6 +12,15 @@ import {
 import { toast } from "sonner";
 import { ArrowRight, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const trainingLeadSchema = z.object({
+  name: z.string().trim().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome deve ter no máximo 100 caracteres"),
+  email: z.string().trim().email("Email inválido").max(255, "Email deve ter no máximo 255 caracteres"),
+  whatsapp: z.string().trim().min(10, "WhatsApp deve ter pelo menos 10 dígitos").max(20, "WhatsApp deve ter no máximo 20 caracteres"),
+  city: z.string().trim().min(2, "Cidade deve ter pelo menos 2 caracteres").max(100, "Cidade deve ter no máximo 100 caracteres"),
+  profile: z.enum(["montador", "agencia", "empresa", "outro"], { errorMap: () => ({ message: "Selecione um perfil válido" }) }),
+});
 
 const TrainingLeadForm = () => {
   const [formData, setFormData] = useState({
@@ -22,18 +31,35 @@ const TrainingLeadForm = () => {
     profile: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+    
+    const result = trainingLeadSchema.safeParse(formData);
+    
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
+      toast.error("Por favor, corrija os erros no formulário");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const { error } = await supabase.from("training_leads").insert({
-        name: formData.name,
-        email: formData.email,
-        whatsapp: formData.whatsapp,
-        city: formData.city,
-        profile: formData.profile,
+        name: result.data.name,
+        email: result.data.email,
+        whatsapp: result.data.whatsapp,
+        city: result.data.city,
+        profile: result.data.profile,
       });
 
       if (error) throw error;
@@ -86,11 +112,13 @@ const TrainingLeadForm = () => {
                 <Input
                   id="name"
                   required
+                  maxLength={100}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
+                  className={`bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400 ${errors.name ? "border-red-500" : ""}`}
                   placeholder="Seu nome"
                 />
+                {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
               </div>
 
               <div className="space-y-2">
@@ -101,11 +129,13 @@ const TrainingLeadForm = () => {
                   id="email"
                   type="email"
                   required
+                  maxLength={255}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
+                  className={`bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400 ${errors.email ? "border-red-500" : ""}`}
                   placeholder="seu@email.com"
                 />
+                {errors.email && <p className="text-red-400 text-sm">{errors.email}</p>}
               </div>
 
               <div className="space-y-2">
@@ -115,11 +145,13 @@ const TrainingLeadForm = () => {
                 <Input
                   id="whatsapp"
                   required
+                  maxLength={20}
                   value={formData.whatsapp}
                   onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
+                  className={`bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400 ${errors.whatsapp ? "border-red-500" : ""}`}
                   placeholder="(00) 00000-0000"
                 />
+                {errors.whatsapp && <p className="text-red-400 text-sm">{errors.whatsapp}</p>}
               </div>
 
               <div className="space-y-2">
@@ -129,11 +161,13 @@ const TrainingLeadForm = () => {
                 <Input
                   id="city"
                   required
+                  maxLength={100}
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400"
+                  className={`bg-[#0a0a2e]/50 border-red-500/30 text-white placeholder:text-gray-500 focus:border-red-400 ${errors.city ? "border-red-500" : ""}`}
                   placeholder="Sua cidade"
                 />
+                {errors.city && <p className="text-red-400 text-sm">{errors.city}</p>}
               </div>
             </div>
 
@@ -146,7 +180,7 @@ const TrainingLeadForm = () => {
                 onValueChange={(value) => setFormData({ ...formData, profile: value })}
                 required
               >
-                <SelectTrigger className="bg-[#0a0a2e]/50 border-red-500/30 text-white">
+                <SelectTrigger className={`bg-[#0a0a2e]/50 border-red-500/30 text-white ${errors.profile ? "border-red-500" : ""}`}>
                   <SelectValue placeholder="Selecione seu perfil" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0a0a2e] border-red-500/30">
@@ -156,6 +190,7 @@ const TrainingLeadForm = () => {
                   <SelectItem value="outro">Outro</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.profile && <p className="text-red-400 text-sm">{errors.profile}</p>}
             </div>
 
             <div className="flex items-start gap-3 text-gray-400 text-sm">

@@ -7,7 +7,6 @@ import TrainingAudience from "@/components/training/TrainingAudience";
 import TrainingCertification from "@/components/training/TrainingCertification";
 import TrainingTestimonials from "@/components/training/TrainingTestimonials";
 import TrainingFAQ from "@/components/training/TrainingFAQ";
-import TrainingLeadForm from "@/components/training/TrainingLeadForm";
 import TrainingNav from "@/components/training/TrainingNav";
 
 const TrainingSchool = () => {
@@ -32,7 +31,6 @@ const TrainingSchool = () => {
         <TrainingCertification />
         <TrainingTestimonials />
         <TrainingFAQ />
-        <TrainingLeadForm />
       </div>
     </>
   );

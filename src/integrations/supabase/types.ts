@@ -323,36 +323,6 @@ export type Database = {
           },
         ]
       }
-      training_leads: {
-        Row: {
-          city: string
-          created_at: string
-          email: string
-          id: string
-          name: string
-          profile: string
-          whatsapp: string
-        }
-        Insert: {
-          city: string
-          created_at?: string
-          email: string
-          id?: string
-          name: string
-          profile: string
-          whatsapp: string
-        }
-        Update: {
-          city?: string
-          created_at?: string
-          email?: string
-          id?: string
-          name?: string
-          profile?: string
-          whatsapp?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string

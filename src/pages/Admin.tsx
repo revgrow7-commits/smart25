@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Package, Upload, Grid3x3, Settings, Loader2, LogOut, Image, Star, FileText } from "lucide-react";
+import { Package, Upload, Grid3x3, Settings, Image, Star, FileText } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
@@ -11,46 +9,21 @@ import CategoryManager from "@/components/admin/CategoryManager";
 import { HeroImageManager } from "@/components/admin/HeroImageManager";
 import FeaturedProductsManager from "@/components/admin/FeaturedProductsManager";
 import BlogPostManager from "@/components/admin/BlogPostManager";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
-  const navigate = useNavigate();
-  const { user, isAdmin, loading, signOut } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    navigate("/auth");
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-4xl font-bold mb-2">
-              Painel <span className="gradient-text">Administrativo</span>
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground">
-              Gerencie produtos, categorias e uploads do catálogo
-            </p>
-          </div>
-          <div className="flex items-center gap-3 md:gap-4">
-            <span className="text-xs md:text-sm text-muted-foreground hidden sm:inline">{user?.email}</span>
-            <Button variant="outline" size="sm" onClick={signOut} className="w-full sm:w-auto">
-              <LogOut className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Sair</span>
-            </Button>
-          </div>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">
+            Painel <span className="gradient-text">Administrativo</span>
+          </h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Gerencie produtos, categorias e uploads do catálogo
+          </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">

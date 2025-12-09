@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import DOMPurify from "dompurify";
 import Navbar from "@/components/Navbar";
 import HomeFooter from "@/components/HomeFooter";
 import { Badge } from "@/components/ui/badge";
@@ -201,7 +202,7 @@ const BlogPost = () => {
               {/* Article Content with Custom Styling */}
               <div 
                 className="blog-article-content"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
               />
 
               {/* Keywords Tags */}

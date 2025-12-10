@@ -32,4 +32,4 @@ const Index = () => {
   );
 };
 
-export default Index; // v1.0
+export default Index; // v1.1 - Published

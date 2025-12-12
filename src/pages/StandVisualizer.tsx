@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Upload, Wand2, Lightbulb, Heart, Trash2, Check, Grid3X3 } from "lucide-react";
+import { Upload, Wand2, Lightbulb, Heart, Trash2, Check, Grid3X3, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
@@ -17,16 +17,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// Import booth images
-import booth202 from "@/assets/booths/booth-202-b1d2b4.jpg";
-import booth203 from "@/assets/booths/booth-203-b4d2b4.jpg";
-import booth205 from "@/assets/booths/booth-205-c5c2c5.jpg";
-import booth206 from "@/assets/booths/booth-206-b1d5b1.jpg";
-import booth208 from "@/assets/booths/booth-208-d4b5b4.jpg";
-import booth210 from "@/assets/booths/booth-210-d1a3d1.jpg";
-import booth211 from "@/assets/booths/booth-211-a4a6c1a6a4.jpg";
-import booth212 from "@/assets/booths/booth-212-b1d5b4.jpg";
-
 interface FavoritePrompt {
   id: string;
   title: string;
@@ -34,76 +24,19 @@ interface FavoritePrompt {
   created_at: string;
 }
 
-interface BoothOption {
+interface StandProduct {
   id: string;
   name: string;
-  code: string;
-  image: string;
-  description: string;
+  item_code: string;
+  description: string | null;
+  image_url: string | null;
 }
-
-const boothOptions: BoothOption[] = [
-  {
-    id: "booth-202",
-    name: "Booth 202",
-    code: "B1D2B4",
-    image: booth202,
-    description: "Stand com parede curva, monitor e balcão"
-  },
-  {
-    id: "booth-203",
-    name: "Booth 203",
-    code: "B4D2B4",
-    image: booth203,
-    description: "Stand com dois monitores e balcões"
-  },
-  {
-    id: "booth-205",
-    name: "Booth 205",
-    code: "C5C2C5",
-    image: booth205,
-    description: "Stand amplo com paredes arredondadas"
-  },
-  {
-    id: "booth-206",
-    name: "Booth 206",
-    code: "B1D5B1",
-    image: booth206,
-    description: "Stand simétrico com dois monitores"
-  },
-  {
-    id: "booth-208",
-    name: "Booth 208",
-    code: "D4B5B4",
-    image: booth208,
-    description: "Stand compacto com monitor central"
-  },
-  {
-    id: "booth-210",
-    name: "Booth 210",
-    code: "D1A3D1",
-    image: booth210,
-    description: "Stand modular com monitor"
-  },
-  {
-    id: "booth-211",
-    name: "Booth 211",
-    code: "A4A6C1A6A4",
-    image: booth211,
-    description: "Stand premium com dois monitores"
-  },
-  {
-    id: "booth-212",
-    name: "Booth 212",
-    code: "B1D5B4",
-    image: booth212,
-    description: "Stand com arco e monitor lateral"
-  },
-];
 
 
 const StandVisualizer = () => {
-  const [selectedBooth, setSelectedBooth] = useState<BoothOption | null>(null);
+  const [selectedStand, setSelectedStand] = useState<StandProduct | null>(null);
+  const [standProducts, setStandProducts] = useState<StandProduct[]>([]);
+  const [isLoadingStands, setIsLoadingStands] = useState(true);
   const [prompt, setPrompt] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -116,7 +49,56 @@ const StandVisualizer = () => {
 
   useEffect(() => {
     checkAuth();
+    fetchStandProducts();
   }, []);
+
+  const fetchStandProducts = async () => {
+    try {
+      setIsLoadingStands(true);
+      // First get the category ID for "Stands Modulados"
+      const { data: categoryData } = await supabase
+        .from("categories")
+        .select("id")
+        .ilike("name", "%stands modulados%")
+        .single();
+
+      if (!categoryData) {
+        console.error("Category 'Stands Modulados' not found");
+        return;
+      }
+
+      // Fetch products with their primary images
+      const { data: products, error } = await supabase
+        .from("products")
+        .select(`
+          id,
+          name,
+          item_code,
+          description,
+          product_images!inner(image_url, is_primary)
+        `)
+        .eq("category_id", categoryData.id)
+        .eq("status", "active")
+        .eq("product_images.is_primary", true)
+        .order("name");
+
+      if (error) throw error;
+
+      const formattedProducts: StandProduct[] = (products || []).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        item_code: p.item_code,
+        description: p.description,
+        image_url: p.product_images?.[0]?.image_url || null,
+      })).filter((p: StandProduct) => p.image_url); // Only show products with images
+
+      setStandProducts(formattedProducts);
+    } catch (error) {
+      console.error("Error fetching stand products:", error);
+    } finally {
+      setIsLoadingStands(false);
+    }
+  };
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -224,16 +206,18 @@ const StandVisualizer = () => {
     });
   };
 
-  const handleBoothSelect = async (booth: BoothOption) => {
-    setSelectedBooth(booth);
+  const handleStandSelect = async (stand: StandProduct) => {
+    setSelectedStand(stand);
     
-    // Convert imported image to base64 for the AI API
+    // Convert image URL to base64 for the AI API
+    if (!stand.image_url) return;
+    
     try {
-      console.log('=== SELECIONANDO BOOTH ===');
-      console.log('Booth:', booth.name);
-      console.log('URL da imagem (resolvida pelo Vite):', booth.image);
+      console.log('=== SELECIONANDO STAND ===');
+      console.log('Stand:', stand.name);
+      console.log('URL da imagem:', stand.image_url);
       
-      const response = await fetch(booth.image);
+      const response = await fetch(stand.image_url);
       
       if (!response.ok) {
         throw new Error(`Falha ao buscar imagem: ${response.status}`);
@@ -249,7 +233,6 @@ const StandVisualizer = () => {
           const result = e.target?.result as string;
           if (result && result.startsWith('data:')) {
             console.log('Base64 gerado com sucesso, tamanho:', result.length);
-            console.log('Prefix base64:', result.substring(0, 50));
             resolve(result);
           } else {
             reject(new Error('Resultado não é base64 válido'));
@@ -260,15 +243,15 @@ const StandVisualizer = () => {
       });
       
       setUploadedImage(base64);
-      console.log('=== BOOTH CARREGADO COM SUCESSO ===');
+      console.log('=== STAND CARREGADO COM SUCESSO ===');
       
       toast({
         title: "Stand selecionado!",
-        description: `${booth.name} (${booth.code}) foi carregado como base`,
+        description: `${stand.name} (${stand.item_code}) foi carregado como base`,
       });
     } catch (error) {
-      console.error("=== ERRO AO CARREGAR BOOTH ===");
-      console.error("Error converting booth image:", error);
+      console.error("=== ERRO AO CARREGAR STAND ===");
+      console.error("Error converting stand image:", error);
       toast({
         title: "Erro ao carregar imagem",
         description: "Não foi possível carregar a imagem do stand",
@@ -292,7 +275,7 @@ const StandVisualizer = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         setUploadedImage(event.target?.result as string);
-        setSelectedBooth(null);
+        setSelectedStand(null);
       };
       reader.readAsDataURL(file);
     }
@@ -312,11 +295,11 @@ const StandVisualizer = () => {
     console.log('=== INICIANDO GERAÇÃO ===');
 
     try {
-      const boothInfo = selectedBooth 
-        ? `O stand deve ser baseado no modelo: ${selectedBooth.name} (${selectedBooth.code}) - ${selectedBooth.description}.`
+      const standInfo = selectedStand 
+        ? `O stand deve ser baseado no modelo: ${selectedStand.name} (${selectedStand.item_code}) - ${selectedStand.description || 'Stand modular'}.`
         : '';
       
-      const fullPrompt = `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}\n\n${boothInfo} Use fotografia profissional com iluminação adequada, ambiente de feira realista. Aplique a marca e identidade visual solicitada mantendo a estrutura base do stand.`;
+      const fullPrompt = `Crie uma visualização realista e profissional de um stand de feira/evento. ${prompt}\n\n${standInfo} Use fotografia profissional com iluminação adequada, ambiente de feira realista. Aplique a marca e identidade visual solicitada mantendo a estrutura base do stand.`;
 
       console.log('Prompt completo:', fullPrompt.substring(0, 100) + '...');
       console.log('Imagem de referência:', uploadedImage ? 'Presente' : 'Ausente');
@@ -385,49 +368,60 @@ const StandVisualizer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
           {/* Left Panel - Input */}
           <div className="space-y-6">
-            {/* Booth Gallery */}
+            {/* Stand Gallery from Database */}
             <Card className="p-6 bg-card border-border">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Grid3X3 className="w-5 h-5 text-primary" />
                 Selecione um Stand Base
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {boothOptions.map((booth) => (
-                  <button
-                    key={booth.id}
-                    onClick={() => handleBoothSelect(booth)}
-                    className={`relative group rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                      selectedBooth?.id === booth.id
-                        ? "border-primary ring-2 ring-primary/50"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="aspect-[4/3] relative">
-                      <img
-                        src={booth.image}
-                        alt={booth.name}
-                        className="w-full h-full object-cover"
-                      />
-                      {selectedBooth?.id === booth.id && (
-                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                          <div className="bg-primary rounded-full p-1.5">
-                            <Check className="w-4 h-4 text-primary-foreground" />
+              {isLoadingStands ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  <span className="ml-3 text-muted-foreground">Carregando stands...</span>
+                </div>
+              ) : standProducts.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Nenhum stand disponível no momento.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto">
+                  {standProducts.map((stand) => (
+                    <button
+                      key={stand.id}
+                      onClick={() => handleStandSelect(stand)}
+                      className={`relative group rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                        selectedStand?.id === stand.id
+                          ? "border-primary ring-2 ring-primary/50"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="aspect-[4/3] relative">
+                        <img
+                          src={stand.image_url || ''}
+                          alt={stand.name}
+                          className="w-full h-full object-cover"
+                        />
+                        {selectedStand?.id === stand.id && (
+                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                            <div className="bg-primary rounded-full p-1.5">
+                              <Check className="w-4 h-4 text-primary-foreground" />
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-2 text-left opacity-0 group-hover:opacity-100 transition-opacity">
-                      <p className="text-xs font-bold text-white">{booth.name}</p>
-                      <p className="text-[10px] text-white/80">{booth.code}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-              {selectedBooth && (
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-2 text-left opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-xs font-bold text-white">{stand.name}</p>
+                        <p className="text-[10px] text-white/80">{stand.item_code}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {selectedStand && (
                 <div className="mt-4 p-3 rounded-lg bg-muted/50 border border-border">
-                  <p className="text-sm font-semibold">{selectedBooth.name} - {selectedBooth.code}</p>
-                  <p className="text-xs text-muted-foreground">{selectedBooth.description}</p>
+                  <p className="text-sm font-semibold">{selectedStand.name} - {selectedStand.item_code}</p>
+                  <p className="text-xs text-muted-foreground">{selectedStand.description || 'Stand modular'}</p>
                 </div>
               )}
             </Card>
@@ -447,7 +441,7 @@ const StandVisualizer = () => {
                   id="image-upload"
                 />
                 <div className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
-                  {uploadedImage && !selectedBooth ? (
+                  {uploadedImage && !selectedStand ? (
                     <img src={uploadedImage} alt="Preview" className="max-h-40 mx-auto rounded" />
                   ) : (
                     <>
@@ -579,9 +573,9 @@ const StandVisualizer = () => {
                     className="w-full h-auto"
                   />
                 </div>
-                {selectedBooth && (
+                {selectedStand && (
                   <p className="text-sm text-muted-foreground mt-3 text-center">
-                    {selectedBooth.name} - {selectedBooth.code}
+                    {selectedStand.name} - {selectedStand.item_code}
                   </p>
                 )}
               </Card>

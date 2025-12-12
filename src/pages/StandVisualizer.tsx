@@ -242,13 +242,32 @@ const StandVisualizer = () => {
     });
   };
 
-  const handleBoothSelect = (booth: BoothOption) => {
+  const handleBoothSelect = async (booth: BoothOption) => {
     setSelectedBooth(booth);
-    setUploadedImage(booth.image);
-    toast({
-      title: "Stand selecionado!",
-      description: `${booth.name} (${booth.code}) foi carregado como base`,
-    });
+    
+    // Convert imported image to base64 for the AI API
+    try {
+      const response = await fetch(booth.image);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64 = e.target?.result as string;
+        setUploadedImage(base64);
+      };
+      reader.readAsDataURL(blob);
+      
+      toast({
+        title: "Stand selecionado!",
+        description: `${booth.name} (${booth.code}) foi carregado como base`,
+      });
+    } catch (error) {
+      console.error("Error converting booth image:", error);
+      toast({
+        title: "Erro ao carregar imagem",
+        description: "Não foi possível carregar a imagem do stand",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

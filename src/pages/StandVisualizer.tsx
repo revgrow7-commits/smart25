@@ -535,7 +535,7 @@ const StandVisualizer = () => {
                 )}
               </div>
               <Textarea
-                placeholder="Ex: Aplique a marca Coca-Cola com cores vermelho e branco, adicione logo centralizado no painel principal, iluminação LED vermelha nas laterais..."
+                placeholder="Ex: Crie uma imagem ultra realista do stand em anexo e aplique a marca Jeep, neste stand teremos fotos de veículos e uma pessoa dentro do carro, o stand usa as cores da marca, ao fundo um cenário de feira do automóvel em São Paulo."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="min-h-32 bg-background border-border mb-4"

@@ -247,31 +247,45 @@ const StandVisualizer = () => {
     
     // Convert imported image to base64 for the AI API
     try {
-      console.log('Selecionando booth:', booth.name);
-      console.log('Caminho da imagem:', booth.image);
+      console.log('=== SELECIONANDO BOOTH ===');
+      console.log('Booth:', booth.name);
+      console.log('URL da imagem (resolvida pelo Vite):', booth.image);
       
       const response = await fetch(booth.image);
+      
+      if (!response.ok) {
+        throw new Error(`Falha ao buscar imagem: ${response.status}`);
+      }
+      
       const blob = await response.blob();
+      console.log('Blob criado, tipo:', blob.type, 'tamanho:', blob.size);
       
       // Create a Promise to wait for FileReader to complete
       const base64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const result = e.target?.result as string;
-          console.log('Imagem convertida para base64, tamanho:', result?.length);
-          resolve(result);
+          if (result && result.startsWith('data:')) {
+            console.log('Base64 gerado com sucesso, tamanho:', result.length);
+            console.log('Prefix base64:', result.substring(0, 50));
+            resolve(result);
+          } else {
+            reject(new Error('Resultado não é base64 válido'));
+          }
         };
         reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
         reader.readAsDataURL(blob);
       });
       
       setUploadedImage(base64);
+      console.log('=== BOOTH CARREGADO COM SUCESSO ===');
       
       toast({
         title: "Stand selecionado!",
         description: `${booth.name} (${booth.code}) foi carregado como base`,
       });
     } catch (error) {
+      console.error("=== ERRO AO CARREGAR BOOTH ===");
       console.error("Error converting booth image:", error);
       toast({
         title: "Erro ao carregar imagem",

@@ -79,23 +79,23 @@ const SubscriptionHero = () => {
             </Button>
           </div>
 
-          {/* 3D Stand illustration placeholder */}
+          {/* YouTube Video Embed */}
           <div className="mt-16 relative">
-            <a 
-              href="https://catalogo-smart-594992343441.us-west1.run.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full max-w-2xl mx-auto h-64 md:h-80 rounded-2xl bg-gradient-to-br from-[#0a0a2e]/80 to-[#1a0a3e]/80 border border-red-500/20 backdrop-blur-sm flex items-center justify-center group hover:border-cyan-400/40 transition-all duration-300 cursor-pointer"
-            >
-              <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-xl bg-gradient-to-br from-red-500/30 to-cyan-500/30 border border-red-400/30 flex items-center justify-center animate-pulse group-hover:scale-110 transition-transform duration-300">
-                  <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-red-400 to-cyan-400 opacity-50" />
-                </div>
-                <p className="text-cyan-300/60 text-sm group-hover:text-cyan-300 transition-colors">Stand Modular Inteligente</p>
+            <div className="w-full max-w-3xl mx-auto rounded-2xl overflow-hidden border border-red-500/20 shadow-[0_0_60px_rgba(220,38,38,0.2)]">
+              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                <iframe 
+                  className="absolute top-0 left-0 w-full h-full"
+                  src="https://www.youtube.com/embed/wARdccAUwFg?si=_LsPmBMgc6MSeJGB&start=8" 
+                  title="YouTube video player" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  referrerPolicy="strict-origin-when-cross-origin" 
+                  allowFullScreen
+                />
               </div>
-              {/* Glowing contour effect */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/20 shadow-[inset_0_0_30px_rgba(6,182,212,0.1)] group-hover:border-cyan-400/40 group-hover:shadow-[inset_0_0_40px_rgba(6,182,212,0.2)] transition-all duration-300" />
-            </a>
+            </div>
+            {/* Glowing contour effect */}
+            <div className="absolute inset-0 max-w-3xl mx-auto left-0 right-0 rounded-2xl border-2 border-cyan-400/20 shadow-[inset_0_0_30px_rgba(6,182,212,0.1)] pointer-events-none" />
           </div>
         </div>
       </div>

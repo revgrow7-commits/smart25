@@ -1,18 +1,92 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Upload, Wand2 } from "lucide-react";
+import { Sparkles, Upload, Wand2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+
+interface StandProduct {
+  id: string;
+  name: string;
+  item_code: string;
+  image_url: string | null;
+}
 
 const AIVisualizer = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedStand, setSelectedStand] = useState<StandProduct | null>(null);
   const { toast } = useToast();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Fetch stands from "Stands Modulados" category
+  const { data: standProducts = [] } = useQuery({
+    queryKey: ["stands-modulados-home"],
+    queryFn: async () => {
+      const { data: category } = await supabase
+        .from("categories")
+        .select("id")
+        .or("name.ilike.%stands modulados%,slug.ilike.%stands-modulados%")
+        .limit(1)
+        .single();
+
+      if (!category) return [];
+
+      const { data: products } = await supabase
+        .from("products")
+        .select(`
+          id, name, item_code,
+          product_images (image_url, is_primary)
+        `)
+        .eq("category_id", category.id)
+        .eq("status", "active")
+        .limit(12);
+
+      return (products || []).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        item_code: p.item_code,
+        image_url: p.product_images?.find((img: any) => img.is_primary)?.image_url 
+          || p.product_images?.[0]?.image_url || null,
+      }));
+    },
+  });
+
+  const handleStandSelect = async (stand: StandProduct) => {
+    setSelectedStand(stand);
+    if (stand.image_url) {
+      try {
+        const response = await fetch(stand.image_url);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setUploadedImage(reader.result as string);
+          toast({
+            title: "Stand selecionado",
+            description: `${stand.name} - agora descreva as alterações`,
+          });
+        };
+        reader.readAsDataURL(blob);
+      } catch {
+        setUploadedImage(stand.image_url);
+      }
+    }
+  };
+
+  const scrollGallery = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const examplePrompts = [
     {
@@ -154,6 +228,68 @@ const AIVisualizer = () => {
             Faça upload de uma foto do seu espaço ou produto e veja como ficaria com Smart Signage
           </p>
         </div>
+
+        {/* Gallery with horizontal scroll */}
+        {standProducts.length > 0 && (
+          <div className="mb-10 max-w-6xl mx-auto">
+            <h3 className="text-lg font-semibold mb-4 text-center">
+              Ou escolha um stand pronto:
+            </h3>
+            <div className="relative group">
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => scrollGallery("left")}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+              
+              <div
+                ref={scrollRef}
+                className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-2 scroll-smooth"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {standProducts.map((stand) => (
+                  <div
+                    key={stand.id}
+                    onClick={() => handleStandSelect(stand)}
+                    className={`flex-shrink-0 w-40 cursor-pointer rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
+                      selectedStand?.id === stand.id
+                        ? "border-primary ring-2 ring-primary/50"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    {stand.image_url ? (
+                      <img
+                        src={stand.image_url}
+                        alt={stand.name}
+                        className="w-full h-28 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-28 bg-muted flex items-center justify-center">
+                        <Sparkles className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                    )}
+                    <div className="p-2 bg-card">
+                      <p className="text-xs font-medium truncate">{stand.name}</p>
+                      <p className="text-xs text-muted-foreground">{stand.item_code}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => scrollGallery("right")}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Upload Section */}

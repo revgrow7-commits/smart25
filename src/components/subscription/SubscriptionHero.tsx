@@ -64,6 +64,7 @@ const SubscriptionHero = () => {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white border-0 px-8 py-6 text-lg rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.5)] hover:shadow-[0_0_40px_rgba(220,38,38,0.7)] transition-all duration-300"
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Sparkles className="w-5 h-5 mr-2" />
               Criar Minha Assinatura

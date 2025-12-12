@@ -70,7 +70,15 @@ const Navbar = () => {
         error
       } = await supabase.from("categories").select("id, name, slug, icon").order("name");
       if (error) throw error;
-      setCategories(data || []);
+      
+      // Sort categories to show "Stands Modulados" first
+      const sortedData = (data || []).sort((a, b) => {
+        if (a.name.toLowerCase().includes('stands modulados')) return -1;
+        if (b.name.toLowerCase().includes('stands modulados')) return 1;
+        return a.name.localeCompare(b.name);
+      });
+      
+      setCategories(sortedData);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }

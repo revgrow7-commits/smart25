@@ -247,14 +247,25 @@ const StandVisualizer = () => {
     
     // Convert imported image to base64 for the AI API
     try {
+      console.log('Selecionando booth:', booth.name);
+      console.log('Caminho da imagem:', booth.image);
+      
       const response = await fetch(booth.image);
       const blob = await response.blob();
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target?.result as string;
-        setUploadedImage(base64);
-      };
-      reader.readAsDataURL(blob);
+      
+      // Create a Promise to wait for FileReader to complete
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = e.target?.result as string;
+          console.log('Imagem convertida para base64, tamanho:', result?.length);
+          resolve(result);
+        };
+        reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
+        reader.readAsDataURL(blob);
+      });
+      
+      setUploadedImage(base64);
       
       toast({
         title: "Stand selecionado!",

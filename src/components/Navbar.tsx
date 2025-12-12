@@ -137,16 +137,8 @@ const Navbar = () => {
                 <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-card border-border z-50 w-72">
-                <DropdownMenuItem asChild>
-                  <Link to="/visualizador-stand" className="cursor-pointer font-medium flex items-center gap-2">
-                    <Wand2 className="w-4 h-4" />
-                    Visualizador com IA
-                  </Link>
-                </DropdownMenuItem>
-                
                 {categories.length > 0 && (
                   <>
-                    <DropdownMenuSeparator />
                     <DropdownMenuLabel className="text-xs text-muted-foreground px-2">
                       Categorias
                     </DropdownMenuLabel>

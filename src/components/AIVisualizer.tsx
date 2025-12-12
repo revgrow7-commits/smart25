@@ -225,7 +225,7 @@ const AIVisualizer = () => {
             Visualize Seu Stand em <span className="gradient-text">Segundos</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Faça upload de uma foto do seu espaço ou produto e veja como ficaria com Smart Signage
+            Crie o seu Stand com a ajuda da IA.
           </p>
         </div>
 

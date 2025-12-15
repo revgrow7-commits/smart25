@@ -175,21 +175,21 @@ const ProductDetail = () => {
           Voltar ao Catálogo
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr,0.85fr] gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,0.85fr] gap-6 lg:gap-12">
           {/* Visualizador com Abas */}
           <div className="space-y-2">
             <Tabs defaultValue="galeria" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1 rounded-xl">
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1 rounded-xl h-12">
                 <TabsTrigger 
                   value="galeria" 
-                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg"
+                  className="flex items-center justify-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg text-sm"
                 >
                   <ImageIcon className="w-4 h-4" />
                   <span className="hidden sm:inline">Galeria</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="3d" 
-                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" 
+                  className="flex items-center justify-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg text-sm" 
                   disabled={!product.model_3d_url && !product.sketchfab_url}
                 >
                   <Box className="w-4 h-4" />
@@ -197,7 +197,7 @@ const ProductDetail = () => {
                 </TabsTrigger>
                 <TabsTrigger 
                   value="video" 
-                  className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" 
+                  className="flex items-center justify-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg text-sm" 
                   disabled={!product.video_url}
                 >
                   <Video className="w-4 h-4" />
@@ -206,8 +206,8 @@ const ProductDetail = () => {
               </TabsList>
 
               {/* Galeria de Imagens */}
-              <TabsContent value="galeria" className="space-y-2 mt-0">
-                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md" style={{ height: '750px' }}>
+              <TabsContent value="galeria" className="space-y-2 mt-2">
+                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[600px]">
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
@@ -239,9 +239,9 @@ const ProductDetail = () => {
               </TabsContent>
 
               {/* Visualização 3D */}
-              <TabsContent value="3d" className="mt-4">
+              <TabsContent value="3d" className="mt-2">
                 {product.sketchfab_url ? (
-                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md" style={{ height: '600px' }}>
+                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
                     <iframe
                       src={product.sketchfab_url}
                       className="w-full h-full"
@@ -251,7 +251,7 @@ const ProductDetail = () => {
                     />
                   </div>
                 ) : product.model_3d_url ? (
-                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md" style={{ height: '600px' }}>
+                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
                     {modelLoading && (
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
                         <div className="w-64 space-y-4">
@@ -348,7 +348,7 @@ const ProductDetail = () => {
               </TabsContent>
 
               {/* Vídeo */}
-              <TabsContent value="video" className="mt-4">
+              <TabsContent value="video" className="mt-2">
                 {product.video_url && (
                   <div className="aspect-video rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md">
                     <iframe

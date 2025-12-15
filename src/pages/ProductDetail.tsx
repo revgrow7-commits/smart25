@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -52,6 +52,44 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [modelLoading, setModelLoading] = useState(true);
   const [modelProgress, setModelProgress] = useState(0);
+  const [videoHovered, setVideoHovered] = useState(false);
+  const [sketchfabHovered, setSketchfabHovered] = useState(false);
+
+  // Helper function to get YouTube embed URL with autoplay
+  const getYouTubeEmbedUrl = (url: string, autoplay: boolean = false) => {
+    if (!url) return "";
+    
+    // Extract video ID from various YouTube URL formats
+    let videoId = "";
+    
+    if (url.includes("youtube.com/watch")) {
+      const urlParams = new URL(url).searchParams;
+      videoId = urlParams.get("v") || "";
+    } else if (url.includes("youtu.be/")) {
+      videoId = url.split("youtu.be/")[1]?.split("?")[0] || "";
+    } else if (url.includes("youtube.com/embed/")) {
+      videoId = url.split("youtube.com/embed/")[1]?.split("?")[0] || "";
+    }
+    
+    if (!videoId) return url;
+    
+    const params = new URLSearchParams({
+      autoplay: autoplay ? "1" : "0",
+      mute: "1",
+      rel: "0"
+    });
+    
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+  };
+
+  // Helper function to get Sketchfab embed URL with autoplay
+  const getSketchfabEmbedUrl = (url: string, autoplay: boolean = false) => {
+    if (!url) return "";
+    
+    // Add autostart parameter
+    const separator = url.includes("?") ? "&" : "?";
+    return autoplay ? `${url}${separator}autostart=1&autospin=0.2` : url;
+  };
 
   useEffect(() => {
     if (id) {
@@ -241,9 +279,13 @@ const ProductDetail = () => {
               {/* Visualização 3D */}
               <TabsContent value="3d" className="mt-2">
                 {product.sketchfab_url ? (
-                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
+                  <div 
+                    className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]"
+                    onMouseEnter={() => setSketchfabHovered(true)}
+                    onMouseLeave={() => setSketchfabHovered(false)}
+                  >
                     <iframe
-                      src={product.sketchfab_url}
+                      src={getSketchfabEmbedUrl(product.sketchfab_url, sketchfabHovered)}
                       className="w-full h-full"
                       allow="autoplay; fullscreen; xr-spatial-tracking"
                       allowFullScreen
@@ -350,9 +392,13 @@ const ProductDetail = () => {
               {/* Vídeo */}
               <TabsContent value="video" className="mt-2">
                 {product.video_url && (
-                  <div className="aspect-video rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md">
+                  <div 
+                    className="aspect-video rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md"
+                    onMouseEnter={() => setVideoHovered(true)}
+                    onMouseLeave={() => setVideoHovered(false)}
+                  >
                     <iframe
-                      src={product.video_url}
+                      src={getYouTubeEmbedUrl(product.video_url, videoHovered)}
                       className="w-full h-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen

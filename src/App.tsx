@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BudgetProvider } from "@/contexts/BudgetContext";
 import BudgetIndicator from "@/components/BudgetIndicator";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
@@ -31,7 +32,11 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/access-denied" element={<AccessDenied />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={
+              <ProtectedRoute requireAdmin>
+                <Admin />
+              </ProtectedRoute>
+            } />
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/produto/:id" element={<ProductDetail />} />
             <Route path="/visualizador-stand" element={<StandVisualizer />} />

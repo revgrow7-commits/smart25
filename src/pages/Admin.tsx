@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { Package, Upload, Grid3x3, Settings, Image, Star, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Package, Upload, Grid3x3, Settings, Image, Star, FileText, LogOut } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
@@ -9,21 +10,29 @@ import CategoryManager from "@/components/admin/CategoryManager";
 import { HeroImageManager } from "@/components/admin/HeroImageManager";
 import FeaturedProductsManager from "@/components/admin/FeaturedProductsManager";
 import BlogPostManager from "@/components/admin/BlogPostManager";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const { signOut, user } = useAdminAuth();
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-4xl font-bold mb-2">
-            Painel <span className="gradient-text">Administrativo</span>
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Gerencie produtos, categorias e uploads do catálogo
-          </p>
+        <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">
+              Painel <span className="gradient-text">Administrativo</span>
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground">
+              {user?.email}
+            </p>
+          </div>
+          <Button variant="outline" onClick={signOut} className="w-fit">
+            <LogOut className="h-4 w-4 mr-2" />
+            Sair
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, Home, Box, Wand2, Calculator, Grid3x3, Monitor, Tv, Projector, Smartphone, Tablet, Speaker, Camera, Router, Headphones, HardDrive, Package, Shapes, LayoutGrid, Crown, GraduationCap, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import LogoProcessor from "@/components/LogoProcessor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";

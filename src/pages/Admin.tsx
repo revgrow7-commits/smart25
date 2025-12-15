@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Upload, Grid3x3, Settings, Image, Star, FileText, LogOut } from "lucide-react";
+import { Package, Upload, Grid3x3, Settings, Image, Star, FileText, LogOut, Loader2 } from "lucide-react";
 import ProductList from "@/components/admin/ProductList";
 import ProductForm from "@/components/admin/ProductForm";
 import ExcelUpload from "@/components/admin/ExcelUpload";
@@ -15,7 +16,30 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("products");
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const { signOut, user } = useAdminAuth();
+  const { signOut, user, isAdmin, loading } = useAdminAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        navigate("/auth");
+      } else if (!isAdmin) {
+        navigate("/access-denied");
+      }
+    }
+  }, [user, isAdmin, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background py-4 md:py-8">

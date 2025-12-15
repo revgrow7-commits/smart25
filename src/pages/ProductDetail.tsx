@@ -245,7 +245,7 @@ const ProductDetail = () => {
 
               {/* Galeria de Imagens */}
               <TabsContent value="galeria" className="space-y-2 mt-2">
-                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[600px]">
+                <div className="rounded-xl overflow-hidden bg-gradient-to-br from-muted/30 to-muted/60 border border-border/50 shadow-md aspect-[4/3] md:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
                   <img
                     src={selectedImage || "/placeholder.svg"}
                     alt={product.name}
@@ -280,7 +280,7 @@ const ProductDetail = () => {
               <TabsContent value="3d" className="mt-2">
                 {product.sketchfab_url ? (
                   <div 
-                    className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]"
+                    className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-[4/3] md:aspect-[4/3] lg:aspect-auto lg:h-[500px]"
                     onMouseEnter={() => setSketchfabHovered(true)}
                     onMouseLeave={() => setSketchfabHovered(false)}
                   >
@@ -293,7 +293,7 @@ const ProductDetail = () => {
                     />
                   </div>
                 ) : product.model_3d_url ? (
-                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
+                  <div className="relative rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md aspect-[4/3] md:aspect-[4/3] lg:aspect-auto lg:h-[500px]">
                     {modelLoading && (
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
                         <div className="w-64 space-y-4">

@@ -49,4 +49,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App; // build v1.1
+export default App; // build v1.2

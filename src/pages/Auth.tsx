@@ -24,20 +24,39 @@ const Auth = () => {
     // Check if user arrived from password reset email
     const isReset = searchParams.get('reset') === 'true';
     
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
+    // Check for recovery token in URL hash (Supabase adds tokens there)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+    
+    // If we have a recovery type token, show the password reset form
+    if (type === 'recovery' && accessToken) {
+      setShowResetPassword(true);
+      return;
+    }
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth event:', event);
+      if (event === 'SIGNED_IN' && isReset) {
+        // User just signed in from recovery link
         setShowResetPassword(true);
-      } else if (session && !isReset) {
+      } else if (session && !isReset && !showResetPassword) {
         navigate("/admin");
       }
     });
 
+    // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && !isReset) {
+      // If there's a session and we're on the reset page, show reset form
+      if (session && isReset) {
+        setShowResetPassword(true);
+      } else if (session && !isReset && !showResetPassword) {
         navigate("/admin");
       }
     });
-  }, [navigate, searchParams]);
+
+    return () => subscription.unsubscribe();
+  }, [navigate, searchParams, showResetPassword]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();

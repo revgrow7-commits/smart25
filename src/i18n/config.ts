@@ -4,41 +4,28 @@ import pt from './locales/pt.json';
 import en from './locales/en.json';
 import es from './locales/es.json';
 
-// Função para detectar idioma baseado no IP de forma assíncrona
-const detectAndSetLanguageByIP = async () => {
+// Função para detectar idioma baseado no navegador (mais confiável que IP)
+const detectAndSetLanguage = () => {
   try {
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    const countryCode = data.country_code?.toLowerCase();
-    
-    // Mapear código do país para idioma
-    const countryToLanguage: Record<string, string> = {
-      'br': 'pt',
-      'pt': 'pt',
-      'ao': 'pt', // Angola
-      'mz': 'pt', // Moçambique
-      'us': 'en',
-      'gb': 'en',
-      'ca': 'en',
-      'au': 'en',
-      'es': 'es',
-      'mx': 'es',
-      'ar': 'es',
-      'co': 'es',
-      'cl': 'es',
-      've': 'es',
-      'pe': 'es',
-    };
-    
-    const detectedLanguage = countryToLanguage[countryCode] || 'pt';
-    
     // Só aplica se não houver preferência salva
     if (!localStorage.getItem('language')) {
+      const browserLang = navigator.language?.toLowerCase() || 'pt';
+      
+      let detectedLanguage = 'pt'; // Default
+      
+      if (browserLang.startsWith('pt')) {
+        detectedLanguage = 'pt';
+      } else if (browserLang.startsWith('es')) {
+        detectedLanguage = 'es';
+      } else if (browserLang.startsWith('en')) {
+        detectedLanguage = 'en';
+      }
+      
       localStorage.setItem('language', detectedLanguage);
       i18n.changeLanguage(detectedLanguage);
     }
-  } catch (error) {
-    console.warn('Falha ao detectar localização por IP:', error);
+  } catch {
+    // Silently fail - use default language
   }
 };
 
@@ -63,7 +50,7 @@ i18n
     }
   });
 
-// Detectar idioma por IP em segundo plano (não bloqueia a inicialização)
-detectAndSetLanguageByIP();
+// Detectar idioma pelo navegador (mais rápido e confiável)
+detectAndSetLanguage();
 
 export default i18n;

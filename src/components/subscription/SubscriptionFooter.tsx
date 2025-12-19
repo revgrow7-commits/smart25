@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Linkedin, MessageCircle, MapPin, Lightbulb } from "lucide-react";
+import { Instagram, Linkedin, MessageCircle, MapPin, Lightbulb } from "lucide-react";
 
 const SubscriptionFooter = () => {
   return (
@@ -71,25 +71,25 @@ const SubscriptionFooter = () => {
             <h4 className="text-white font-semibold mb-4">Redes Sociais</h4>
             <div className="flex gap-4">
               <a 
-                href="#" 
+                href="https://www.instagram.com/stand_smart/" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-400/50 hover:text-red-300 transition-all duration-300"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a 
-                href="#" 
-                className="w-10 h-10 rounded-lg border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-400/50 hover:text-red-300 transition-all duration-300"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
+                href="https://www.linkedin.com/in/smart-signage-0a865a3a0/" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-400/50 hover:text-red-300 transition-all duration-300"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
               <a 
-                href="#" 
+                href="https://wa.me/5551936512200" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-400/50 hover:text-red-300 transition-all duration-300"
               >
                 <MessageCircle className="w-5 h-5" />

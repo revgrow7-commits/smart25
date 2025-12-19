@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import VideoShowcase from "@/components/VideoShowcase";
 import AIVisualizer from "@/components/AIVisualizer";
+import ARShowroom from "@/components/ARShowroom";
 import ROICalculator from "@/components/ROICalculator";
 import ComparisonTable from "@/components/ComparisonTable";
 import Testimonials from "@/components/Testimonials";
@@ -21,6 +22,7 @@ const Index = () => {
       <FeaturedProducts />
       <VideoShowcase />
       <AIVisualizer />
+      <ARShowroom />
       <ROICalculator />
       <ComparisonTable />
       <Testimonials />

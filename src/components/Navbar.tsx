@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
+import logo from "@/assets/logo-smartsignage-navbar.png";
+
 interface Category {
   id: string;
   name: string;
@@ -108,9 +110,9 @@ const Navbar = () => {
   return <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-background/95 backdrop-blur-lg border-b border-border shadow-lg' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo removido */}
+          {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-xl font-bold text-primary">Smart Signage</span>
+            <img src={logo} alt="Smart Signage" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

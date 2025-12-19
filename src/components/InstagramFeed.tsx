@@ -1,4 +1,4 @@
-import { Instagram } from "lucide-react";
+import { Instagram, Play, ExternalLink } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -9,14 +9,51 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// IDs dos posts/reels do Instagram
-// Para pegar o ID: abra o post, copie a URL, o ID é a parte após /reel/ ou /p/
-// Ex: https://www.instagram.com/reel/DFSrAkWuH81/ → ID = DFSrAkWuH81
+// Posts do Instagram com thumbnails
+// Para adicionar: use imagens dos produtos/stands e link para o post real
 const instagramPosts = [
-  { id: "DFSrAkWuH81", type: "reel" },
-  { id: "DFS0tM_O-rj", type: "reel" },
-  { id: "DFT-sNJu27j", type: "reel" },
-  { id: "DFV3yUeuF0l", type: "reel" },
+  {
+    id: "1",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/mpa05ckolka-1765912226245.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: true,
+    caption: "Stand Booth202",
+  },
+  {
+    id: "2",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/s0w0sdd0xcr-1765814433766.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: true,
+    caption: "Stand Booth209",
+  },
+  {
+    id: "3",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/lwivpm9mmo-1764251022604.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: true,
+    caption: "Stand Booth203",
+  },
+  {
+    id: "4",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/31o264xknzl-1764257396391.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: true,
+    caption: "Stand Booth206",
+  },
+  {
+    id: "5",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/6l67ndtyvzs-1764257453476.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: false,
+    caption: "Stand Booth210",
+  },
+  {
+    id: "6",
+    imageUrl: "https://vlwwedprsjyxsnhponwd.supabase.co/storage/v1/object/public/product-images/cqhnw3o5amk-1765914228487.png",
+    postUrl: "https://www.instagram.com/stand_smart/",
+    isVideo: false,
+    caption: "Stand Booth104",
+  },
 ];
 
 const InstagramFeed = () => {
@@ -47,20 +84,45 @@ const InstagramFeed = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {instagramPosts.map((post, index) => (
-                <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <Card className="overflow-hidden border-0 shadow-lg">
-                    <CardContent className="p-0">
-                      <iframe
-                        src={`https://www.instagram.com/${post.type}/${post.id}/embed/captioned/`}
-                        className="w-full border-0"
-                        style={{ minHeight: "500px" }}
-                        scrolling="no"
-                        allowTransparency
-                        title={`Instagram ${post.type} ${index + 1}`}
-                      />
-                    </CardContent>
-                  </Card>
+              {instagramPosts.map((post) => (
+                <CarouselItem key={post.id} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <a
+                    href={post.postUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group"
+                  >
+                    <Card className="overflow-hidden border-0 shadow-lg transition-transform duration-300 group-hover:scale-105">
+                      <CardContent className="p-0 relative">
+                        <div className="aspect-square overflow-hidden">
+                          <img
+                            src={post.imageUrl}
+                            alt={post.caption}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </div>
+                        
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                          <p className="text-white font-medium text-sm">{post.caption}</p>
+                          <div className="flex items-center gap-1 text-white/80 text-xs mt-1">
+                            <ExternalLink className="h-3 w-3" />
+                            Ver no Instagram
+                          </div>
+                        </div>
+
+                        {/* Video indicator */}
+                        {post.isVideo && (
+                          <div className="absolute top-3 right-3 bg-black/50 rounded-full p-2">
+                            <Play className="h-4 w-4 text-white fill-white" />
+                          </div>
+                        )}
+
+                        {/* Instagram gradient border on hover */}
+                        <div className="absolute inset-0 rounded-lg border-2 border-transparent group-hover:border-gradient-to-r group-hover:from-pink-500 group-hover:via-purple-500 group-hover:to-orange-500 pointer-events-none" />
+                      </CardContent>
+                    </Card>
+                  </a>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -73,6 +135,7 @@ const InstagramFeed = () => {
         <div className="text-center mt-10">
           <Button
             asChild
+            size="lg"
             className="bg-gradient-to-r from-pink-500 via-purple-500 to-orange-500 hover:from-pink-600 hover:via-purple-600 hover:to-orange-600 text-white"
           >
             <a

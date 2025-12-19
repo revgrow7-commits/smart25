@@ -1,3 +1,4 @@
+// Smart Signage - v1.0.1 - Published: 2025-12-19
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";

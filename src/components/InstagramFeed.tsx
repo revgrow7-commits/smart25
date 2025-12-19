@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import { Instagram, Play, ExternalLink } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -58,6 +59,28 @@ const instagramPosts = [
 ];
 
 const InstagramFeed = () => {
+  const [api, setApi] = useState<any>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  const scrollTo = useCallback(
+    (index: number) => {
+      api?.scrollTo(index);
+    },
+    [api]
+  );
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -78,6 +101,7 @@ const InstagramFeed = () => {
         {/* Carousel */}
         <div className="relative px-12">
           <Carousel
+            setApi={setApi}
             opts={{
               align: "start",
               loop: true,
@@ -137,6 +161,22 @@ const InstagramFeed = () => {
             <CarouselPrevious className="left-0" />
             <CarouselNext className="right-0" />
           </Carousel>
+
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mt-6">
+            {Array.from({ length: count }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === current
+                    ? "w-6 bg-gradient-to-r from-pink-500 via-purple-500 to-orange-500"
+                    : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+                aria-label={`Ir para slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
 
         {/* CTA */}

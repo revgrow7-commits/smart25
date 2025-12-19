@@ -10,7 +10,7 @@ import ComparisonTable from "@/components/ComparisonTable";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
-import ContactForm from "@/components/ContactForm";
+import ContactSection from "@/components/ContactSection";
 import ProductChatbot from "@/components/ProductChatbot";
 import HomeFooter from "@/components/HomeFooter";
 
@@ -28,7 +28,7 @@ const Index = () => {
       <Testimonials />
       <HowItWorks />
       <FAQ />
-      <ContactForm />
+      <ContactSection />
       <ProductChatbot />
       <HomeFooter />
     </div>

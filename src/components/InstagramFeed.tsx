@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Instagram, Play, ExternalLink } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
 import {
   Carousel,
   CarouselContent,
@@ -107,6 +108,7 @@ const InstagramFeed = () => {
               loop: true,
             }}
             plugins={[
+              Fade(),
               Autoplay({
                 delay: 3000,
                 stopOnInteraction: true,
@@ -117,7 +119,7 @@ const InstagramFeed = () => {
           >
             <CarouselContent className="-ml-4">
               {instagramPosts.map((post) => (
-                <CarouselItem key={post.id} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
+                <CarouselItem key={post.id} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 transition-opacity duration-500">
                   <a
                     href={post.postUrl}
                     target="_blank"

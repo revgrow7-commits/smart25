@@ -1,5 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,7 +17,10 @@ serve(async (req) => {
 
     if (!LOVABLE_API_KEY) {
       console.error('LOVABLE_API_KEY não encontrada');
-      throw new Error('LOVABLE_API_KEY não configurada');
+      return new Response(
+        JSON.stringify({ error: 'LOVABLE_API_KEY não configurada' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log('=== INÍCIO DA GERAÇÃO ===');
@@ -25,15 +28,15 @@ serve(async (req) => {
     console.log('Referência de imagem:', referenceImage ? 'SIM' : 'NÃO');
 
     // Preparar conteúdo para o Lovable AI
-    const content: any[] = [{ type: "text", text: prompt }];
+    const content: Array<{ type: string; text?: string; image_url?: { url: string } }> = [
+      { type: "text", text: prompt }
+    ];
 
     // Se houver imagem de referência, adicionar como image_url
     if (referenceImage) {
       content.push({
         type: "image_url",
-        image_url: {
-          url: referenceImage
-        }
+        image_url: { url: referenceImage }
       });
     }
 
@@ -46,7 +49,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-image-preview',
+        model: 'google/gemini-3-pro-image-preview',
         messages: [{
           role: 'user',
           content: content
@@ -64,24 +67,21 @@ serve(async (req) => {
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente mais tarde.' }),
-          { 
-            status: 429, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
       if (response.status === 402) {
         return new Response(
           JSON.stringify({ error: 'Créditos insuficientes. Adicione créditos à sua conta Lovable.' }),
-          { 
-            status: 402, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      throw new Error(`Erro na geração: ${response.status} ${errorText}`);
+      return new Response(
+        JSON.stringify({ error: `Erro na geração: ${response.status}` }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const data = await response.json();
@@ -105,7 +105,10 @@ serve(async (req) => {
     
     if (!imageUrl) {
       console.error('Estrutura completa da resposta:', JSON.stringify(data, null, 2));
-      throw new Error('Nenhuma imagem foi gerada');
+      return new Response(
+        JSON.stringify({ error: 'Nenhuma imagem foi gerada' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log('=== SUCESSO ===');
@@ -115,24 +118,18 @@ serve(async (req) => {
         imageUrl: imageUrl,
         message: textResponse || 'Imagem gerada com sucesso'
       }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('=== ERRO NA FUNÇÃO ===');
     console.error('Tipo:', error instanceof Error ? error.constructor.name : typeof error);
     console.error('Mensagem:', error instanceof Error ? error.message : String(error));
-    console.error('Stack:', error instanceof Error ? error.stack : 'N/A');
     
     return new Response(
       JSON.stringify({ 
         error: error instanceof Error ? error.message : 'Erro desconhecido ao gerar imagem' 
       }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

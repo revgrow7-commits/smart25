@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,7 +15,11 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+      console.error("LOVABLE_API_KEY is not configured");
+      return new Response(
+        JSON.stringify({ error: "LOVABLE_API_KEY não está configurada" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     console.log(`Generating blog article for topic: ${topic}, category: ${category}`);
@@ -93,29 +97,36 @@ IMPORTANTE: Retorne APENAS o objeto JSON puro, sem code blocks (\`\`\`), sem mar
       console.error("AI gateway error:", response.status, errorText);
       
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns minutos." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns minutos." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes. Adicione créditos ao workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "Créditos insuficientes. Adicione créditos ao workspace." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
       
-      throw new Error(`AI gateway error: ${response.status}`);
+      return new Response(
+        JSON.stringify({ error: `Erro na API: ${response.status}` }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
     
     if (!content) {
-      throw new Error("No content received from AI");
+      console.error("No content received from AI");
+      return new Response(
+        JSON.stringify({ error: "Nenhum conteúdo recebido da IA" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    console.log("Raw AI response:", content);
+    console.log("Raw AI response length:", content.length);
 
     // Parse the JSON response - handle potential formatting issues
     let articleData;
@@ -139,30 +150,32 @@ IMPORTANTE: Retorne APENAS o objeto JSON puro, sem code blocks (\`\`\`), sem mar
           .replace(/'\s*\+\s*'/g, '');
       }
       
-      // Remove HTML attributes with quotes that break JSON (e.g., border="1")
-      // Replace attribute patterns like attr="value" with just the tag
+      // Remove HTML attributes with quotes that break JSON
       cleanContent = cleanContent.replace(/(\s+\w+)=\\\\?"[^"]*\\\\?"/g, '');
       cleanContent = cleanContent.replace(/(\s+\w+)=\\"[^"]*\\"/g, '');
       
       articleData = JSON.parse(cleanContent);
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
-      console.error("Content that failed to parse:", content.substring(0, 500));
-      throw new Error("Failed to parse AI response as JSON. The AI may have returned invalid format.");
+      console.error("Content preview:", content.substring(0, 500));
+      return new Response(
+        JSON.stringify({ error: "Falha ao processar resposta da IA. Tente novamente." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    console.log("Parsed article data:", articleData);
+    console.log("Article generated successfully:", articleData.title);
 
-    return new Response(JSON.stringify({ article: articleData }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ article: articleData }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
 
   } catch (error) {
     console.error("Error generating blog article:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 });

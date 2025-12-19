@@ -1,4 +1,4 @@
-// Smart Signage - Build: 2025-12-19T15:08:00 - v1.3
+// Smart Signage - Build: 2025-12-19T16:30:00 - v2.0 - Force Deploy
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";

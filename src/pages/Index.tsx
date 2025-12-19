@@ -1,4 +1,4 @@
-// Smart Signage - Build: 2025-12-19T14:52:00 - v1.1
+// Smart Signage - Build: 2025-12-19T15:08:00 - v1.3
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";

@@ -26,7 +26,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
@@ -49,4 +49,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App; // build v1.2
+export default App; // build v1.4 - warnings fixed

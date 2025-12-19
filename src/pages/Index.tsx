@@ -1,4 +1,4 @@
-// Smart Signage - Build: 2025-12-19T14:35:00
+// Smart Signage - Build: 2025-12-19T14:52:00 - v1.1
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
@@ -33,4 +33,4 @@ const Index = () => {
   );
 };
 
-export default Index; // v1.1 - Published
+export default Index; // v1.2 - Rebuild

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Instagram } from "lucide-react";
 import {
   Carousel,
@@ -9,16 +10,34 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// Posts do Instagram - adicione os IDs dos posts aqui
-// Para obter o ID: abra o post no Instagram, clique em "..." e "Embed", copie o código
+// URLs dos posts do Instagram - adicione as URLs completas aqui
 const instagramPosts = [
-  { id: "DFSrAkWuH81", type: "reel" },
-  { id: "DFS0tM_O-rj", type: "reel" },
-  { id: "DFT-sNJu27j", type: "reel" },
-  { id: "DFV3yUeuF0l", type: "reel" },
+  "https://www.instagram.com/reel/DFSrAkWuH81/",
+  "https://www.instagram.com/reel/DFS0tM_O-rj/",
+  "https://www.instagram.com/reel/DFT-sNJu27j/",
+  "https://www.instagram.com/reel/DFV3yUeuF0l/",
 ];
 
 const InstagramFeed = () => {
+  useEffect(() => {
+    // Carrega o script de embed do Instagram
+    const script = document.createElement("script");
+    script.src = "//www.instagram.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Processa os embeds quando o script carregar
+    script.onload = () => {
+      if ((window as any).instgrm) {
+        (window as any).instgrm.Embeds.process();
+      }
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -46,20 +65,27 @@ const InstagramFeed = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {instagramPosts.map((post, index) => (
+              {instagramPosts.map((postUrl, index) => (
                 <CarouselItem key={index} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <Card className="overflow-hidden border-0 shadow-lg">
-                    <CardContent className="p-0">
-                      <div className="aspect-[9/16] w-full">
-                        <iframe
-                          src={`https://www.instagram.com/${post.type}/${post.id}/embed`}
-                          className="w-full h-full"
-                          frameBorder="0"
-                          scrolling="no"
-                          allowTransparency={true}
-                          title={`Instagram post ${index + 1}`}
-                        />
-                      </div>
+                  <Card className="overflow-hidden border-0 shadow-lg bg-card">
+                    <CardContent className="p-0 flex items-center justify-center min-h-[500px]">
+                      <blockquote
+                        className="instagram-media"
+                        data-instgrm-captioned
+                        data-instgrm-permalink={postUrl}
+                        data-instgrm-version="14"
+                        style={{
+                          background: "#FFF",
+                          border: 0,
+                          borderRadius: "3px",
+                          boxShadow: "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+                          margin: "1px",
+                          maxWidth: "540px",
+                          minWidth: "326px",
+                          padding: 0,
+                          width: "calc(100% - 2px)",
+                        }}
+                      />
                     </CardContent>
                   </Card>
                 </CarouselItem>

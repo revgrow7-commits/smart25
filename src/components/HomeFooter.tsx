@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { 
   Box, Monitor, Lightbulb, Store, Calendar, TrendingUp, FileText, Scale,
-  Instagram, Facebook, Linkedin, MessageCircle, MapPin
+  Instagram, Linkedin, MessageCircle, MapPin
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -96,16 +96,13 @@ const HomeFooter = () => {
 
             <h4 className="text-white font-semibold mb-4">Redes Sociais</h4>
             <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
+              <a href="https://www.instagram.com/stand_smart/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
+              <a href="https://www.linkedin.com/in/smart-signage-0a865a3a0/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
+              <a href="https://wa.me/5551936512200" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 transition-all">
                 <MessageCircle className="w-5 h-5" />
               </a>
             </div>
